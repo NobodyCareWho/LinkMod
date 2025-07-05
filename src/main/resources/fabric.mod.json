@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "linkmod",
+  "version": "${version}",
+  "name": "LinkMod",
+  "description": "links mod its very very cool and stuff :D",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/linkmod/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "org.goober.linkmod.client.LinkmodDataGenerator"
+    ],
+    "client": [
+      "org.goober.linkmod.client.LinkmodClient"
+    ],
+    "main": [
+      "org.goober.linkmod.Linkmod"
+    ]
+  },
+  "mixins": [
+    "linkmod.mixins.json",
+    {
+      "config": "linkmod.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
