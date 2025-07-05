@@ -29,18 +29,20 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.server.world.ServerWorld;
+import org.goober.linkmod.entitystuff.LmodEntityRegistry;
+import org.goober.linkmod.itemstuff.LmodItemRegistry;
 
 public class SeedbagEntity extends ThrownItemEntity {
-    public SeedbagEntity(EntityType<? extends net.minecraft.entity.projectile.thrown.SnowballEntity> entityType, World world) {
+    public SeedbagEntity(EntityType<? extends SeedbagEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    public SeedbagEntity(World world, LivingEntity owner, ItemStack stack) {
-        super(EntityType.SNOWBALL, owner, world, stack);
+    public SeedbagEntity(World world, LivingEntity owner) {
+        super(LmodEntityRegistry.SEEDBAG_ENTITY, owner, world, new ItemStack(LmodItemRegistry.SEEDBAG));
     }
 
-    public SeedbagEntity(World world, double x, double y, double z, ItemStack stack) {
-        super(EntityType.SNOWBALL, x, y, z, world, stack);
+    public SeedbagEntity(World world, double x, double y, double z) {
+        super(LmodEntityRegistry.SEEDBAG_ENTITY, x, y, z, world, new ItemStack(LmodItemRegistry.SEEDBAG));
     }
 
     protected Item getDefaultItem() {
