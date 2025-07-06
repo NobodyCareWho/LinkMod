@@ -6,6 +6,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.item.tooltip.TooltipData;
+import java.util.Optional;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -17,11 +19,11 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SeedBagItemCustom extends Item {
-    private static final int SLOT_COUNT = 8;
-    private static final int MAX_STACK_SIZE = 64;
+    private static final int MAX_CAPACITY = 512; // 8 stacks worth
     
     public SeedBagItemCustom(Settings settings) {
         super(settings);
@@ -35,39 +37,37 @@ public class SeedBagItemCustom extends Item {
         if (!world.isClient && !contents.isEmpty()) {
             // Get the first non-empty seed stack
             ItemStack seedStack = null;
-            int slotIndex = -1;
-            for (int i = 0; i < contents.items().size(); i++) {
-                ItemStack item = contents.get(i);
+            for (ItemStack item : contents.items()) {
                 if (!item.isEmpty()) {
                     seedStack = item;
-                    slotIndex = i;
                     break;
                 }
             }
             
-            if (seedStack != null && slotIndex >= 0) {
+            if (seedStack != null) {
                 // Calculate how many seeds to throw
                 int seedsToThrow = Math.min(seedStack.getCount(), 8);
                 
+                // Create a new builder and remove seeds
+                SeedBagContentsComponent.Builder builder = new SeedBagContentsComponent.Builder(contents);
+                
                 // Throw multiple seeds with variance
                 for (int i = 0; i < seedsToThrow; i++) {
-                    // Create and shoot the projectile
-                    org.goober.linkmod.projectilestuff.SeedbagEntity projectile = new org.goober.linkmod.projectilestuff.SeedbagEntity(world, user, seedStack.copyWithCount(1));
-                    
-                    // Add slight variance to the velocity
-                    float variance = 0.8F;
-                    float pitchVariance = (world.getRandom().nextFloat() - 0.5F) * variance * 20;
-                    float yawVariance = (world.getRandom().nextFloat() - 0.5F) * variance * 20;
-                    
-                    projectile.setVelocity(user, user.getPitch() + pitchVariance, user.getYaw() + yawVariance, 0.0F, 1.5F, 1.0F);
-                    world.spawnEntity(projectile);
+                    ItemStack thrownSeed = builder.removeOne();
+                    if (!thrownSeed.isEmpty()) {
+                        // Create and shoot the projectile
+                        org.goober.linkmod.projectilestuff.SeedbagEntity projectile = new org.goober.linkmod.projectilestuff.SeedbagEntity(world, user, thrownSeed);
+                        
+                        // Add slight variance to the velocity
+                        float variance = 0.8F;
+                        float pitchVariance = (world.getRandom().nextFloat() - 0.5F) * variance * 20;
+                        float yawVariance = (world.getRandom().nextFloat() - 0.5F) * variance * 20;
+                        
+                        projectile.setVelocity(user, user.getPitch() + pitchVariance, user.getYaw() + yawVariance, 0.0F, 1.5F, 1.0F);
+                        world.spawnEntity(projectile);
+                    }
                 }
                 
-                // Remove seeds from the inventory
-                SeedBagContentsComponent.Builder builder = new SeedBagContentsComponent.Builder(contents);
-                ItemStack remaining = seedStack.copy();
-                remaining.decrement(seedsToThrow);
-                builder.setStack(slotIndex, remaining);
                 stack.set(LmodDataComponentTypes.SEEDBAG_CONTENTS, builder.build());
                 
                 // Play throw sound
@@ -85,55 +85,21 @@ public class SeedBagItemCustom extends Item {
     
     @Override
     public boolean onStackClicked(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player) {
-        if (clickType != ClickType.LEFT || !slot.canTakePartial(player)) {
+        if (clickType != ClickType.LEFT) {
             return false;
         }
         
         ItemStack otherStack = slot.getStack();
-        if (otherStack.isEmpty()) {
-            return false;
-        }
-        
-        if (!isSeedItem(otherStack)) {
+        if (otherStack.isEmpty() || !isSeedItem(otherStack)) {
             return false;
         }
         
         SeedBagContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.SEEDBAG_CONTENTS, SeedBagContentsComponent.EMPTY);
         SeedBagContentsComponent.Builder builder = new SeedBagContentsComponent.Builder(contents);
         
-        // Try to add the item to existing stacks first
-        boolean added = false;
-        for (int i = 0; i < SLOT_COUNT; i++) {
-            ItemStack existing = builder.getStack(i);
-            if (ItemStack.areItemsAndComponentsEqual(existing, otherStack)) {
-                int transferAmount = Math.min(otherStack.getCount(), MAX_STACK_SIZE - existing.getCount());
-                if (transferAmount > 0) {
-                    existing.increment(transferAmount);
-                    otherStack.decrement(transferAmount);
-                    builder.setStack(i, existing);
-                    added = true;
-                    if (otherStack.isEmpty()) {
-                        break;
-                    }
-                }
-            }
-        }
-        
-        // Try to add to empty slots
-        if (!otherStack.isEmpty()) {
-            for (int i = 0; i < SLOT_COUNT; i++) {
-                if (builder.getStack(i).isEmpty()) {
-                    int transferAmount = Math.min(otherStack.getCount(), MAX_STACK_SIZE);
-                    builder.setStack(i, otherStack.split(transferAmount));
-                    added = true;
-                    if (otherStack.isEmpty()) {
-                        break;
-                    }
-                }
-            }
-        }
-        
-        if (added) {
+        int added = builder.add(otherStack);
+        if (added > 0) {
+            otherStack.decrement(added);
             stack.set(LmodDataComponentTypes.SEEDBAG_CONTENTS, builder.build());
             playInsertSound(player);
             return true;
@@ -146,19 +112,30 @@ public class SeedBagItemCustom extends Item {
     @Override
     public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
         if (clickType == ClickType.RIGHT && otherStack.isEmpty() && slot.canTakePartial(player)) {
-            // Remove the first item from the bag
+            // Remove full stack from the bag
             SeedBagContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.SEEDBAG_CONTENTS, SeedBagContentsComponent.EMPTY);
             SeedBagContentsComponent.Builder builder = new SeedBagContentsComponent.Builder(contents);
             
-            for (int i = 0; i < SLOT_COUNT; i++) {
-                ItemStack item = builder.getStack(i);
-                if (!item.isEmpty()) {
-                    cursorStackReference.set(item.copy());
-                    builder.setStack(i, ItemStack.EMPTY);
-                    stack.set(LmodDataComponentTypes.SEEDBAG_CONTENTS, builder.build());
-                    playRemoveOneSound(player);
-                    return true;
-                }
+            ItemStack removed = builder.removeFirst();
+            if (!removed.isEmpty()) {
+                cursorStackReference.set(removed);
+                stack.set(LmodDataComponentTypes.SEEDBAG_CONTENTS, builder.build());
+                playRemoveOneSound(player);
+                return true;
+            }
+        } else if (clickType == ClickType.LEFT && !otherStack.isEmpty() && isSeedItem(otherStack)) {
+            // Add items to the bag
+            SeedBagContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.SEEDBAG_CONTENTS, SeedBagContentsComponent.EMPTY);
+            SeedBagContentsComponent.Builder builder = new SeedBagContentsComponent.Builder(contents);
+            
+            int added = builder.add(otherStack);
+            if (added > 0) {
+                otherStack.decrement(added);
+                stack.set(LmodDataComponentTypes.SEEDBAG_CONTENTS, builder.build());
+                playInsertSound(player);
+                return true;
+            } else {
+                playInsertFailSound(player);
             }
         }
         return false;
@@ -168,16 +145,10 @@ public class SeedBagItemCustom extends Item {
     public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type) {
         SeedBagContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.SEEDBAG_CONTENTS, SeedBagContentsComponent.EMPTY);
         int totalSeeds = contents.getTotalCount();
-        int usedSlots = 0;
+        int uniqueTypes = contents.items().size();
         
-        for (ItemStack item : contents.items()) {
-            if (!item.isEmpty()) {
-                usedSlots++;
-            }
-        }
-        
-        tooltip.add(Text.literal("Seeds: " + totalSeeds));
-        tooltip.add(Text.literal("Slots: " + usedSlots + "/" + SLOT_COUNT));
+        tooltip.add(Text.literal("Seeds: " + totalSeeds + "/" + MAX_CAPACITY));
+        tooltip.add(Text.literal("Types: " + uniqueTypes));
     }
     
     @Override
@@ -190,8 +161,7 @@ public class SeedBagItemCustom extends Item {
     public int getItemBarStep(ItemStack stack) {
         SeedBagContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.SEEDBAG_CONTENTS, SeedBagContentsComponent.EMPTY);
         int totalSeeds = contents.getTotalCount();
-        int maxCapacity = SLOT_COUNT * MAX_STACK_SIZE;
-        return Math.round(13.0F * (float)totalSeeds / (float)maxCapacity);
+        return Math.round(13.0F * (float)totalSeeds / (float)MAX_CAPACITY);
     }
     
     @Override
@@ -199,10 +169,30 @@ public class SeedBagItemCustom extends Item {
         return 0x00FF00; // Green color for seeds
     }
     
+    @Override
+    public Optional<TooltipData> getTooltipData(ItemStack stack) {
+        SeedBagContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.SEEDBAG_CONTENTS, SeedBagContentsComponent.EMPTY);
+        // Always show the tooltip, even if empty
+        List<ItemStack> displayItems = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            ItemStack item = contents.get(i);
+            displayItems.add(item);
+        }
+        return Optional.of(new SeedBagTooltipData(displayItems));
+    }
+    
     private static boolean isSeedItem(ItemStack stack) {
-        return stack.isIn(net.minecraft.registry.tag.TagKey.of(net.minecraft.registry.RegistryKeys.ITEM, net.minecraft.util.Identifier.of("c", "seeds")))
-                || stack.getItem() == Items.CARROT
-                || stack.getItem() == Items.POTATO;
+        Item item = stack.getItem();
+        // Check common vanilla seeds first
+        return item == Items.WHEAT_SEEDS
+                || item == Items.MELON_SEEDS
+                || item == Items.PUMPKIN_SEEDS
+                || item == Items.BEETROOT_SEEDS
+                || item == Items.TORCHFLOWER_SEEDS
+                || item == Items.PITCHER_POD
+                || item == Items.CARROT
+                || item == Items.POTATO
+                || stack.isIn(net.minecraft.registry.tag.TagKey.of(net.minecraft.registry.RegistryKeys.ITEM, net.minecraft.util.Identifier.of("c", "seeds")));
     }
     
     private static void playInsertSound(PlayerEntity player) {

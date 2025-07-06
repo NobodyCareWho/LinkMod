@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public record SeedBagContentsComponent(List<ItemStack> items) {
-    public static final SeedBagContentsComponent EMPTY = new SeedBagContentsComponent(DefaultedList.of());
+    public static final SeedBagContentsComponent EMPTY = new SeedBagContentsComponent(new ArrayList<>());
+    public static final int MAX_CAPACITY = 512; // 8 stacks worth of items
     
     public static final Codec<SeedBagContentsComponent> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
@@ -71,40 +72,84 @@ public record SeedBagContentsComponent(List<ItemStack> items) {
     }
     
     public static class Builder {
-        private final DefaultedList<ItemStack> items;
+        private final List<ItemStack> items;
         
         public Builder() {
-            this.items = DefaultedList.ofSize(8, ItemStack.EMPTY);
+            this.items = new ArrayList<>();
         }
         
         public Builder(SeedBagContentsComponent component) {
-            this.items = DefaultedList.ofSize(8, ItemStack.EMPTY);
-            for (int i = 0; i < component.items.size() && i < 8; i++) {
-                this.items.set(i, component.items.get(i).copy());
+            this.items = new ArrayList<>();
+            for (ItemStack stack : component.items) {
+                this.items.add(stack.copy());
             }
         }
         
-        public void setStack(int slot, ItemStack stack) {
-            if (slot >= 0 && slot < 8) {
-                this.items.set(slot, stack.copy());
+        public int add(ItemStack stack) {
+            if (stack.isEmpty()) return 0;
+            
+            int remainingCapacity = getRemainingCapacity();
+            int toAdd = Math.min(stack.getCount(), remainingCapacity);
+            if (toAdd <= 0) return 0;
+            
+            int added = 0;
+            
+            // First try to merge with existing stacks
+            for (ItemStack existing : items) {
+                if (ItemStack.areItemsAndComponentsEqual(existing, stack)) {
+                    int canAdd = Math.min(toAdd, existing.getMaxCount() - existing.getCount());
+                    if (canAdd > 0) {
+                        existing.increment(canAdd);
+                        added += canAdd;
+                        toAdd -= canAdd;
+                        if (toAdd <= 0) break;
+                    }
+                }
             }
+            
+            // Add as new stack if needed
+            if (toAdd > 0) {
+                ItemStack newStack = stack.copy();
+                newStack.setCount(toAdd);
+                items.add(newStack);
+                added += toAdd;
+            }
+            
+            return added;
         }
         
-        public ItemStack getStack(int slot) {
-            if (slot >= 0 && slot < 8) {
-                return this.items.get(slot);
+        public ItemStack removeFirst() {
+            if (items.isEmpty()) return ItemStack.EMPTY;
+            ItemStack stack = items.remove(0);
+            return stack;
+        }
+        
+        public ItemStack removeOne() {
+            if (items.isEmpty()) return ItemStack.EMPTY;
+            ItemStack stack = items.get(0);
+            ItemStack result = stack.split(1);
+            if (stack.isEmpty()) {
+                items.remove(0);
             }
-            return ItemStack.EMPTY;
+            return result;
         }
         
         public void clear() {
-            for (int i = 0; i < 8; i++) {
-                this.items.set(i, ItemStack.EMPTY);
-            }
+            items.clear();
+        }
+        
+        public int getTotalCount() {
+            return items.stream().mapToInt(ItemStack::getCount).sum();
+        }
+        
+        public int getRemainingCapacity() {
+            return MAX_CAPACITY - getTotalCount();
         }
         
         public SeedBagContentsComponent build() {
-            return new SeedBagContentsComponent(DefaultedList.copyOf(ItemStack.EMPTY, items.toArray(new ItemStack[0])));
+            // Remove any empty stacks
+            items.removeIf(ItemStack::isEmpty);
+            return new SeedBagContentsComponent(new ArrayList<>(items));
         }
     }
 }

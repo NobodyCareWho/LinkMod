@@ -151,7 +151,7 @@ public class SeedBagItem extends Item {
                     org.goober.linkmod.projectilestuff.SeedbagEntity projectile = new org.goober.linkmod.projectilestuff.SeedbagEntity(world, user, seedStack.copyWithCount(1));
                     
                     // add slight variance to the velocity
-                    float variance = 0.1F;
+                    float variance = 0.8F;
                     float pitchVariance = (world.getRandom().nextFloat() - 0.5F) * variance * 20;
                     float yawVariance = (world.getRandom().nextFloat() - 0.5F) * variance * 20;
                     

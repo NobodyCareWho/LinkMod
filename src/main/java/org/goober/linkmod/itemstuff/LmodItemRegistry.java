@@ -36,6 +36,15 @@ public class LmodItemRegistry {
                     .maxCount(1)
                     .component(net.minecraft.component.DataComponentTypes.BUNDLE_CONTENTS, net.minecraft.component.type.BundleContentsComponent.DEFAULT)
     );
+    
+    public static final Item SEEDBAG_CUSTOM = register(
+            "seed_bag_custom",
+            SeedBagItemCustom::new,
+            new Item.Settings()
+                    .maxCount(1)
+                    .component(LmodDataComponentTypes.SEEDBAG_CONTENTS, SeedBagContentsComponent.EMPTY)
+    );
+    
     public static void initialize() {
         // Force class loading
     }
