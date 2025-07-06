@@ -15,6 +15,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.block.CropBlock;
 import net.minecraft.server.network.EntityTrackerEntry;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
@@ -93,8 +94,8 @@ public class SeedbagEntity extends ThrownItemEntity {
             // Try to plant the crop
             if (block == Blocks.FARMLAND && world.getBlockState(pos.up()).isAir()) {
                 plantSeed(world, pos.up(), seedItem);
-            } else {
-                // try to find nearest empty farmland
+            } else if (world.getBlockState(pos).getBlock() instanceof CropBlock || world.getBlockState(pos.up()).getBlock() instanceof CropBlock) {
+                // Only search for nearby farmland if we hit a crop
                 BlockPos nearestFarmland = findNearestEmptyFarmland(world, pos, 3);
                 if (nearestFarmland != null) {
                     plantSeed(world, nearestFarmland.up(), seedItem);
@@ -105,6 +106,12 @@ public class SeedbagEntity extends ThrownItemEntity {
                     ItemEntity itemEntity = new ItemEntity(world, dropPos.x, dropPos.y, dropPos.z, dropStack);
                     world.spawnEntity(itemEntity);
                 }
+            } else {
+                // Hit something other than farmland or crops - just drop the seed
+                ItemStack dropStack = new ItemStack(seedItem, 1);
+                Vec3d dropPos = Vec3d.ofCenter(pos.up());
+                ItemEntity itemEntity = new ItemEntity(world, dropPos.x, dropPos.y, dropPos.z, dropStack);
+                world.spawnEntity(itemEntity);
             }
         }
 

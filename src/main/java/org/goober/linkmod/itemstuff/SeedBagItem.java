@@ -135,8 +135,37 @@ public class SeedBagItem extends Item {
     }
 
     public ActionResult use(World world, PlayerEntity user, Hand hand) {
-        user.setCurrentHand(hand);
-        return ActionResult.SUCCESS;
+        ItemStack stack = user.getStackInHand(hand);
+        BundleContentsComponent contents = stack.getOrDefault(DataComponentTypes.BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
+        
+        if (!world.isClient && !contents.isEmpty()) {
+            // get the first seed from the bundle
+            ItemStack seedStack = contents.get(0);
+            if (seedStack != null && !seedStack.isEmpty()) {
+                // create and shoot the projectile
+                org.goober.linkmod.projectilestuff.SeedbagEntity projectile = new org.goober.linkmod.projectilestuff.SeedbagEntity(world, user, seedStack.copy());
+                projectile.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 0.5F, 1.0F);
+                world.spawnEntity(projectile);
+                
+                // remove one seed from the bundle
+                BundleContentsComponent.Builder builder = new BundleContentsComponent.Builder(contents);
+                ItemStack remaining = seedStack.copy();
+                remaining.decrement(1);
+                builder.clear();
+                if (!remaining.isEmpty()) {
+                    builder.add(remaining);
+                }
+                // add remaining items
+                for (int i = 1; i < contents.size(); i++) {
+                    builder.add(contents.get(i));
+                }
+                stack.set(DataComponentTypes.BUNDLE_CONTENTS, builder.build());
+                user.incrementStat(Stats.USED.getOrCreateStat(this));
+                return ActionResult.SUCCESS;
+            }
+        }
+        
+        return ActionResult.PASS;
     }
 
     private void dropContentsOnUse(World world, PlayerEntity player, ItemStack stack) {
