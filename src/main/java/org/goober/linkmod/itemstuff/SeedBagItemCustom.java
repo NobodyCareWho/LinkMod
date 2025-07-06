@@ -166,7 +166,15 @@ public class SeedBagItemCustom extends Item {
     
     @Override
     public int getItemBarColor(ItemStack stack) {
-        return 0x45818e; // Green color for seeds
+        SeedBagContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.SEEDBAG_CONTENTS, SeedBagContentsComponent.EMPTY);
+        int totalSeeds = contents.getTotalCount();
+        
+        // Red when full (512 items), teal otherwise
+        if (totalSeeds >= MAX_CAPACITY) {
+            return 0xFF0000; // Red
+        } else {
+            return 0x45818e; // Teal
+        }
     }
     
     @Override
