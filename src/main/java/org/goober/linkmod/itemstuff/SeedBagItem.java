@@ -142,15 +142,27 @@ public class SeedBagItem extends Item {
             // get the first seed from the bundle
             ItemStack seedStack = contents.get(0);
             if (seedStack != null && !seedStack.isEmpty()) {
-                // create and shoot the projectile
-                org.goober.linkmod.projectilestuff.SeedbagEntity projectile = new org.goober.linkmod.projectilestuff.SeedbagEntity(world, user, seedStack.copy());
-                projectile.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 0.5F, 1.0F);
-                world.spawnEntity(projectile);
+                // calculate how many seeds to throw
+                int seedsToThrow = Math.min(seedStack.getCount(), 8);
                 
-                // remove one seed from the bundle
+                // throw multiple seeds with variance
+                for (int i = 0; i < seedsToThrow; i++) {
+                    // create and shoot the projectile
+                    org.goober.linkmod.projectilestuff.SeedbagEntity projectile = new org.goober.linkmod.projectilestuff.SeedbagEntity(world, user, seedStack.copyWithCount(1));
+                    
+                    // add slight variance to the velocity
+                    float variance = 0.1F;
+                    float pitchVariance = (world.getRandom().nextFloat() - 0.5F) * variance * 20;
+                    float yawVariance = (world.getRandom().nextFloat() - 0.5F) * variance * 20;
+                    
+                    projectile.setVelocity(user, user.getPitch() + pitchVariance, user.getYaw() + yawVariance, 0.0F, 1.5F, 1.0F);
+                    world.spawnEntity(projectile);
+                }
+                
+                // remove seeds from the bundle
                 BundleContentsComponent.Builder builder = new BundleContentsComponent.Builder(contents);
                 ItemStack remaining = seedStack.copy();
-                remaining.decrement(1);
+                remaining.decrement(seedsToThrow);
                 builder.clear();
                 if (!remaining.isEmpty()) {
                     builder.add(remaining);
