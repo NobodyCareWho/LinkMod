@@ -81,15 +81,20 @@ public class SeedbagEntity extends ThrownItemEntity {
             BlockState state = world.getBlockState(pos);
             Block block = state.getBlock();
             System.out.println("hit block" + block);
-            if (block==Blocks.FARMLAND){
+            if (block == Blocks.FARMLAND && world.getBlockState(pos.up()).isAir()) {
                 world.setBlockState(pos.up(), Blocks.WHEAT.getDefaultState());
-
-            }else{
-                    ItemStack stack = new ItemStack(Items.WHEAT_SEEDS, 1); // Replace with any item
-                    Vec3d dropPos = Vec3d.ofCenter(pos.up()); // Center of the block
-
+            } else {
+                // try to find nearest empty farmland
+                BlockPos nearestFarmland = findNearestEmptyFarmland(world, pos, 3);
+                if (nearestFarmland != null) {
+                    world.setBlockState(nearestFarmland.up(), Blocks.WHEAT.getDefaultState());
+                } else {
+                    // drop as item if no farmland found
+                    ItemStack stack = new ItemStack(Items.WHEAT_SEEDS, 1);
+                    Vec3d dropPos = Vec3d.ofCenter(pos.up());
                     ItemEntity itemEntity = new ItemEntity(world, dropPos.x, dropPos.y, dropPos.z, stack);
                     world.spawnEntity(itemEntity);
+                }
             }
 
 
@@ -103,5 +108,32 @@ public class SeedbagEntity extends ThrownItemEntity {
         }
 
 
+    }
+    
+    private BlockPos findNearestEmptyFarmland(World world, BlockPos center, int radius) {
+        BlockPos nearestPos = null;
+        double nearestDistance = Double.MAX_VALUE;
+        
+        // search in a radius to a cube in the center position
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -1; y <= 1; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    BlockPos checkPos = center.add(x, y, z);
+                    
+                    // check if it's farmland with air above
+                    if (world.getBlockState(checkPos).getBlock() == Blocks.FARMLAND 
+                        && world.getBlockState(checkPos.up()).isAir()) {
+                        
+                        double distance = checkPos.getSquaredDistance(center);
+                        if (distance < nearestDistance) {
+                            nearestDistance = distance;
+                            nearestPos = checkPos;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return nearestPos;
     }
   }

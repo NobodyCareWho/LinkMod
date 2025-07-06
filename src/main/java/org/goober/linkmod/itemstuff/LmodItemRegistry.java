@@ -31,8 +31,10 @@ public class LmodItemRegistry {
     // Define items here:
     public static final Item SEEDBAG = register(
             "seed_bag",
-            Item::new,
+            SeedBagItem::new,
             new Item.Settings()
+                    .maxCount(1)
+                    .component(net.minecraft.component.DataComponentTypes.BUNDLE_CONTENTS, net.minecraft.component.type.BundleContentsComponent.DEFAULT)
     );
     public static void initialize() {
         // Force class loading

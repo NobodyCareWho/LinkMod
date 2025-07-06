@@ -65,7 +65,7 @@ public class SeedBagItem extends Item {
             ItemStack itemStack = slot.getStack();
             BundleContentsComponent.Builder builder = new BundleContentsComponent.Builder(bundleContentsComponent);
             if (clickType == ClickType.LEFT && !itemStack.isEmpty()) {
-                if (builder.add(slot, player) > 0) {
+                if (isSeedItem(itemStack) && builder.add(slot, player) > 0) {
                     playInsertSound(player);
                 } else {
                     playInsertFailSound(player);
@@ -105,7 +105,7 @@ public class SeedBagItem extends Item {
             } else {
                 BundleContentsComponent.Builder builder = new BundleContentsComponent.Builder(bundleContentsComponent);
                 if (clickType == ClickType.LEFT && !otherStack.isEmpty()) {
-                    if (slot.canTakePartial(player) && builder.add(otherStack) > 0) {
+                    if (isSeedItem(otherStack) && slot.canTakePartial(player) && builder.add(otherStack) > 0) {
                         playInsertSound(player);
                     } else {
                         playInsertFailSound(player);
@@ -278,5 +278,17 @@ public class SeedBagItem extends Item {
             screenHandler.onContentChanged(user.getInventory());
         }
 
+    }
+    
+    private static boolean isSeedItem(ItemStack stack) {
+        Item item = stack.getItem();
+        // Check for common seed items
+        return item == Items.WHEAT_SEEDS ||
+               item == Items.MELON_SEEDS ||
+               item == Items.PUMPKIN_SEEDS ||
+               item == Items.BEETROOT_SEEDS ||
+               item == Items.TORCHFLOWER_SEEDS ||
+               item == Items.PITCHER_POD ||
+               stack.isIn(net.minecraft.registry.tag.ItemTags.VILLAGER_PLANTABLE_SEEDS);
     }
 }
