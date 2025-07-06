@@ -11,6 +11,7 @@ import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.BlockItem;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -40,13 +41,17 @@ public class SeedbagEntity extends ThrownItemEntity {
     public SeedbagEntity(World world, LivingEntity owner) {
         super(LmodEntityRegistry.SEEDBAG_ENTITY, owner, world, new ItemStack(LmodItemRegistry.SEEDBAG));
     }
+    
+    public SeedbagEntity(World world, LivingEntity owner, ItemStack seedStack) {
+        super(LmodEntityRegistry.SEEDBAG_ENTITY, owner, world, seedStack);
+    }
 
     public SeedbagEntity(World world, double x, double y, double z) {
         super(LmodEntityRegistry.SEEDBAG_ENTITY, x, y, z, world, new ItemStack(LmodItemRegistry.SEEDBAG));
     }
 
     protected Item getDefaultItem() {
-        return Items.WHEAT_SEEDS;
+        return Items.BEETROOT_SEEDS; // testing for dynamic items change this later
     }
 
     private ParticleEffect getParticleParameters() {
@@ -81,18 +86,23 @@ public class SeedbagEntity extends ThrownItemEntity {
             BlockState state = world.getBlockState(pos);
             Block block = state.getBlock();
             System.out.println("hit block" + block);
+            // we can use this to get the seed item
+            ItemStack seedStack = this.getStack();
+            Item seedItem = seedStack.isEmpty() ? Items.WHEAT_SEEDS : seedStack.getItem();
+            
+            // Try to plant the crop
             if (block == Blocks.FARMLAND && world.getBlockState(pos.up()).isAir()) {
-                world.setBlockState(pos.up(), Blocks.WHEAT.getDefaultState());
+                plantSeed(world, pos.up(), seedItem);
             } else {
                 // try to find nearest empty farmland
                 BlockPos nearestFarmland = findNearestEmptyFarmland(world, pos, 3);
                 if (nearestFarmland != null) {
-                    world.setBlockState(nearestFarmland.up(), Blocks.WHEAT.getDefaultState());
+                    plantSeed(world, nearestFarmland.up(), seedItem);
                 } else {
                     // drop as item if no farmland found
-                    ItemStack stack = new ItemStack(Items.WHEAT_SEEDS, 1);
+                    ItemStack dropStack = new ItemStack(seedItem, 1);
                     Vec3d dropPos = Vec3d.ofCenter(pos.up());
-                    ItemEntity itemEntity = new ItemEntity(world, dropPos.x, dropPos.y, dropPos.z, stack);
+                    ItemEntity itemEntity = new ItemEntity(world, dropPos.x, dropPos.y, dropPos.z, dropStack);
                     world.spawnEntity(itemEntity);
                 }
             }
@@ -131,5 +141,19 @@ public class SeedbagEntity extends ThrownItemEntity {
         }
         
         return nearestPos;
+    }
+    
+    private void plantSeed(World world, BlockPos pos, Item seedItem) {
+        // check if the seed item is a BlockItem
+        if (seedItem instanceof BlockItem blockItem) {
+            Block cropBlock = blockItem.getBlock();
+            world.setBlockState(pos, cropBlock.getDefaultState());
+        } else {
+            // fall back to drop item
+            ItemStack dropStack = new ItemStack(seedItem, 1);
+            Vec3d dropPos = Vec3d.ofCenter(pos);
+            ItemEntity itemEntity = new ItemEntity(world, dropPos.x, dropPos.y, dropPos.z, dropStack);
+            world.spawnEntity(itemEntity);
+        }
     }
   }
