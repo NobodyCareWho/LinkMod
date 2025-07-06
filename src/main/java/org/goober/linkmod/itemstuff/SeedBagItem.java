@@ -310,6 +310,9 @@ public class SeedBagItem extends Item {
     }
     
     private static boolean isSeedItem(ItemStack stack) {
-        return stack.isIn(net.minecraft.registry.tag.TagKey.of(net.minecraft.registry.RegistryKeys.ITEM, net.minecraft.util.Identifier.of("c", "seeds")));
+        Item item = stack.getItem();
+        return stack.isIn(net.minecraft.registry.tag.TagKey.of(net.minecraft.registry.RegistryKeys.ITEM, net.minecraft.util.Identifier.of("c", "seeds")))
+                || item == Items.CARROT
+                || item == Items.POTATO;
     }
 }
