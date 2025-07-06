@@ -172,13 +172,8 @@ public class SeedBagItemCustom extends Item {
     @Override
     public Optional<TooltipData> getTooltipData(ItemStack stack) {
         SeedBagContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.SEEDBAG_CONTENTS, SeedBagContentsComponent.EMPTY);
-        // Always show the tooltip, even if empty
-        List<ItemStack> displayItems = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            ItemStack item = contents.get(i);
-            displayItems.add(item);
-        }
-        return Optional.of(new SeedBagTooltipData(displayItems));
+        // Show all items in the seed bag
+        return Optional.of(new SeedBagTooltipData(new ArrayList<>(contents.items())));
     }
     
     private static boolean isSeedItem(ItemStack stack) {
