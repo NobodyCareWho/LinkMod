@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:lmod/root",
+  "criteria": {
+    "has_seed_bag": {
+      "conditions": {
+        "items": [
+          {
+            "items": "lmod:seed_bag_custom"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.lmod.get_seed_bag.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "lmod:seed_bag"
+    },
+    "title": {
+      "translate": "advancement.lmod.get_seed_bag.title"
+    }
+  },
+  "requirements": [
+    [
+      "has_seed_bag"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

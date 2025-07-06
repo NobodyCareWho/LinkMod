@@ -1,4 +1,8 @@
 {
   "item.lmod.seed_bag": "Seed Pouch",
-  "item.lmod.seed_bag_custom": "Seed Pouch"
+  "item.lmod.seed_bag_custom": "Seed Bag",
+  "advancement.lmod.root.title": "LinkMod",
+  "advancement.lmod.root.description": "Linkmerd",
+  "advancement.lmod.get_seed_bag.title": "Lazy Farmer",
+  "advancement.lmod.get_seed_bag.description": "Obtain a Seed Bag"
 }

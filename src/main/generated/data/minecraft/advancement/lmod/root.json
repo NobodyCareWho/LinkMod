@@ -1,0 +1,35 @@
+{
+  "criteria": {
+    "has_seeds": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:wheat_seeds"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "translate": "advancement.lmod.root.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "lmod:seed_bag"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancement.lmod.root.title"
+    }
+  },
+  "requirements": [
+    [
+      "has_seeds"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

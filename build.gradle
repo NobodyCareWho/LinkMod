@@ -21,6 +21,14 @@ loom {
     }
 }
 
+sourceSets {
+    main {
+        resources {
+            srcDirs += file("src/main/generated")
+        }
+    }
+}
+
 fabricApi {
     configureDataGeneration {
         client = true
