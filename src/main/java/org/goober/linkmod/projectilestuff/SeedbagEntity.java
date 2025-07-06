@@ -96,11 +96,7 @@ public class SeedbagEntity extends ThrownItemEntity {
                     world.spawnEntity(itemEntity);
                 }
             }
-
-
-
-
-        };
+        }
 
         if (!this.getWorld().isClient) {
             this.getWorld().sendEntityStatus(this, (byte)3);

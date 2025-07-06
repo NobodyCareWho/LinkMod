@@ -281,14 +281,6 @@ public class SeedBagItem extends Item {
     }
     
     private static boolean isSeedItem(ItemStack stack) {
-        Item item = stack.getItem();
-        // Check for common seed items
-        return item == Items.WHEAT_SEEDS ||
-               item == Items.MELON_SEEDS ||
-               item == Items.PUMPKIN_SEEDS ||
-               item == Items.BEETROOT_SEEDS ||
-               item == Items.TORCHFLOWER_SEEDS ||
-               item == Items.PITCHER_POD ||
-               stack.isIn(net.minecraft.registry.tag.ItemTags.VILLAGER_PLANTABLE_SEEDS);
+        return stack.isIn(net.minecraft.registry.tag.TagKey.of(net.minecraft.registry.RegistryKeys.ITEM, net.minecraft.util.Identifier.of("c", "seeds")));
     }
 }
