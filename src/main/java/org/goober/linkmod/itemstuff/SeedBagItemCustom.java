@@ -166,7 +166,7 @@ public class SeedBagItemCustom extends Item {
     
     @Override
     public int getItemBarColor(ItemStack stack) {
-        return 0x00FF00; // Green color for seeds
+        return 0x45818e; // Green color for seeds
     }
     
     @Override

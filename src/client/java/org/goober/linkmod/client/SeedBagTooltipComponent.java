@@ -3,18 +3,22 @@ package org.goober.linkmod.client;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.BundleContentsComponent;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.ColorHelper;
+import org.apache.commons.lang3.math.Fraction;
 import org.goober.linkmod.itemstuff.SeedBagTooltipData;
 
 public class SeedBagTooltipComponent implements TooltipComponent {
     private static final int SLOT_SIZE = 18;
     private static final int PADDING = 1;
-    private static final int MAX_COLUMNS = 8; // Maximum columns to show
+    private static final int MAX_COLUMNS = 4; // Maximum columns to show
     private final SeedBagTooltipData data;
     private final int itemCount;
     private final int columns;
     private final int rows;
-    
+
     public SeedBagTooltipComponent(SeedBagTooltipData data) {
         this.data = data;
         // Count non-empty items
@@ -23,7 +27,7 @@ public class SeedBagTooltipComponent implements TooltipComponent {
         this.columns = Math.min(Math.max(1, itemCount), MAX_COLUMNS);
         this.rows = Math.max(1, (itemCount + columns - 1) / columns);
     }
-    
+
     @Override
     public int getHeight(TextRenderer textRenderer) {
         return rows * SLOT_SIZE + (rows - 1) * PADDING + 4;
@@ -52,10 +56,10 @@ public class SeedBagTooltipComponent implements TooltipComponent {
                 // Draw slot background
                 context.fillGradient(slotX, slotY,
                         slotX + SLOT_SIZE, slotY + SLOT_SIZE,
-                        0x80000000, 0x80000000);
+                        0x805818e, 0x8038761d);
                 context.drawBorder(slotX, slotY,
                         SLOT_SIZE, SLOT_SIZE,
-                        0xFF8B8B8B);
+                        0xFF274e13);
 
                 // Find next non-empty item
                 ItemStack stack = ItemStack.EMPTY;
