@@ -4,5 +4,8 @@
   "advancement.lmod.root.title": "LinkMod",
   "advancement.lmod.root.description": "Linkmerd",
   "advancement.lmod.get_seed_bag.title": "Lazy Farmer",
-  "advancement.lmod.get_seed_bag.description": "Obtain a Seed Bag"
+  "advancement.lmod.get_seed_bag.description": "Obtain a Seed Bag",
+  "block.lmod.rounded_sandstone": "Embossed Sandstone",
+  "block.lmod.gilded_sandstone": "Gilded Sandstone",
+  "block.lmod.auros_bloom": "Auros Bloom"
 }

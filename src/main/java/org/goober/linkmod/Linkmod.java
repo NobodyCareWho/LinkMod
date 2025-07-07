@@ -1,6 +1,7 @@
 package org.goober.linkmod;
 
 import net.fabricmc.api.ModInitializer;
+import org.goober.linkmod.blockstuff.LmodBlockRegistry;
 import org.goober.linkmod.itemstuff.LmodItemRegistry;
 import org.goober.linkmod.itemstuff.LmodDataComponentTypes;
 import org.goober.linkmod.entitystuff.LmodEntityRegistry;
@@ -12,6 +13,7 @@ public class Linkmod implements ModInitializer {
         LmodDataComponentTypes.initialize();
         LmodItemRegistry.initialize();
         LmodEntityRegistry.initialize();
+        LmodBlockRegistry.initialize();
     }
 
 }

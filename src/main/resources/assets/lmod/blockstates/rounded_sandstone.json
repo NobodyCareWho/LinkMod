@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "": [{ "model": "lmod:block/rounded_sandstone" },
+        { "model": "lmod:block/rounded_sandstone", "y": 90 },
+        { "model": "lmod:block/rounded_sandstone", "y": 180 },
+        { "model": "lmod:block/rounded_sandstone", "y": 270 }
+  ]
+      }
+}

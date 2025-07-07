@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:stonecutting",
+  "": "",
+  "category": "building",
+  "ingredients": [
+    "minecraft:wheat",
+    "minecraft:bundle"
+  ],
+  "ingredient": [
+    "minecraft:cut_sandstone",
+    "sandstone"
+  ],
+  "result": {
+    "id": "lmod:rounded_sandstone"
+  }
+}
