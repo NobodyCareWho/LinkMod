@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "": "",
+  "category": "misc",
+  "ingredients": [
+    "lmod:auros_bloom"
+  ],
+  "result": {
+    "id": "minecraft:gold_nugget",
+    "count": 5
+  }
+}
