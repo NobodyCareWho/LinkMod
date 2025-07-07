@@ -15,7 +15,10 @@ import java.util.function.Function;
 public class LmodBlockRegistry {
     public static final Block ROUNDED_SANDSTONE = register("rounded_sandstone", Block::new, Block.Settings.create().strength(4.0f));
     public static final Block GILDED_SANDSTONE = register("gilded_sandstone", Block::new, Block.Settings.create().strength(4.0f));
-    public static final Block AUROS_BLOOM = register("auros_bloom", Block::new, AbstractBlock.Settings.copy(Blocks.POPPY));
+    public static final Block AUROS_BLOOM = register("auros_bloom", 
+            settings -> new FlowerBlock(StatusEffects.SATURATION, 0.1F, settings),
+            AbstractBlock.Settings.copy(Blocks.POPPY));
+    // Flower constructors need effect parameters for some reason? That's what the saturation effect is.
     private static Block register(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
         final Identifier identifier = Identifier.of("lmod", path);
         final RegistryKey<Block> registryKey = RegistryKey.of(RegistryKeys.BLOCK, identifier);
