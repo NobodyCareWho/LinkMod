@@ -86,7 +86,7 @@ public class SeedbagEntity extends ThrownItemEntity {
             World world = this.getWorld();
             BlockState state = world.getBlockState(pos);
             Block block = state.getBlock();
-            System.out.println("hit block" + block);
+       //     System.out.println("hit block" + block);
             // we can use this to get the seed item
             ItemStack seedStack = this.getStack();
             Item seedItem = seedStack.isEmpty() ? Items.WHEAT_SEEDS : seedStack.getItem();

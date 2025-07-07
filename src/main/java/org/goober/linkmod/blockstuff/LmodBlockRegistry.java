@@ -13,8 +13,8 @@ import net.minecraft.util.Identifier;
 import java.util.function.Function;
 
 public class LmodBlockRegistry {
-    public static final Block ROUNDED_SANDSTONE = register("rounded_sandstone", Block::new, Block.Settings.create().strength(4.0f));
-    public static final Block GILDED_SANDSTONE = register("gilded_sandstone", Block::new, Block.Settings.create().strength(4.0f));
+    public static final Block ROUNDED_SANDSTONE = register("rounded_sandstone", Block::new, Block.Settings.create().strength(4.0f).requiresTool());
+    public static final Block GILDED_SANDSTONE = register("gilded_sandstone", Block::new, Block.Settings.create().strength(4.0f).requiresTool());
     public static final Block AUROS_BLOOM = register("auros_bloom", 
             settings -> new FlowerBlock(StatusEffects.SATURATION, 0.1F, settings),
             AbstractBlock.Settings.copy(Blocks.POPPY));
