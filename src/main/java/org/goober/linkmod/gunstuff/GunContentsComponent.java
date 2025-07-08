@@ -12,7 +12,6 @@ import java.util.List;
 
 public record GunContentsComponent(List<ItemStack> items) {
     public static final GunContentsComponent EMPTY = new GunContentsComponent(new ArrayList<>());
-    public static final int MAX_CAPACITY = 6; // 6 items
     
     public static final Codec<GunContentsComponent> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
@@ -84,10 +83,10 @@ public record GunContentsComponent(List<ItemStack> items) {
             }
         }
         
-        public int add(ItemStack stack) {
+        public int add(ItemStack stack, int maxCapacity) {
             if (stack.isEmpty()) return 0;
             
-            int remainingCapacity = getRemainingCapacity();
+            int remainingCapacity = maxCapacity - getTotalCount();
             int toAdd = Math.min(stack.getCount(), remainingCapacity);
             if (toAdd <= 0) return 0;
             
@@ -117,6 +116,11 @@ public record GunContentsComponent(List<ItemStack> items) {
             return added;
         }
         
+        // overload for backwards compatibility
+        public int add(ItemStack stack) {
+            return add(stack, Integer.MAX_VALUE);
+        }
+        
         public ItemStack removeFirst() {
             if (items.isEmpty()) return ItemStack.EMPTY;
             ItemStack stack = items.remove(0);
@@ -141,8 +145,8 @@ public record GunContentsComponent(List<ItemStack> items) {
             return items.stream().mapToInt(ItemStack::getCount).sum();
         }
         
-        public int getRemainingCapacity() {
-            return MAX_CAPACITY - getTotalCount();
+        public int getRemainingCapacity(int maxCapacity) {
+            return maxCapacity - getTotalCount();
         }
         
         public GunContentsComponent build() {
