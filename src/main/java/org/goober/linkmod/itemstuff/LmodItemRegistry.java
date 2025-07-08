@@ -7,6 +7,9 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import org.goober.linkmod.Linkmod;
+import org.goober.linkmod.gunstuff.items.BulletItem;
+import org.goober.linkmod.gunstuff.items.GunItem;
+import org.goober.linkmod.gunstuff.GunContentsComponent;
 
 import java.util.function.Function;
 
@@ -45,12 +48,29 @@ public class LmodItemRegistry {
                     .component(LmodDataComponentTypes.SEEDBAG_CONTENTS, SeedBagContentsComponent.EMPTY)
     );
 
-    public static final Item PISTOL = register(
-            "pistol",
-            SeedBagItem::new,
+    // guns
+    public static final Item RIFLE = register(
+            "rifle",
+            settings -> new GunItem(settings, "rifle"),
             new Item.Settings()
                     .maxCount(1)
-                    .component(net.minecraft.component.DataComponentTypes.BUNDLE_CONTENTS, net.minecraft.component.type.BundleContentsComponent.DEFAULT)
+                    .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
+    );
+    
+    public static final Item SHOTGUN = register(
+            "shotgun",
+            settings -> new GunItem(settings, "shotgun"),
+            new Item.Settings()
+                    .maxCount(1)
+                    .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
+    );
+    
+    // bullets
+    public static final Item BULLET = register(
+            "bullet",
+            settings -> new BulletItem(settings, "standard"),
+            new Item.Settings()
+                    .maxCount(64)
     );
     
     public static void initialize() {

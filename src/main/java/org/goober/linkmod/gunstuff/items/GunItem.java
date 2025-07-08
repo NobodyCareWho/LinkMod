@@ -1,369 +1,218 @@
 package org.goober.linkmod.gunstuff.items;
 
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.BundleContentsComponent;
-import net.minecraft.component.type.TooltipDisplayComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsage;
-import net.minecraft.item.Items;
-import net.minecraft.item.consume.UseAction;
-import net.minecraft.item.tooltip.BundleTooltipData;
 import net.minecraft.item.tooltip.TooltipData;
-import net.minecraft.screen.ScreenHandler;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.math.Fraction;
-import org.goober.linkmod.itemstuff.LmodItemRegistry;
+import org.goober.linkmod.gunstuff.GunContentsComponent;
+import org.goober.linkmod.gunstuff.GunTooltipData;
+import org.goober.linkmod.itemstuff.LmodDataComponentTypes;
+import org.goober.linkmod.projectilestuff.BulletEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
-
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.BundleContentsComponent;
-import net.minecraft.component.type.TooltipDisplayComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.StackReference;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsage;
-import net.minecraft.item.Items;
-import net.minecraft.item.consume.UseAction;
-import net.minecraft.item.tooltip.BundleTooltipData;
-import net.minecraft.item.tooltip.TooltipData;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ClickType;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
-import org.apache.commons.lang3.math.Fraction;
 
 public class GunItem extends Item {
-    //
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-     public static final int TOOLTIP_STACKS_COLUMNS = 4;
-        public static final int TOOLTIP_STACKS_ROWS = 3;
-        public static final int MAX_TOOLTIP_STACKS_SHOWN = 12;
-        public static final int MAX_TOOLTIP_STACKS_SHOWN_WHEN_TOO_MANY_TYPES = 11;
-        private static final int FULL_ITEM_BAR_COLOR = ColorHelper.fromFloats(1.0F, 1.0F, 0.33F, 0.33F);
-        private static final int ITEM_BAR_COLOR = ColorHelper.fromFloats(1.0F, 0.44F, 0.53F, 1.0F);
-        private static final int field_54109 = 10;
-        private static final int field_54110 = 2;
-        private static final int MAX_USE_TIME = 200;
-
-        public GunItem(Item.Settings settings) {
-            super(settings);
-        }
-
-        public static float getAmountFilled(ItemStack stack) {
-            BundleContentsComponent bundleContentsComponent = (BundleContentsComponent)stack.getOrDefault(DataComponentTypes.BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
-            return bundleContentsComponent.getOccupancy().floatValue();
-        }
-
-        public boolean onStackClicked(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player) {
-            BundleContentsComponent bundleContentsComponent = (BundleContentsComponent)stack.get(DataComponentTypes.BUNDLE_CONTENTS);
-            if (bundleContentsComponent == null) {
-                return false;
-            } else {
-                ItemStack itemStack = slot.getStack();
-                BundleContentsComponent.Builder builder = new BundleContentsComponent.Builder(bundleContentsComponent);
-                if (clickType == ClickType.LEFT && !itemStack.isEmpty()) {
-                    if (isSeedItem(itemStack) && builder.add(slot, player) > 0) {
-                        playInsertSound(player);
-                    } else {
-                        playInsertFailSound(player);
-                    }
-
-                    stack.set(DataComponentTypes.BUNDLE_CONTENTS, builder.build());
-                    this.onContentChanged(player);
-                    return true;
-                } else if (clickType == ClickType.RIGHT && itemStack.isEmpty()) {
-                    ItemStack itemStack2 = builder.removeSelected();
-                    if (itemStack2 != null) {
-                        ItemStack itemStack3 = slot.insertStack(itemStack2);
-                        if (itemStack3.getCount() > 0) {
-                            builder.add(itemStack3);
-                        } else {
-                            playRemoveOneSound(player);
-                        }
-                    }
-
-                    stack.set(DataComponentTypes.BUNDLE_CONTENTS, builder.build());
-                    this.onContentChanged(player);
-                    return true;
-                } else {
-                    return false;
+    private static final int MAX_CAPACITY = 6; // 6 bullets
+    private final String gunTypeId;
+    
+    public GunItem(Settings settings, String gunTypeId) {
+        super(settings);
+        this.gunTypeId = gunTypeId;
+    }
+    
+    @Override
+    public ActionResult use(World world, PlayerEntity user, Hand hand) {
+        ItemStack stack = user.getStackInHand(hand);
+        GunContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY);
+        
+        System.out.println("Gun use called - isEmpty: " + contents.isEmpty());
+        
+        if (!world.isClient && !contents.isEmpty()) {
+            try {
+                // check cooldown
+                if (user.getItemCooldownManager().isCoolingDown(stack)) {
+                    return ActionResult.FAIL;
                 }
-            }
-        }
-
-        public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
-            if (clickType == ClickType.LEFT && otherStack.isEmpty()) {
-                setSelectedStackIndex(stack, -1);
-                return false;
-            } else {
-                BundleContentsComponent bundleContentsComponent = (BundleContentsComponent)stack.get(DataComponentTypes.BUNDLE_CONTENTS);
-                if (bundleContentsComponent == null) {
-                    return false;
-                } else {
-                    BundleContentsComponent.Builder builder = new BundleContentsComponent.Builder(bundleContentsComponent);
-                    if (clickType == ClickType.LEFT && !otherStack.isEmpty()) {
-                        if (isSeedItem(otherStack) && slot.canTakePartial(player) && builder.add(otherStack) > 0) {
-                            playInsertSound(player);
-                        } else {
-                            playInsertFailSound(player);
-                        }
-
-                        stack.set(DataComponentTypes.BUNDLE_CONTENTS, builder.build());
-                        this.onContentChanged(player);
-                        return true;
-                    } else if (clickType == ClickType.RIGHT && otherStack.isEmpty()) {
-                        if (slot.canTakePartial(player)) {
-                            ItemStack itemStack = builder.removeSelected();
-                            if (itemStack != null) {
-                                playRemoveOneSound(player);
-                                cursorStackReference.set(itemStack);
-                            }
-                        }
-
-                        stack.set(DataComponentTypes.BUNDLE_CONTENTS, builder.build());
-                        this.onContentChanged(player);
-                        return true;
-                    } else {
-                        setSelectedStackIndex(stack, -1);
-                        return false;
+                
+                // get the first bullet
+                GunContentsComponent.Builder builder = new GunContentsComponent.Builder(contents);
+                ItemStack bulletStack = builder.removeOne();
+                
+                if (!bulletStack.isEmpty()) {
+                    System.out.println("Shooting bullet: " + bulletStack);
+                    Guns.GunType gunType = Guns.get(gunTypeId);
+                    
+                    // shoot multiple bullets for shotgun
+                    for (int i = 0; i < gunType.pelletsPerShot(); i++) {
+                        // create and shoot the bullet
+                        BulletEntity bullet = new BulletEntity(world, user, bulletStack);
+                        bullet.setDamage(gunType.damage());
+                        
+                        // set velocity with spread based on gun type
+                        float spread = gunType.pelletsPerShot() > 1 ? 6.0F : 1.0F;
+                        bullet.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, gunType.velocity(), spread);
+                        world.spawnEntity(bullet);
+                        System.out.println("Spawned bullet entity");
                     }
-                }
-            }
-        }
-
-        public ActionResult use(World world, PlayerEntity user, Hand hand) {
-            ItemStack stack = user.getStackInHand(hand);
-            BundleContentsComponent contents = stack.getOrDefault(DataComponentTypes.BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
-
-            if (!world.isClient && !contents.isEmpty()) {
-                // get the first BULLET from the bundle
-                ItemStack seedStack = contents.get(0);
-                if (seedStack != null && !seedStack.isEmpty()) {
-                    // calculate how many BULLETS to SHOOT
-                    int seedsToThrow = Math.min(seedStack.getCount(), 8);
-
-                    // SHOOT multiple BULLETS with variance
-                    for (int i = 0; i < seedsToThrow; i++) {
-                        // create and shoot the projectile
-                        org.goober.linkmod.projectilestuff.SeedbagEntity projectile = new org.goober.linkmod.projectilestuff.SeedbagEntity(world, user, seedStack.copyWithCount(1));
-
-                        // add slight variance to the velocity
-                        float variance = 0.8F;
-                        float pitchVariance = (world.getRandom().nextFloat() - 0.5F) * variance * 20;
-                        float yawVariance = (world.getRandom().nextFloat() - 0.5F) * variance * 20;
-
-                        projectile.setVelocity(user, user.getPitch() + pitchVariance, user.getYaw() + yawVariance, 0.0F, 1.5F, 1.0F);
-                        world.spawnEntity(projectile);
-                    }
-
-                    // remove BULLETS from the bundle
-                    BundleContentsComponent.Builder builder = new BundleContentsComponent.Builder(contents);
-                    ItemStack remaining = seedStack.copy();
-                    remaining.decrement(seedsToThrow);
-                    builder.clear();
-                    if (!remaining.isEmpty()) {
-                        builder.add(remaining);
-                    }
-                    // add remaining items
-                    for (int i = 1; i < contents.size(); i++) {
-                        builder.add(contents.get(i));
-                    }
-                    stack.set(DataComponentTypes.BUNDLE_CONTENTS, builder.build());
+                    
+                    // update gun contents
+                    stack.set(LmodDataComponentTypes.GUN_CONTENTS, builder.build());
+                    
+                    // play gun sound
+                    world.playSound(null, user.getX(), user.getY(), user.getZ(), 
+                        SoundEvents.ENTITY_FIREWORK_ROCKET_BLAST, 
+                        SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
+                    
+                    // add cooldown
+                    user.getItemCooldownManager().set(stack, gunType.fireRate());
+                    
                     user.incrementStat(Stats.USED.getOrCreateStat(this));
                     return ActionResult.SUCCESS;
                 }
-            }
-
-            return ActionResult.PASS;
-        }
-
-        private void dropContentsOnUse(World world, PlayerEntity player, ItemStack stack) {
-            if (this.dropFirstBundledStack(stack, player)) {
-                playDropContentsSound(world, player);
-                player.incrementStat(Stats.USED.getOrCreateStat(this));
-            }
-
-        }
-
-        public boolean isItemBarVisible(ItemStack stack) {
-            BundleContentsComponent bundleContentsComponent = (BundleContentsComponent)stack.getOrDefault(DataComponentTypes.BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
-            return bundleContentsComponent.getOccupancy().compareTo(Fraction.ZERO) > 0;
-        }
-
-        public int getItemBarStep(ItemStack stack) {
-            BundleContentsComponent bundleContentsComponent = (BundleContentsComponent)stack.getOrDefault(DataComponentTypes.BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
-            return Math.min(1 + MathHelper.multiplyFraction(bundleContentsComponent.getOccupancy(), 12), 13);
-        }
-
-        public int getItemBarColor(ItemStack stack) {
-            BundleContentsComponent bundleContentsComponent = (BundleContentsComponent)stack.getOrDefault(DataComponentTypes.BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
-            return bundleContentsComponent.getOccupancy().compareTo(Fraction.ONE) >= 0 ? FULL_ITEM_BAR_COLOR : ITEM_BAR_COLOR;
-        }
-
-        public static void setSelectedStackIndex(ItemStack stack, int selectedStackIndex) {
-            BundleContentsComponent bundleContentsComponent = (BundleContentsComponent)stack.get(DataComponentTypes.BUNDLE_CONTENTS);
-            if (bundleContentsComponent != null) {
-                BundleContentsComponent.Builder builder = new BundleContentsComponent.Builder(bundleContentsComponent);
-                builder.setSelectedStackIndex(selectedStackIndex);
-                stack.set(DataComponentTypes.BUNDLE_CONTENTS, builder.build());
+            } catch (Exception e) {
+                System.err.println("Error shooting gun: " + e.getMessage());
+                e.printStackTrace();
             }
         }
-
-        public static boolean hasSelectedStack(ItemStack stack) {
-            BundleContentsComponent bundleContentsComponent = (BundleContentsComponent)stack.get(DataComponentTypes.BUNDLE_CONTENTS);
-            return bundleContentsComponent != null && bundleContentsComponent.getSelectedStackIndex() != -1;
-        }
-
-        public static int getSelectedStackIndex(ItemStack stack) {
-            BundleContentsComponent bundleContentsComponent = (BundleContentsComponent)stack.getOrDefault(DataComponentTypes.BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
-            return bundleContentsComponent.getSelectedStackIndex();
-        }
-
-        public static ItemStack getSelectedStack(ItemStack stack) {
-            BundleContentsComponent bundleContentsComponent = (BundleContentsComponent)stack.get(DataComponentTypes.BUNDLE_CONTENTS);
-            return bundleContentsComponent != null && bundleContentsComponent.getSelectedStackIndex() != -1 ? bundleContentsComponent.get(bundleContentsComponent.getSelectedStackIndex()) : ItemStack.EMPTY;
-        }
-
-        public static int getNumberOfStacksShown(ItemStack stack) {
-            BundleContentsComponent bundleContentsComponent = (BundleContentsComponent)stack.getOrDefault(DataComponentTypes.BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
-            return bundleContentsComponent.getNumberOfStacksShown();
-        }
-
-        private boolean dropFirstBundledStack(ItemStack stack, PlayerEntity player) {
-            BundleContentsComponent bundleContentsComponent = (BundleContentsComponent)stack.get(DataComponentTypes.BUNDLE_CONTENTS);
-            if (bundleContentsComponent != null && !bundleContentsComponent.isEmpty()) {
-                Optional<ItemStack> optional = popFirstBundledStack(stack, player, bundleContentsComponent);
-                if (optional.isPresent()) {
-                    player.dropItem((ItemStack)optional.get(), true);
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        }
-
-        private static Optional<ItemStack> popFirstBundledStack(ItemStack stack, PlayerEntity player, BundleContentsComponent contents) {
-            BundleContentsComponent.Builder builder = new BundleContentsComponent.Builder(contents);
-            ItemStack itemStack = builder.removeSelected();
-            if (itemStack != null) {
-                playRemoveOneSound(player);
-                stack.set(DataComponentTypes.BUNDLE_CONTENTS, builder.build());
-                return Optional.of(itemStack);
-            } else {
-                return Optional.empty();
-            }
-        }
-
-        public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-            if (user instanceof PlayerEntity playerEntity) {
-                int i = this.getMaxUseTime(stack, user);
-                boolean bl = remainingUseTicks == i;
-                if (bl || remainingUseTicks < i - 10 && remainingUseTicks % 2 == 0) {
-                    this.dropContentsOnUse(world, playerEntity, stack);
-                }
-            }
-
-        }
-
-        public int getMaxUseTime(ItemStack stack, LivingEntity user) {
-            return 200;
-        }
-
-        public UseAction getUseAction(ItemStack stack) {
-            return UseAction.BUNDLE;
-        }
-
-        public Optional<TooltipData> getTooltipData(ItemStack stack) {
-            TooltipDisplayComponent tooltipDisplayComponent = (TooltipDisplayComponent)stack.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT);
-            return !tooltipDisplayComponent.shouldDisplay(DataComponentTypes.BUNDLE_CONTENTS) ? Optional.empty() : Optional.ofNullable((BundleContentsComponent)stack.get(DataComponentTypes.BUNDLE_CONTENTS)).map(BundleTooltipData::new);
-        }
-
-        public void onItemEntityDestroyed(ItemEntity entity) {
-            BundleContentsComponent bundleContentsComponent = (BundleContentsComponent)entity.getStack().get(DataComponentTypes.BUNDLE_CONTENTS);
-            if (bundleContentsComponent != null) {
-                entity.getStack().set(DataComponentTypes.BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT);
-                ItemUsage.spawnItemContents(entity, bundleContentsComponent.iterateCopy());
-            }
-        }
-
-        public static List<org.goober.linkmod.gunstuff.items.GunItem> getBundles() {
-            return Stream.of(LmodItemRegistry.PISTOL).map((item) -> {
-                return (org.goober.linkmod.gunstuff.items.GunItem)item;
-            }).toList();
-        }
-
-        private static void playRemoveOneSound(Entity entity) {
-            entity.playSound(SoundEvents.ITEM_BUNDLE_REMOVE_ONE, 0.8F, 0.8F + entity.getWorld().getRandom().nextFloat() * 0.4F);
-        }
-
-        private static void playInsertSound(Entity entity) {
-            entity.playSound(SoundEvents.ITEM_BUNDLE_INSERT, 0.8F, 0.8F + entity.getWorld().getRandom().nextFloat() * 0.4F);
-        }
-
-        private static void playInsertFailSound(Entity entity) {
-            entity.playSound(SoundEvents.ITEM_BUNDLE_INSERT_FAIL, 1.0F, 1.0F);
-        }
-
-        private static void playDropContentsSound(World world, Entity entity) {
-            world.playSound((Entity)null, entity.getBlockPos(), SoundEvents.ITEM_BUNDLE_DROP_CONTENTS, SoundCategory.PLAYERS, 0.8F, 0.8F + entity.getWorld().getRandom().nextFloat() * 0.4F);
-        }
-
-        private void onContentChanged(PlayerEntity user) {
-            ScreenHandler screenHandler = user.currentScreenHandler;
-            if (screenHandler != null) {
-                screenHandler.onContentChanged(user.getInventory());
-            }
-
-        }
-
-        private static boolean isSeedItem(ItemStack stack) {
-            Item item = stack.getItem();
-            return stack.isIn(net.minecraft.registry.tag.TagKey.of(net.minecraft.registry.RegistryKeys.ITEM, net.minecraft.util.Identifier.of("c", "seeds")))
-                    || item == Items.CARROT
-                    || item == Items.POTATO;
-        }
-
+        
+        return ActionResult.PASS;
+    }
+    
     @Override
-    public boolean allowComponentsUpdateAnimation(PlayerEntity player, Hand hand, ItemStack oldStack, ItemStack newStack) {
-        return super.allowComponentsUpdateAnimation(player, hand, oldStack, newStack);
+    public boolean onStackClicked(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player) {
+        if (clickType != ClickType.LEFT) {
+            return false;
+        }
+        
+        ItemStack otherStack = slot.getStack();
+        if (otherStack.isEmpty() || !isBulletItem(otherStack)) {
+            return false;
+        }
+        
+        GunContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY);
+        GunContentsComponent.Builder builder = new GunContentsComponent.Builder(contents);
+        
+        int added = builder.add(otherStack);
+        if (added > 0) {
+            otherStack.decrement(added);
+            stack.set(LmodDataComponentTypes.GUN_CONTENTS, builder.build());
+            playInsertSound(player);
+            return true;
+        } else {
+            playInsertFailSound(player);
+            return false;
+        }
+    }
+    
+    @Override
+    public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
+        if (clickType == ClickType.RIGHT && otherStack.isEmpty() && slot.canTakePartial(player)) {
+            // remove full stack from the gun
+            GunContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY);
+            GunContentsComponent.Builder builder = new GunContentsComponent.Builder(contents);
+            
+            ItemStack removed = builder.removeFirst();
+            if (!removed.isEmpty()) {
+                cursorStackReference.set(removed);
+                stack.set(LmodDataComponentTypes.GUN_CONTENTS, builder.build());
+                playRemoveOneSound(player);
+                return true;
+            }
+        } else if (clickType == ClickType.LEFT && !otherStack.isEmpty() && isBulletItem(otherStack)) {
+            // add bullets to the gun
+            GunContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY);
+            GunContentsComponent.Builder builder = new GunContentsComponent.Builder(contents);
+            
+            int added = builder.add(otherStack);
+            if (added > 0) {
+                otherStack.decrement(added);
+                stack.set(LmodDataComponentTypes.GUN_CONTENTS, builder.build());
+                playInsertSound(player);
+                return true;
+            } else {
+                playInsertFailSound(player);
+            }
+        }
+        return false;
+    }
+    
+    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type) {
+        GunContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY);
+        int totalBullets = contents.getTotalCount();
+        
+        Guns.GunType gunType = Guns.get(gunTypeId);
+        tooltip.add(Text.literal("Gun Type: " + gunType.displayName()));
+        tooltip.add(Text.literal("Damage: " + gunType.damage()));
+        tooltip.add(Text.literal("Fire Rate: " + (60.0f / gunType.fireRate()) + " shots/sec"));
+        tooltip.add(Text.literal("Ammo: " + totalBullets + "/" + MAX_CAPACITY));
+    }
+    
+    @Override
+    public boolean isItemBarVisible(ItemStack stack) {
+        return true; // always show ammo bar
+    }
+    
+    @Override
+    public int getItemBarStep(ItemStack stack) {
+        GunContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY);
+        int totalBullets = contents.getTotalCount();
+        return Math.round(13.0F * (float)totalBullets / (float)MAX_CAPACITY);
+    }
+    
+    @Override
+    public int getItemBarColor(ItemStack stack) {
+        GunContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY);
+        int totalBullets = contents.getTotalCount();
+        
+        // red when empty, yellow when low, green when full
+        if (totalBullets == 0) {
+            return 0xFF0000; // red
+        } else {
+            return 0x00FF00; // green
+        }
+    }
+    
+    @Override
+    public Optional<TooltipData> getTooltipData(ItemStack stack) {
+        GunContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY);
+        // show all bullets in the gun
+        return Optional.of(new GunTooltipData(new ArrayList<>(contents.items())));
+    }
+    
+    private static boolean isBulletItem(ItemStack stack) {
+        // check if item is a bullet
+        return stack.getItem() instanceof BulletItem;
+    }
+    
+    public String getGunTypeId() {
+        return gunTypeId;
+    }
+    
+    private static void playInsertSound(PlayerEntity player) {
+        player.playSound(SoundEvents.ITEM_BUNDLE_INSERT, 0.8F, 0.8F + player.getWorld().getRandom().nextFloat() * 0.4F);
+    }
+    
+    private static void playInsertFailSound(PlayerEntity player) {
+        player.playSound(SoundEvents.ITEM_BUNDLE_INSERT_FAIL, 1.0F, 1.0F);
+    }
+    
+    private static void playRemoveOneSound(PlayerEntity player) {
+        player.playSound(SoundEvents.ITEM_BUNDLE_REMOVE_ONE, 0.8F, 0.8F + player.getWorld().getRandom().nextFloat() * 0.4F);
     }
 }

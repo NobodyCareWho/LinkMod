@@ -11,17 +11,22 @@ import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import org.goober.linkmod.blockstuff.LmodBlockRegistry;
 import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.itemstuff.SeedBagTooltipData;
+import org.goober.linkmod.gunstuff.GunTooltipData;
 
 public class LinkmodClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        // Register entity renderer
+        // Register entity renderers
         EntityRendererRegistry.register(LmodEntityRegistry.SEEDBAG_ENTITY, FlyingItemEntityRenderer::new);
-        // Register tooltip component
+        // register empty renderer for bullet entity
+        EntityRendererRegistry.register(LmodEntityRegistry.BULLET, EmptyEntityRenderer::new);
+        // Register tooltip components
         TooltipComponentCallback.EVENT.register(data -> {
             if (data instanceof SeedBagTooltipData seedBagData) {
                 return new SeedBagTooltipComponent(seedBagData);
+            } else if (data instanceof GunTooltipData gunData) {
+                return new GunTooltipComponent(gunData);
             }
             return null;
         });
