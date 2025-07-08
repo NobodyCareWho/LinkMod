@@ -1,6 +1,13 @@
 {
   "item.lmod.seed_bag": "Seed Pouch",
   "item.lmod.seed_bag_custom": "Seed Bag",
+  "item.lmod.shotgun": "Shotgun",
+  "item.lmod.rifle": "Rifle",
+  "item.lmod.revolver": "Revolver",
+  "item.lmod.bullet": "Bullet",
+  "item.lmod.buckshot": "Buckshot",
+  "item.lmod.slug": "Slug",
+  "item.lmod.breezeshot": "Breezeshot",
   "advancement.lmod.root.title": "LinkMod",
   "advancement.lmod.root.description": "Linkmerd",
   "advancement.lmod.get_seed_bag.title": "Lazy Farmer",
