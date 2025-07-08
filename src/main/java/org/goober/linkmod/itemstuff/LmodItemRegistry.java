@@ -44,6 +44,14 @@ public class LmodItemRegistry {
                     .maxCount(1)
                     .component(LmodDataComponentTypes.SEEDBAG_CONTENTS, SeedBagContentsComponent.EMPTY)
     );
+
+    public static final Item PISTOL = register(
+            "pistol",
+            SeedBagItem::new,
+            new Item.Settings()
+                    .maxCount(1)
+                    .component(net.minecraft.component.DataComponentTypes.BUNDLE_CONTENTS, net.minecraft.component.type.BundleContentsComponent.DEFAULT)
+    );
     
     public static void initialize() {
         // Force class loading
