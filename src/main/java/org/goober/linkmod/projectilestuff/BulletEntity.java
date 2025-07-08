@@ -114,6 +114,11 @@ public class BulletEntity extends PersistentProjectileEntity {
         DamageSource damageSource = this.getDamageSources().arrow(this, this.getOwner());
         if (this.getWorld() instanceof ServerWorld serverWorld) {
             entity.damage(serverWorld, damageSource, finalDamage);
+            // remove immunity frames so shotgun pellets can all hit
+            if (entity instanceof LivingEntity livingEntity) {
+                livingEntity.hurtTime = 0;
+                livingEntity.timeUntilRegen = 0;
+            }
         }
         
         // add impact particles
