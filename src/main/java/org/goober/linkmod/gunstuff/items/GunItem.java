@@ -64,7 +64,7 @@ public class GunItem extends Item {
                     ItemStack item = items.get(i);
                     if (item.getItem() instanceof BulletItem bulletItem) {
                         // check if this bullet type is compatible with this gun
-                        if (gunType.acceptsAmmo(bulletItem.getBulletTypeId())) {
+                        if (gunType.acceptsBullet(bulletItem)) {
                             // found a compatible bullet, remove one
                             bulletStack = item.split(1);
                             if (item.isEmpty()) {
@@ -147,7 +147,7 @@ public class GunItem extends Item {
                         SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
                     
                     // add cooldown
-                    user.getItemCooldownManager().set(stack, gunType.fireRate());
+                    user.getItemCooldownManager().set(stack, gunType.cooldownTicks());
                     
                     user.incrementStat(Stats.USED.getOrCreateStat(this));
                     return ActionResult.SUCCESS;
@@ -228,9 +228,9 @@ public class GunItem extends Item {
         Guns.GunType gunType = Guns.get(gunTypeId);
         tooltip.add(Text.literal("Gun Type: " + gunType.displayName()));
         tooltip.add(Text.literal("Damage: " + gunType.damage()));
-        tooltip.add(Text.literal("Fire Rate: " + (60.0f / gunType.fireRate()) + " shots/sec"));
+        tooltip.add(Text.literal("Cooldown: " + gunType.cooldownTicks() + " ticks"));
         tooltip.add(Text.literal("Ammo: " + totalBullets + "/" + gunType.maxAmmo()));
-        tooltip.add(Text.literal("Accepts: " + String.join(", ", gunType.acceptedAmmoTypes())));
+        tooltip.add(Text.literal("Accepts: " + String.join(", ", gunType.acceptedAmmoTags())));
     }
     
     @Override
@@ -278,7 +278,7 @@ public class GunItem extends Item {
         }
         
         Guns.GunType gunType = Guns.get(gunTypeId);
-        return gunType.acceptsAmmo(bulletItem.getBulletTypeId());
+        return gunType.acceptsBullet(bulletItem);
     }
     
     private int getCompatibleBulletCount(GunContentsComponent contents) {
@@ -288,7 +288,7 @@ public class GunItem extends Item {
         
         for (ItemStack itemStack : contents.items()) {
             if (itemStack.getItem() instanceof BulletItem bulletItem) {
-                if (gunType.acceptsAmmo(bulletItem.getBulletTypeId())) {
+                if (gunType.acceptsBullet(bulletItem)) {
                     count += itemStack.getCount();
                 }
             }

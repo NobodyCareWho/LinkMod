@@ -14,10 +14,10 @@ public class Guns {
         TO_WORLD   // drop as item in world
     }
     
-    // define gun types
+    // define gun types using ammo tags
     static {
-        register("rifle", new GunType("Rifle", 8.0f, 4.0f, 20, 1, 30, Set.of("standard"), "bulletcasing", ShellEjectionMode.TO_WORLD));
-        register("shotgun", new GunType("Shotgun", 4.0f, 2.5f, 25, 5, 2, Set.of("buckshotgunshell"), "shotgunshellempty", ShellEjectionMode.TO_BUNDLE));
+        register("rifle", new GunType("Rifle", 8.0f, 4.0f, 20, 1, 30, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_WORLD));
+        register("shotgun", new GunType("Shotgun", 4.0f, 2.5f, 10, 5, 2, Set.of("shotgun_shells"), "shotgunshellempty", ShellEjectionMode.TO_BUNDLE));
     }
     
     public static void register(String id, GunType gunType) {
@@ -36,16 +36,23 @@ public class Guns {
         String displayName,
         float damage,
         float velocity,
-        int fireRate,
+        int cooldownTicks,  // cooldown between shots in ticks
         int pelletsPerShot,
         int maxAmmo,
-        Set<String> acceptedAmmoTypes,
+        Set<String> acceptedAmmoTags,  // changed to tags
         String ejectShellItemId,
         ShellEjectionMode shellEjectionMode
     ) {
-        // check if this gun accepts a specific ammo type
-        public boolean acceptsAmmo(String ammoType) {
-            return acceptedAmmoTypes.contains(ammoType);
+        // check if this gun accepts a bullet with specific tags
+        public boolean acceptsBullet(BulletItem bulletItem) {
+            Bullets.BulletType bulletType = bulletItem.getBulletType();
+            // check if bullet has any of the accepted tags
+            for (String acceptedTag : acceptedAmmoTags) {
+                if (bulletType.hasTag(acceptedTag)) {
+                    return true;
+                }
+            }
+            return false;
         }
         
         // check if this gun ejects shells
