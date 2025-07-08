@@ -36,6 +36,7 @@ fabricApi {
 }
 
 repositories {
+    // GeckoLib
     exclusiveContent {
         forRepository {
             maven {
@@ -47,7 +48,21 @@ repositories {
             includeGroup('software.bernie.geckolib')
         }
     }
+
+    // KosmX's repo for its group
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "KosmX's maven"
+                url = 'https://maven.kosmx.dev/'
+            }
+        }
+        filter {
+            includeGroup('dev.kosmx.player-anim')
+        }
+    }
 }
+
 
 dependencies {
     // To change the versions see the gradle.properties file
@@ -55,6 +70,7 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}"
+    include modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim}")
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 }
