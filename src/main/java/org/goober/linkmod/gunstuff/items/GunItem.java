@@ -101,7 +101,7 @@ public class GunItem extends Item {
         }
         
         ItemStack otherStack = slot.getStack();
-        if (otherStack.isEmpty() || !isBulletItem(otherStack)) {
+        if (otherStack.isEmpty() || !isBulletItem(otherStack) || !isCompatibleBullet(otherStack)) {
             return false;
         }
         
@@ -134,7 +134,7 @@ public class GunItem extends Item {
                 playRemoveOneSound(player);
                 return true;
             }
-        } else if (clickType == ClickType.LEFT && !otherStack.isEmpty() && isBulletItem(otherStack)) {
+        } else if (clickType == ClickType.LEFT && !otherStack.isEmpty() && isBulletItem(otherStack) && isCompatibleBullet(otherStack)) {
             // add bullets to the gun
             GunContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY);
             GunContentsComponent.Builder builder = new GunContentsComponent.Builder(contents);
@@ -161,6 +161,7 @@ public class GunItem extends Item {
         tooltip.add(Text.literal("Damage: " + gunType.damage()));
         tooltip.add(Text.literal("Fire Rate: " + (60.0f / gunType.fireRate()) + " shots/sec"));
         tooltip.add(Text.literal("Ammo: " + totalBullets + "/" + MAX_CAPACITY));
+        tooltip.add(Text.literal("Accepts: " + String.join(", ", gunType.acceptedAmmoTypes())));
     }
     
     @Override
@@ -198,6 +199,16 @@ public class GunItem extends Item {
     private static boolean isBulletItem(ItemStack stack) {
         // check if item is a bullet
         return stack.getItem() instanceof BulletItem;
+    }
+    
+    private boolean isCompatibleBullet(ItemStack bulletStack) {
+        // check if this gun accepts this bullet type
+        if (!(bulletStack.getItem() instanceof BulletItem bulletItem)) {
+            return false;
+        }
+        
+        Guns.GunType gunType = Guns.get(gunTypeId);
+        return gunType.acceptsAmmo(bulletItem.getBulletTypeId());
     }
     
     public String getGunTypeId() {

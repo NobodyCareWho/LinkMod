@@ -9,6 +9,7 @@ public class Bullets {
     // define bullet types
     static {
         register("standard", new BulletType("Standard Bullet", 1.0f, 0xFF888888));
+        register("buckshotgunshell", new BulletType("Buckshot", 0.6f, 0xFF444444));
     }
     
     public static void register(String id, BulletType bulletType) {

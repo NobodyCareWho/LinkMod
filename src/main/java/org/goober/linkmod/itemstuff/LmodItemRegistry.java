@@ -72,6 +72,13 @@ public class LmodItemRegistry {
             new Item.Settings()
                     .maxCount(64)
     );
+
+    public static final Item BUCKSHOTGUNSHELL = register(
+            "buckshotgunshell",
+            settings -> new BulletItem(settings, "buckshotgunshell"),
+            new Item.Settings()
+                    .maxCount(64)
+    );
     
     public static void initialize() {
         // Force class loading
