@@ -16,8 +16,9 @@ public class Guns {
     
     // define gun types using ammo tags
     static {
-        register("rifle", new GunType("Rifle", 8.0f, 4.0f, 20, 1, 30, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_WORLD));
-        register("shotgun", new GunType("Shotgun", 4.0f, 2.5f, 10, 5, 2, Set.of("shotgun_shells"), "shotgunshellempty", ShellEjectionMode.TO_BUNDLE));
+        register("rifle", new GunType("Rifle", 8.0f, 8.0f, 20, 1, 30, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_WORLD));
+        register("shotgun", new GunType("Shotgun", 6.0f, 2.5f, 7, 5, 2, Set.of("shotgun_shells"), "shotgunshellempty", ShellEjectionMode.TO_BUNDLE));
+        register("revolver", new GunType("Revolver", 8.0f, 8.0f, 4, 1, 6, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_BUNDLE));
     }
     
     public static void register(String id, GunType gunType) {

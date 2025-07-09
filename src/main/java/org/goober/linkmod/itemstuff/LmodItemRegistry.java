@@ -64,7 +64,15 @@ public class LmodItemRegistry {
                     .maxCount(1)
                     .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
     );
-    
+
+    public static final Item PISTOL = register(
+            "revolver",
+            settings -> new GunItem(settings, "revolver"),
+            new Item.Settings()
+                    .maxCount(1)
+                    .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
+    );
+
     // bullets
     public static final Item BULLET = register(
             "bullet",

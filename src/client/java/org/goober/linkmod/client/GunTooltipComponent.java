@@ -52,10 +52,10 @@ public class GunTooltipComponent implements TooltipComponent {
                 // Draw slot background
                 context.fillGradient(slotX, slotY,
                         slotX + SLOT_SIZE, slotY + SLOT_SIZE,
-                        0x805818e, 0x8038761d);
+                        0xFF140010, 0xFF660f56);
                 context.drawBorder(slotX, slotY,
                         SLOT_SIZE, SLOT_SIZE,
-                        0xFF274e13);
+                        0xFFc3c3c3);
 
                 // Find next non-empty item
                 ItemStack stack = ItemStack.EMPTY;
