@@ -65,7 +65,7 @@ public class LmodItemRegistry {
                     .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
     );
 
-    public static final Item PISTOL = register(
+    public static final Item REVOLVER = register(
             "revolver",
             settings -> new GunItem(settings, "revolver"),
             new Item.Settings()

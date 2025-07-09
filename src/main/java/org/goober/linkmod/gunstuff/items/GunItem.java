@@ -62,6 +62,15 @@ public class GunItem extends Item {
                 List<ItemStack> items = new ArrayList<>(contents.items());
                 for (int i = 0; i < items.size(); i++) {
                     ItemStack item = items.get(i);
+                    
+                    // skip if it's the gun's own shell type
+                    if (gunType.ejectShellItemId() != null) {
+                        String itemId = Registries.ITEM.getId(item.getItem()).getPath();
+                        if (itemId.equals(gunType.ejectShellItemId())) {
+                            continue; // skip shell casings
+                        }
+                    }
+                    
                     if (item.getItem() instanceof BulletItem bulletItem) {
                         // check if this bullet type is compatible with this gun
                         if (gunType.acceptsBullet(bulletItem)) {
@@ -286,6 +295,15 @@ public class GunItem extends Item {
         }
         
         Guns.GunType gunType = Guns.get(gunTypeId);
+        
+        // check if this is the gun's own ejected shell type
+        if (gunType.ejectShellItemId() != null) {
+            String itemId = Registries.ITEM.getId(bulletStack.getItem()).getPath();
+            if (itemId.equals(gunType.ejectShellItemId())) {
+                return false; // reject own shell type
+            }
+        }
+        
         return gunType.acceptsBullet(bulletItem);
     }
     
@@ -295,6 +313,14 @@ public class GunItem extends Item {
         Guns.GunType gunType = Guns.get(gunTypeId);
         
         for (ItemStack itemStack : contents.items()) {
+            // skip if it's the gun's own shell type
+            if (gunType.ejectShellItemId() != null) {
+                String itemId = Registries.ITEM.getId(itemStack.getItem()).getPath();
+                if (itemId.equals(gunType.ejectShellItemId())) {
+                    continue; // skip shell casings
+                }
+            }
+            
             if (itemStack.getItem() instanceof BulletItem bulletItem) {
                 if (gunType.acceptsBullet(bulletItem)) {
                     count += itemStack.getCount();
