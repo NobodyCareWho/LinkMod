@@ -195,10 +195,18 @@ public class GunItem extends Item {
             GunContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY);
             GunContentsComponent.Builder builder = new GunContentsComponent.Builder(contents);
             
-            ItemStack removed = builder.removeFirst();
+            // prioritize removing empty shells first
+            ItemStack removed = removeWithPriority(contents);
             if (!removed.isEmpty()) {
                 cursorStackReference.set(removed);
-                stack.set(LmodDataComponentTypes.GUN_CONTENTS, builder.build());
+                // rebuild contents without the removed item
+                GunContentsComponent.Builder newBuilder = new GunContentsComponent.Builder();
+                for (ItemStack item : contents.items()) {
+                    if (item != removed) {
+                        newBuilder.add(item);
+                    }
+                }
+                stack.set(LmodDataComponentTypes.GUN_CONTENTS, newBuilder.build());
                 playRemoveOneSound(player);
                 return true;
             }
@@ -295,6 +303,28 @@ public class GunItem extends Item {
         }
         
         return count;
+    }
+    
+    private ItemStack removeWithPriority(GunContentsComponent contents) {
+        // priority list for removal - empty shells first
+        String[] priorityItems = {"bulletcasing", "shotgunshellempty"};
+        
+        // first, try to remove priority items (empty shells)
+        for (String priorityItemId : priorityItems) {
+            for (ItemStack item : contents.items()) {
+                Item itemType = item.getItem();
+                if (Registries.ITEM.getId(itemType).getPath().equals(priorityItemId)) {
+                    return item;
+                }
+            }
+        }
+        
+        // if no priority items found, remove the first item
+        if (!contents.items().isEmpty()) {
+            return contents.items().get(0);
+        }
+        
+        return ItemStack.EMPTY;
     }
     
     public String getGunTypeId() {
