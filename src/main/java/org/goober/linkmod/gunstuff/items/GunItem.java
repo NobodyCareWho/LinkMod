@@ -24,6 +24,7 @@ import org.goober.linkmod.gunstuff.GunContentsComponent;
 import org.goober.linkmod.gunstuff.GunTooltipData;
 import org.goober.linkmod.itemstuff.LmodDataComponentTypes;
 import org.goober.linkmod.projectilestuff.BulletEntity;
+import org.goober.linkmod.gunstuff.items.Bullets.BulletType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -33,7 +34,7 @@ import java.util.Optional;
 
 public class GunItem extends Item {
     private final String gunTypeId;
-    
+
     public GunItem(Settings settings, String gunTypeId) {
         super(settings);
         this.gunTypeId = gunTypeId;
@@ -56,7 +57,7 @@ public class GunItem extends Item {
                 // find and remove first compatible bullet
                 GunContentsComponent.Builder builder = new GunContentsComponent.Builder(contents);
                 Guns.GunType gunType = Guns.get(gunTypeId);
-                
+
                 // try to remove a compatible bullet
                 ItemStack bulletStack = ItemStack.EMPTY;
                 List<ItemStack> items = new ArrayList<>(contents.items());
@@ -88,30 +89,58 @@ public class GunItem extends Item {
                         }
                     }
                 }
-                
+
                 if (!bulletStack.isEmpty()) {
                     System.out.println("Shooting bullet: " + bulletStack);
-                    
-                    // shoot multiple bullets for shotgun
-                    for (int i = 0; i < gunType.pelletsPerShot(); i++) {
-                        // create and shoot the bullet
-                        BulletEntity bullet = new BulletEntity(world, user, bulletStack);
-                        bullet.setDamage(gunType.damage());
-                        
-                        // set velocity with spread based on gun type
-                        float spread = gunType.pelletsPerShot() > 1 ? 6.0F : 1.0F;
-                        bullet.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, gunType.velocity(), spread);
-                        world.spawnEntity(bullet);
-                        System.out.println("Spawned bullet entity");
+
+                    // bullettype?
+                    BulletType bulletType = null;
+
+                    if (bulletStack.getItem() instanceof BulletItem bulletItem) {
+                        bulletType = bulletItem.getBulletType();
+
+                        // shoot multiple bullets for shotgun
+                        for (int i = 0; i < bulletType.pelletsPerShot(); i++) {
+                            BulletEntity bullet = new BulletEntity(world, user, bulletStack);
+                            bullet.setDamage(gunType.damage());
+
+                            float spread = bulletType.pelletsPerShot() > 1 ? 6.0F : 1.0F;
+                            bullet.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, gunType.velocity(), spread);
+                            world.spawnEntity(bullet);
+                            System.out.println("Spawned bullet entity");
+                        }
                     }
-                    
+
+                    if (gunType.spatialRecoil() > 0) {
+
+                        float force = gunType.spatialRecoil();
+
+                        // Get the direction the player is looking (unit vector)
+                        Vec3d lookVec = user.getRotationVec(1.0F);
+
+                        // Reverse the vector and scale by force
+                        Vec3d launchVec = lookVec.multiply(-force*bulletType.sRMultiplier());
+
+                        // Preserve some of the current Y velocity or override it
+                        double yVelocity = launchVec.y * 1; // Optional lift
+                        Vec3d launchVelocity = new Vec3d(launchVec.x, yVelocity, launchVec.z);
+                        Vec3d oldVelocity = new Vec3d(user.getVelocity().toVector3f());
+                        Vec3d finalVelocity = new Vec3d(launchVelocity.x + oldVelocity.x, launchVelocity.y + oldVelocity.y, launchVelocity.z + oldVelocity.z);
+                        // Set the player's velocity
+                        user.setVelocity(finalVelocity);
+
+
+                        // Optionally mark for velocity update if this is server-side
+                        user.velocityModified = true;
+                    }
+
                     // handle shell ejection based on mode
                     if (gunType.ejectsShells()) {
                         String shellItemId = gunType.ejectShellItemId();
                         Item shellItem = Registries.ITEM.get(Identifier.of("lmod", shellItemId));
                         if (shellItem != null && shellItem != Items.AIR) {
                             ItemStack emptyShell = new ItemStack(shellItem, 1);
-                            
+
                             switch (gunType.shellEjectionMode()) {
                                 case TO_BUNDLE -> {
                                     // add empty shell back to gun's bundle
@@ -121,43 +150,43 @@ public class GunItem extends Item {
                                     // drop empty shell as item entity to the right
                                     Vec3d lookDirection = user.getRotationVector();
                                     Vec3d rightVector = new Vec3d(-lookDirection.z, 0, lookDirection.x).normalize();
-                                    
+
                                     // spawn shell to the right with some velocity
                                     ItemEntity shellEntity = new ItemEntity(
-                                        world,
-                                        user.getX() + rightVector.x * 0.5,
-                                        user.getY() + 0.5,
-                                        user.getZ() + rightVector.z * 0.5,
-                                        emptyShell
+                                            world,
+                                            user.getX() + rightVector.x * 0.5,
+                                            user.getY() + 0.5,
+                                            user.getZ() + rightVector.z * 0.5,
+                                            emptyShell
                                     );
-                                    
+
                                     // add velocity to eject shell to the right
                                     shellEntity.setVelocity(
-                                        rightVector.x * 0.2 + world.random.nextGaussian() * 0.05,
-                                        0.2 + world.random.nextGaussian() * 0.05,
-                                        rightVector.z * 0.2 + world.random.nextGaussian() * 0.05
+                                            rightVector.x * 0.2 + world.random.nextGaussian() * 0.05,
+                                            0.2 + world.random.nextGaussian() * 0.05,
+                                            rightVector.z * 0.2 + world.random.nextGaussian() * 0.05
                                     );
-                                    
+
                                     // set pickup delay to 2 seconds (40 ticks)
                                     shellEntity.setPickupDelay(40);
-                                    
+
                                     world.spawnEntity(shellEntity);
                                 }
                             }
                         }
                     }
-                    
+
                     // update gun contents
                     stack.set(LmodDataComponentTypes.GUN_CONTENTS, builder.build());
-                    
+
                     // play gun sound
-                    world.playSound(null, user.getX(), user.getY(), user.getZ(), 
-                        SoundEvents.ENTITY_FIREWORK_ROCKET_BLAST, 
-                        SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
-                    
+                    world.playSound(null, user.getX(), user.getY(), user.getZ(),
+                            SoundEvents.ENTITY_FIREWORK_ROCKET_BLAST,
+                            SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
+
                     // add cooldown
                     user.getItemCooldownManager().set(stack, gunType.cooldownTicks());
-                    
+
                     user.incrementStat(Stats.USED.getOrCreateStat(this));
                     return ActionResult.SUCCESS;
                 }
@@ -238,7 +267,7 @@ public class GunItem extends Item {
         return false;
     }
     
-    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type) {
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         GunContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY);
         int totalBullets = getCompatibleBulletCount(contents);
         

@@ -81,9 +81,23 @@ public class LmodItemRegistry {
                     .maxCount(64)
     );
 
-    public static final Item BUCKSHOTGUNSHELL = register(
-            "buckshotgunshell",
-            settings -> new BulletItem(settings, "buckshotgunshell"),
+    public static final Item SLUGSHELL = register(
+            "slugshell",
+            settings -> new BulletItem(settings, "slug"),
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item BUCKSHELL = register(
+            "buckshell",
+            settings -> new BulletItem(settings, "buckshot"),
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item BREEZESHELL = register(
+            "breezeshell",
+            settings -> new BulletItem(settings, "breezeshot"),
             new Item.Settings()
                     .maxCount(64)
     );

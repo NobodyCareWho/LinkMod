@@ -16,9 +16,9 @@ public class Guns {
     
     // define gun types using ammo tags
     static {
-        register("rifle", new GunType("Rifle", 8.0f, 8.0f, 20, 1, 30, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_WORLD));
-        register("shotgun", new GunType("Shotgun", 6.0f, 2.5f, 7, 5, 2, Set.of("shotgun_shells"), "shotgunshellempty", ShellEjectionMode.TO_BUNDLE));
-        register("revolver", new GunType("Revolver", 8.0f, 8.0f, 4, 1, 6, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_BUNDLE));
+        register("rifle", new GunType("Rifle", 12.0f, 10.0f, 20, 30, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_WORLD, 0.2f));
+        register("shotgun", new GunType("Shotgun", 7.0f, 2.5f, 7, 2, Set.of("shotgun_shells"), "shotgunshellempty", ShellEjectionMode.TO_BUNDLE, 0.6f));
+        register("revolver", new GunType("Revolver", 8.0f, 8.0f, 4, 6, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_BUNDLE, 0));
     }
     
     public static void register(String id, GunType gunType) {
@@ -38,11 +38,11 @@ public class Guns {
         float damage,
         float velocity,
         int cooldownTicks,  // cooldown between shots in ticks
-        int pelletsPerShot,
         int maxAmmo,
         Set<String> acceptedAmmoTags,  // changed to tags
         String ejectShellItemId,
-        ShellEjectionMode shellEjectionMode
+        ShellEjectionMode shellEjectionMode,
+        float spatialRecoil
     ) {
         // check if this gun accepts a bullet with specific tags
         public boolean acceptsBullet(BulletItem bulletItem) {

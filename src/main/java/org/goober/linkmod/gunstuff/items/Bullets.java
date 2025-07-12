@@ -6,17 +6,20 @@ import java.util.Set;
 
 public class Bullets {
     private static final Map<String, BulletType> BULLET_TYPES = new HashMap<>();
-    
+
+
     // define bullet types with tags
     static {
-        register("standard", new BulletType("Standard Bullet", 1.0f, 0xFF888888, Set.of("rifle_ammo")));
-        register("buckshotgunshell", new BulletType("Buckshot", 0.6f, 0xFF444444, Set.of("shotgun_shells")));
+        register("standard", new BulletType("Standard Bullet", 1.0f, 0xFF888888, Set.of("rifle_ammo"), 1, 1));
+        register("buckshot", new BulletType("Buckshot", 0.6f, 0xFF444444, Set.of("shotgun_shells"), 5, 1 ));
+        register("slug", new BulletType("Slug", 1.7f, 0xFF444444, Set.of("shotgun_shells"), 1, 0.8f ));
+        register("breezeshot", new BulletType("Breezeshot", 1.0f, 0xFF444444, Set.of("shotgun_shells"), 0, 3 ));
     }
     
     public static void register(String id, BulletType bulletType) {
         BULLET_TYPES.put(id, bulletType);
     }
-    
+
     public static BulletType get(String id) {
         return BULLET_TYPES.getOrDefault(id, BULLET_TYPES.get("standard"));
     }
@@ -29,7 +32,9 @@ public class Bullets {
         String displayName,
         float damageMultiplier,
         int color,
-        Set<String> tags
+        Set<String> tags,
+        int pelletsPerShot,
+        float sRMultiplier
     ) {
         // check if this bullet has a specific tag
         public boolean hasTag(String tag) {
