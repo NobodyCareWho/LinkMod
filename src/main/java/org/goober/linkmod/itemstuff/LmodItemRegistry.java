@@ -81,6 +81,27 @@ public class LmodItemRegistry {
                     .maxCount(64)
     );
 
+    public static final Item COPPER_BULLET = register(
+            "copper_bullet",
+            settings -> new BulletItem(settings, "copper_bullet"),
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item SILVER_BULLET = register(
+            "silver_bullet",
+            settings -> new BulletItem(settings, "silver_bullet"),
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item DIAMOND_BULLET = register(
+            "diamond_bullet",
+            settings -> new BulletItem(settings, "diamond_bullet"),
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
     public static final Item SLUGSHELL = register(
             "slugshell",
             settings -> new BulletItem(settings, "slug"),
@@ -98,6 +119,13 @@ public class LmodItemRegistry {
     public static final Item BREEZESHELL = register(
             "breezeshell",
             settings -> new BulletItem(settings, "breezeshot"),
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item BLAZESHELL = register(
+            "blazeshell",
+            settings -> new BulletItem(settings, "blazeshot"),
             new Item.Settings()
                     .maxCount(64)
     );
