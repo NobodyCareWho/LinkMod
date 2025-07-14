@@ -3,6 +3,9 @@ package org.goober.linkmod.gunstuff.items;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import org.goober.linkmod.entitystuff.LmodEntityRegistry;
+import org.goober.linkmod.miscstuff.ParticleProfile;
+import org.goober.linkmod.miscstuff.soundprofiles.BulletSoundProfile;
+import org.goober.linkmod.projectilestuff.BulletEntity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,14 +17,15 @@ public class Bullets {
 
     // define bullet types with tags
     static {
-        register("standard", new BulletType("Standard Bullet", 1.0f, 0xFF888888, Set.of("rifle_ammo"), 1, 1, LmodEntityRegistry.BULLET));
-        register("silver_bullet", new BulletType("Silver Bullet", 1.2f, 0xFF888888, Set.of("rifle_ammo"), 1, 1, LmodEntityRegistry.BULLET));
-        register("copper_bullet", new BulletType("Copper Bullet", 0.8f, 0xFF888888, Set.of("rifle_ammo"), 1, 1, LmodEntityRegistry.BULLET));
-        register("diamond_bullet", new BulletType("Diamond Bullet", 3.0f, 0xFF888888, Set.of("rifle_ammo"), 1, 1, LmodEntityRegistry.BULLET));
-        register("buckshot", new BulletType("Buckshot", 0.6f, 0xFF444444, Set.of("shotgun_shells"), 5, 1, LmodEntityRegistry.BULLET));
-        register("slug", new BulletType("Slug", 1.7f, 0xFF444444, Set.of("shotgun_shells"), 1, 0.8f, LmodEntityRegistry.BULLET));
-        register("breezeshot", new BulletType("Breezeshot", 1.0f, 0xFF444444, Set.of("shotgun_shells"), 0, 3, LmodEntityRegistry.BULLET));
-        register("blazeshot", new BulletType("Blazeshot", 0.2f, 0xFF444444, Set.of("shotgun_shells"), 12, 3, LmodEntityRegistry.SPARKBULLET));
+        register("standard", new BulletType("Standard Bullet", 1.0f, 0xFF888888, Set.of("rifle_ammo"), 1, 1,BulletSoundProfile.get("standard"),ParticleProfile.get("standard")));
+        register("silver_bullet", new BulletType("Silver Bullet", 1.2f, 0xFF888888, Set.of("rifle_ammo"), 1, 1,BulletSoundProfile.get("standard"),ParticleProfile.get("standard")));
+        register("copper_bullet", new BulletType("Copper Bullet", 0.8f, 0xFF888888, Set.of("rifle_ammo"), 1, 1,BulletSoundProfile.get("standard"),ParticleProfile.get("standard")));
+        register("diamond_bullet", new BulletType("Diamond Bullet", 3.0f, 0xFF888888, Set.of("rifle_ammo"), 1, 1,BulletSoundProfile.get("standard"),ParticleProfile.get("standard")));
+        register("ratshot_bullet", new BulletType("Ratshot", 0.15f, 0xFF888888, Set.of("rifle_ammo"), 7, 1.2f,BulletSoundProfile.get("goofyahh"),ParticleProfile.get("goofyahh")));
+        register("buckshot", new BulletType("Buckshot", 0.7f, 0xFF444444, Set.of("shotgun_shells"), 5, 1,BulletSoundProfile.get("standard"),ParticleProfile.get("standard")));
+        register("slug", new BulletType("Slug", 3, 0xFF444444, Set.of("shotgun_shells"), 1, 0.8f,BulletSoundProfile.get("standard"),ParticleProfile.get("standard")));
+        register("breezeshot", new BulletType("Breezeshot", 1.0f, 0xFF444444, Set.of("shotgun_shells"), 0, 3,BulletSoundProfile.get("goofyahh"),ParticleProfile.get("goofyahh")));
+        register("blazeshot", new BulletType("Blazeshot", 0.2f, 0xFF444444, Set.of("shotgun_shells"), 12, 0.5f,BulletSoundProfile.get("standard"),ParticleProfile.get("standard")));
     }
     
     public static void register(String id, BulletType bulletType) {
@@ -42,8 +46,9 @@ public class Bullets {
         int color,
         Set<String> tags,
         int pelletsPerShot,
-        float sRMultiplier,
-        EntityType<? extends PersistentProjectileEntity> projectileType
+        float sRMultiplier, // spatial recoil multiplier
+        BulletSoundProfile.BSP soundprofile,
+        ParticleProfile.PP particleprofile
     ) {
         // check if this bullet has a specific tag
         public boolean hasTag(String tag) {

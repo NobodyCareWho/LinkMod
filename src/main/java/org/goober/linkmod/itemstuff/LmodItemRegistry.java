@@ -73,6 +73,30 @@ public class LmodItemRegistry {
                     .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
     );
 
+    public static final Item EJECTORPISTOL = register(
+            "ejectorpistol",
+            settings -> new GunItem(settings, "ejectorpistol"),
+            new Item.Settings()
+                    .maxCount(1)
+                    .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
+    );
+
+    public static final Item BOILERPISTOL = register(
+            "boilerpistol",
+            settings -> new GunItem(settings, "boilerpistol"),
+            new Item.Settings()
+                    .maxCount(1)
+                    .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
+    );
+
+    public static final Item PUMPSG = register(
+            "pumpshotgun",
+            settings -> new GunItem(settings, "pumpsg"),
+            new Item.Settings()
+                    .maxCount(1)
+                    .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
+    );
+
     // bullets
     public static final Item BULLET = register(
             "bullet",
@@ -98,6 +122,12 @@ public class LmodItemRegistry {
     public static final Item DIAMOND_BULLET = register(
             "diamond_bullet",
             settings -> new BulletItem(settings, "diamond_bullet"),
+            new Item.Settings()
+                    .maxCount(64)
+    );
+    public static final Item RATSHOT = register(
+            "ratshot_bullet",
+            settings -> new BulletItem(settings, "ratshot_bullet"),
             new Item.Settings()
                     .maxCount(64)
     );

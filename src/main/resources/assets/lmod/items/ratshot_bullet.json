@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "lmod:item/bullet/ratshot"
+  }
+}

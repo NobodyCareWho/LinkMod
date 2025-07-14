@@ -87,6 +87,8 @@ public class BulletEntity extends PersistentProjectileEntity {
                 );
             }
         }
+
+
         
         // remove bullet after 3 seconds
         if (this.age > 60) {

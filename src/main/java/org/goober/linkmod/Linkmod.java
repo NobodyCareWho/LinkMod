@@ -1,10 +1,15 @@
 package org.goober.linkmod;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import org.goober.linkmod.blockstuff.LmodBlockRegistry;
 import org.goober.linkmod.itemstuff.LmodItemRegistry;
 import org.goober.linkmod.itemstuff.LmodDataComponentTypes;
 import org.goober.linkmod.entitystuff.LmodEntityRegistry;
+import org.goober.linkmod.particlestuff.LmodParticleRegistry;
+
 
 public class Linkmod implements ModInitializer {
     public static final String MOD_ID = "lmod";
@@ -14,6 +19,7 @@ public class Linkmod implements ModInitializer {
         LmodItemRegistry.initialize();
         LmodEntityRegistry.initialize();
         LmodBlockRegistry.initialize();
+        LmodEntityRegistry.initialize();
     }
 
 }

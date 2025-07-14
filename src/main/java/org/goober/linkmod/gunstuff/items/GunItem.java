@@ -1,9 +1,8 @@
 package org.goober.linkmod.gunstuff.items;
 
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,7 +10,9 @@ import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipData;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
@@ -27,8 +28,6 @@ import org.goober.linkmod.gunstuff.GunTooltipData;
 import org.goober.linkmod.itemstuff.LmodDataComponentTypes;
 import org.goober.linkmod.projectilestuff.BulletEntity;
 import org.goober.linkmod.gunstuff.items.Bullets.BulletType;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,6 +130,12 @@ public class GunItem extends Item {
                         // Set the player's velocity
                         user.setVelocity(finalVelocity);
 
+                        // double yAtLaunch = user.getY(); // THIS CRASHES GAME, PLEASE CIRCUMVENT
+
+                        // while (!(user.getY() >= yAtLaunch && user.isOnGround())){
+                        //     user.fallDistance = 0f;
+                        // }
+
 
                         // Optionally mark for velocity update if this is server-side
                         user.velocityModified = true;
@@ -178,6 +183,8 @@ public class GunItem extends Item {
                         }
                     }
 
+
+
                     // update gun contents
                     stack.set(LmodDataComponentTypes.GUN_CONTENTS, builder.build());
 
@@ -190,12 +197,18 @@ public class GunItem extends Item {
                     user.getItemCooldownManager().set(stack, gunType.cooldownTicks());
 
                     user.incrementStat(Stats.USED.getOrCreateStat(this));
+
+
+
                     return ActionResult.SUCCESS;
+
+
                 }
             } catch (Exception e) {
                 System.err.println("Error shooting gun: " + e.getMessage());
                 e.printStackTrace();
             }
+
         }
         
         return ActionResult.PASS;

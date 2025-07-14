@@ -1,5 +1,8 @@
 package org.goober.linkmod.gunstuff.items;
 
+import org.goober.linkmod.miscstuff.ParticleProfile;
+import org.goober.linkmod.miscstuff.soundprofiles.GunSoundProfile;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -16,9 +19,13 @@ public class Guns {
     
     // define gun types using ammo tags
     static {
-        register("rifle", new GunType("Rifle", 12.0f, 10.0f, 20, 30, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_WORLD, 0.2f));
-        register("shotgun", new GunType("Shotgun", 7.0f, 2.5f, 2, 2, Set.of("shotgun_shells"), "shotgunshellempty", ShellEjectionMode.TO_BUNDLE, 0.6f));
-        register("revolver", new GunType("Revolver", 8.0f, 8.0f, 2, 6, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_BUNDLE, 0));
+        register("rifle", new GunType("Rifle", 14.0f, 10.0f, 20, 8, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_WORLD, 0.2f,GunSoundProfile.get("standard")));
+        register("shotgun", new GunType("D.B. Shotgun", 7.5f, 2.5f, 2, 2, Set.of("shotgun_shells"), "shotgunshellempty", ShellEjectionMode.TO_BUNDLE, 0.6f,GunSoundProfile.get("standard")));
+        register("revolver", new GunType("Revolver", 9.2f, 8.0f, 3, 6, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_BUNDLE, 0,GunSoundProfile.get("goofyahh")));
+        register("ejectorpistol", new GunType("Ejector Pistol", 7.5f, 5.6f, 8, 8, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_WORLD, 0,GunSoundProfile.get("standard")));
+        register("boilerpistol", new GunType("Boiler Pistol", 8.5f, 2.3f, 43, 1, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_BUNDLE, 0,GunSoundProfile.get("goofyahh")));
+        register("pumpsg", new GunType("Pump Shotgun", 6.5f, 4.0f, 14, 5, Set.of("shotgun_shells"), "shotgunshellempty", ShellEjectionMode.TO_WORLD, 0.4f,GunSoundProfile.get("standard")));
+
     }
     
     public static void register(String id, GunType gunType) {
@@ -42,7 +49,8 @@ public class Guns {
         Set<String> acceptedAmmoTags,  // changed to tags
         String ejectShellItemId,
         ShellEjectionMode shellEjectionMode,
-        float spatialRecoil
+        float spatialRecoil,
+        GunSoundProfile.GSP soundprofile
     ) {
         // check if this gun accepts a bullet with specific tags
         public boolean acceptsBullet(BulletItem bulletItem) {

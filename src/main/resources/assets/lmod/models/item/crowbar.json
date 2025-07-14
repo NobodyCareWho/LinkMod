@@ -1,0 +1,26 @@
+{
+	"format_version": "1.21.6",
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:item/handheld",
+	"textures": {
+		"layer0": "lmod:item/crowbar"
+	},
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [175.79, 66.32, -125.67],
+			"translation": [0, 2.25, 1.5]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [-12.68, -79.88, -56.83],
+			"translation": [-0.25, 2.25, 1.25]
+		},
+		"firstperson_righthand": {
+			"rotation": [-172.32, 71.57, -135.16],
+			"translation": [1.5, 2.5, 0]
+		},
+		"firstperson_lefthand": {
+			"rotation": [-92, -103, -135.16],
+			"translation": [1.5, 2.5, 0]
+		}
+	}
+}
