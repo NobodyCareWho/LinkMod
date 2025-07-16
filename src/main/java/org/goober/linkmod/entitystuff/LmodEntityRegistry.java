@@ -43,6 +43,16 @@ public class LmodEntityRegistry {
                     .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Linkmod.MOD_ID, "sparkbullet")))
     );
 
+    public static final EntityType<BulletEntity> PILLGRENADE = Registry.register(
+            Registries.ENTITY_TYPE,
+            Identifier.of(Linkmod.MOD_ID, "pillgrenade"),
+            EntityType.Builder.<BulletEntity>create(BulletEntity::new, SpawnGroup.MISC)
+                    .dimensions(0.5F, 0.5F)
+                    .maxTrackingRange(80)
+                    .trackingTickInterval(1)
+                    .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Linkmod.MOD_ID, "pillgrenade")))
+    );
+
     public static void initialize() {
         // Force class loading
     }

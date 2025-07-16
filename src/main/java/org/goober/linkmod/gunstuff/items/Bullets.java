@@ -26,6 +26,8 @@ public class Bullets {
         register("slug", new BulletType("Slug", 3, 0xFF444444, Set.of("shotgun_shells"), 1, 0.8f,BulletSoundProfile.get("standard"),ParticleProfile.get("standard")));
         register("breezeshot", new BulletType("Breezeshot", 1.0f, 0xFF444444, Set.of("shotgun_shells"), 0, 3,BulletSoundProfile.get("goofyahh"),ParticleProfile.get("goofyahh")));
         register("blazeshot", new BulletType("Blazeshot", 0.2f, 0xFF444444, Set.of("shotgun_shells"), 12, 0.5f,BulletSoundProfile.get("standard"),ParticleProfile.get("standard")));
+        register("pillgrenade", new BulletType("Pill Grenade", 1.0f, 0xFF444444, Set.of("grenade_shells"), 1, 1f,BulletSoundProfile.get("grenadelaunch"),ParticleProfile.get("goofyahh")));
+        register("thumpershell", new BulletType("Thumper Shell", 0.6f, 0xFF444444, Set.of("grenade_shells"), 8, 3f,BulletSoundProfile.get("goofyahh"),ParticleProfile.get("goofyahh")));
     }
     
     public static void register(String id, BulletType bulletType) {

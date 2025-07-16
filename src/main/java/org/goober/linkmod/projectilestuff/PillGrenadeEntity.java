@@ -19,18 +19,18 @@ import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.gunstuff.items.BulletItem;
 import org.goober.linkmod.gunstuff.items.Bullets;
 
-public class SparkBulletEntity extends PersistentProjectileEntity {
-    private float damage = 5.0F;
+public class PillGrenadeEntity extends PersistentProjectileEntity {
+    private float damage = 15.0F;
     private ItemStack bulletStack;
 
-    public SparkBulletEntity(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
+    public PillGrenadeEntity(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
         super(entityType, world);
         this.bulletStack = ItemStack.EMPTY;
-        this.setNoGravity(true);
+        this.setNoGravity(false);
     }
 
-    public SparkBulletEntity(World world, LivingEntity owner, ItemStack bulletStack) {
-        this(LmodEntityRegistry.SPARKBULLET, world);
+    public PillGrenadeEntity(World world, LivingEntity owner, ItemStack bulletStack) {
+        this(LmodEntityRegistry.PILLGRENADE, world);
         this.bulletStack = bulletStack.copy();
         this.setOwner(owner);
         this.setPosition(owner.getX(), owner.getEyeY() - 0.1, owner.getZ());
@@ -54,37 +54,17 @@ public class SparkBulletEntity extends PersistentProjectileEntity {
     @Override
     public void tick() {
         super.tick();
-
+        
         // add particle trail
-        if (this.getWorld() instanceof ServerWorld serverWorld) {
-            Vec3d pos = this.getPos();
-            Vec3d velocity = this.getVelocity();
+
             
-            // create a trail of particles
-            for (int i = 0; i < 3; i++) {
-                double factor = i * 0.3;
-                serverWorld.spawnParticles(
-                    ParticleTypes.ELECTRIC_SPARK,
-                    pos.x - velocity.x * factor,
-                    pos.y - velocity.y * factor,
-                    pos.z - velocity.z * factor,
-                    1,
-                    0.0, 0.0, 0.0,
-                    0.01
-                );
-            }
+            // does not create a trail of particles
             
             // add spark particles
-            if (this.age % 2 == 0) {
-                serverWorld.spawnParticles(
-                    ParticleTypes.ELECTRIC_SPARK,
-                    pos.x, pos.y, pos.z,
-                    1,
-                    0.05, 0.05, 0.05,
-                    0.02
-                );
-            }
-        }
+
+
+
+
         
         // remove bullet after 3 seconds
         if (this.age > 60) {
@@ -116,7 +96,6 @@ public class SparkBulletEntity extends PersistentProjectileEntity {
             if (entity instanceof LivingEntity livingEntity) {
                 livingEntity.hurtTime = 0;
                 livingEntity.timeUntilRegen = 0;
-                livingEntity.setOnFireFor(4); // Sets the entity on fire for 4 seconds
             }
         }
         
@@ -134,7 +113,7 @@ public class SparkBulletEntity extends PersistentProjectileEntity {
         
         // play impact sound
         this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), 
-            SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.PLAYERS, 1.0F, 1.2F);
+            SoundEvents.ENTITY_ARROW_HIT, SoundCategory.PLAYERS, 1.0F, 1.2F);
         
         this.discard();
     }
@@ -157,7 +136,7 @@ public class SparkBulletEntity extends PersistentProjectileEntity {
         
         // play impact sound
         this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), 
-            SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.PLAYERS, 0.8F, 1.5F);
+            SoundEvents.ENTITY_ARROW_HIT_PLAYER, SoundCategory.PLAYERS, 0.8F, 1.5F);
         
         this.discard();
     }

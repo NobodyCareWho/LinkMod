@@ -97,6 +97,14 @@ public class LmodItemRegistry {
                     .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
     );
 
+    public static final Item GRENADELAUNCHER = register(
+            "grenadelauncher",
+            settings -> new GunItem(settings, "grenadelauncher"),
+            new Item.Settings()
+                    .maxCount(1)
+                    .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
+    );
+
     // bullets
     public static final Item BULLET = register(
             "bullet",
@@ -160,6 +168,20 @@ public class LmodItemRegistry {
                     .maxCount(64)
     );
 
+    public static final Item PILLGRENADE = register(
+            "pillgrenade",
+            settings -> new BulletItem(settings, "pillgrenade"),
+            new Item.Settings()
+                    .maxCount(8)
+    );
+
+    public static final Item THUMPERSHELL = register(
+            "thumpershell",
+            settings -> new BulletItem(settings, "thumpershell"),
+            new Item.Settings()
+                    .maxCount(8)
+    );
+
     public static final Item SHOTGUNSHELLEMPTY = register(
             "shotgunshellempty",
             settings -> new BulletItem(settings, "shotgunshellempty"),
@@ -172,6 +194,13 @@ public class LmodItemRegistry {
             settings -> new BulletItem(settings, "bulletcasing"),
             new Item.Settings()
                     .maxCount(64)
+    );
+
+    public static final Item GRENADESHELL = register(
+            "grenadeshellempty",
+            settings -> new BulletItem(settings, "grenadeshellempty"),
+            new Item.Settings()
+                    .maxCount(32)
     );
 
     public static void initialize() {

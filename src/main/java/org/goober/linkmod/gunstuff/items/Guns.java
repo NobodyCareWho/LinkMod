@@ -25,6 +25,8 @@ public class Guns {
         register("ejectorpistol", new GunType("Ejector Pistol", 7.5f, 5.6f, 8, 8, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_WORLD, 0,GunSoundProfile.get("standard")));
         register("boilerpistol", new GunType("Boiler Pistol", 8.5f, 2.3f, 43, 1, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_BUNDLE, 0,GunSoundProfile.get("goofyahh")));
         register("pumpsg", new GunType("Pump Shotgun", 6.5f, 4.0f, 14, 5, Set.of("shotgun_shells"), "shotgunshellempty", ShellEjectionMode.TO_WORLD, 0.4f,GunSoundProfile.get("standard")));
+        register("grenadelauncher", new GunType("Grenade Launcher", 15.5f, 1.0f, 14, 1, Set.of("grenade_shells"), "grenadeshellempty", ShellEjectionMode.TO_BUNDLE, 0.4f,GunSoundProfile.get("goofyahh")));
+
 
     }
     
