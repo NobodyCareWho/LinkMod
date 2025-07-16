@@ -11,6 +11,7 @@ import net.minecraft.util.Identifier;
 import org.goober.linkmod.Linkmod;
 import org.goober.linkmod.projectilestuff.SeedbagEntity;
 import org.goober.linkmod.projectilestuff.BulletEntity;
+import org.goober.linkmod.projectilestuff.PillGrenadeEntity;
 
 public class LmodEntityRegistry {
     public static final EntityType<SeedbagEntity> SEEDBAG_ENTITY = Registry.register(
@@ -43,10 +44,10 @@ public class LmodEntityRegistry {
                     .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Linkmod.MOD_ID, "sparkbullet")))
     );
 
-    public static final EntityType<BulletEntity> PILLGRENADE = Registry.register(
+    public static final EntityType<PillGrenadeEntity> PILLGRENADE = Registry.register(
             Registries.ENTITY_TYPE,
             Identifier.of(Linkmod.MOD_ID, "pillgrenade"),
-            EntityType.Builder.<BulletEntity>create(BulletEntity::new, SpawnGroup.MISC)
+            EntityType.Builder.<PillGrenadeEntity>create(PillGrenadeEntity::new, SpawnGroup.MISC)
                     .dimensions(0.5F, 0.5F)
                     .maxTrackingRange(80)
                     .trackingTickInterval(1)

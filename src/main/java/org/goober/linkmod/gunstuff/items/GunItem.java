@@ -13,6 +13,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
@@ -25,9 +26,13 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.goober.linkmod.gunstuff.GunContentsComponent;
 import org.goober.linkmod.gunstuff.GunTooltipData;
+import org.goober.linkmod.gunstuff.RecoilTracker;
 import org.goober.linkmod.itemstuff.LmodDataComponentTypes;
 import org.goober.linkmod.projectilestuff.BulletEntity;
+import org.goober.linkmod.projectilestuff.PillGrenadeEntity;
 import org.goober.linkmod.gunstuff.items.Bullets.BulletType;
+import org.goober.linkmod.miscstuff.ParticleProfile;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,13 +107,20 @@ public class GunItem extends Item {
 
                         // shoot multiple bullets for shotgun
                         for (int i = 0; i < bulletType.pelletsPerShot(); i++) {
-                            BulletEntity bullet = new BulletEntity(world, user, bulletStack);
-                            bullet.setDamage(gunType.damage());
+                            // use projectile factory to create the correct projectile type
+                            PersistentProjectileEntity projectile = bulletType.projectileFactory().create(world, user, bulletStack);
+                            
+                            // set damage if the projectile supports it
+                            if (projectile instanceof BulletEntity bullet) {
+                                bullet.setDamage(gunType.damage());
+                            } else if (projectile instanceof PillGrenadeEntity grenade) {
+                                grenade.setDamage(gunType.damage());
+                            }
 
                             float spread = bulletType.pelletsPerShot() > 1 ? 6.0F : 1.0F;
-                            bullet.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, gunType.velocity(), spread);
-                            world.spawnEntity(bullet);
-                            System.out.println("Spawned bullet entity");
+                            projectile.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, gunType.velocity(), spread);
+                            world.spawnEntity(projectile);
+                            System.out.println("Spawned projectile entity: " + projectile.getClass().getSimpleName());
                         }
                     }
 
@@ -129,13 +141,9 @@ public class GunItem extends Item {
                         Vec3d finalVelocity = new Vec3d(launchVelocity.x + oldVelocity.x, launchVelocity.y + oldVelocity.y, launchVelocity.z + oldVelocity.z);
                         // Set the player's velocity
                         user.setVelocity(finalVelocity);
-
-                        // double yAtLaunch = user.getY(); // THIS CRASHES GAME, PLEASE CIRCUMVENT
-
-                        // while (!(user.getY() >= yAtLaunch && user.isOnGround())){
-                        //     user.fallDistance = 0f;
-                        // }
-
+                        
+                        // mark player as having recent recoil for fall damage reduction
+                        RecoilTracker.markPlayerRecoil(user);
 
                         // Optionally mark for velocity update if this is server-side
                         user.velocityModified = true;
@@ -188,10 +196,29 @@ public class GunItem extends Item {
                     // update gun contents
                     stack.set(LmodDataComponentTypes.GUN_CONTENTS, builder.build());
 
-                    // play gun sound
-                    world.playSound(null, user.getX(), user.getY(), user.getZ(),
-                            SoundEvents.ENTITY_FIREWORK_ROCKET_BLAST,
-                            SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
+                    // play gun sound using sound profile
+                    if (gunType.soundprofile() != null && gunType.soundprofile().primesound() != null) {
+                        world.playSound(null, user.getX(), user.getY(), user.getZ(),
+                                gunType.soundprofile().primesound(),
+                                SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
+                    }
+                    
+                    // spawn fire particle from gun particle profile
+                    if (gunType.particleprofile() != null && gunType.particleprofile().fireparticle() != null) {
+                        if (world instanceof ServerWorld serverWorld) {
+                            // get muzzle position (slightly in front of player)
+                            Vec3d lookDirection = user.getRotationVec(1.0F);
+                            Vec3d muzzlePos = user.getEyePos().add(lookDirection.multiply(0.5));
+                            
+                            serverWorld.spawnParticles(
+                                gunType.particleprofile().fireparticle(),
+                                muzzlePos.x, muzzlePos.y - 0.1, muzzlePos.z,
+                                5, // particle count
+                                0.1, 0.1, 0.1, // offset
+                                0.1 // speed
+                            );
+                        }
+                    }
 
                     // add cooldown
                     user.getItemCooldownManager().set(stack, gunType.cooldownTicks());
@@ -401,15 +428,27 @@ public class GunItem extends Item {
         return gunTypeId;
     }
     
-    private static void playInsertSound(PlayerEntity player) {
-        player.playSound(SoundEvents.ITEM_BUNDLE_INSERT, 0.8F, 0.8F + player.getWorld().getRandom().nextFloat() * 0.4F);
+    private void playInsertSound(PlayerEntity player) {
+        // use load sound from gun profile if available
+        Guns.GunType gunType = Guns.get(gunTypeId);
+        if (gunType.soundprofile() != null && gunType.soundprofile().loadsound() != null) {
+            player.playSound(gunType.soundprofile().loadsound(), 0.8F, 0.8F + player.getWorld().getRandom().nextFloat() * 0.4F);
+        } else {
+            player.playSound(SoundEvents.ITEM_BUNDLE_INSERT, 0.8F, 0.8F + player.getWorld().getRandom().nextFloat() * 0.4F);
+        }
     }
     
-    private static void playInsertFailSound(PlayerEntity player) {
+    private void playInsertFailSound(PlayerEntity player) {
         player.playSound(SoundEvents.ITEM_BUNDLE_INSERT_FAIL, 1.0F, 1.0F);
     }
     
-    private static void playRemoveOneSound(PlayerEntity player) {
-        player.playSound(SoundEvents.ITEM_BUNDLE_REMOVE_ONE, 0.8F, 0.8F + player.getWorld().getRandom().nextFloat() * 0.4F);
+    private void playRemoveOneSound(PlayerEntity player) {
+        // use unload sound from gun profile if available
+        Guns.GunType gunType = Guns.get(gunTypeId);
+        if (gunType.soundprofile() != null && gunType.soundprofile().unloadsound() != null) {
+            player.playSound(gunType.soundprofile().unloadsound(), 0.8F, 0.8F + player.getWorld().getRandom().nextFloat() * 0.4F);
+        } else {
+            player.playSound(SoundEvents.ITEM_BUNDLE_REMOVE_ONE, 0.8F, 0.8F + player.getWorld().getRandom().nextFloat() * 0.4F);
+        }
     }
 }

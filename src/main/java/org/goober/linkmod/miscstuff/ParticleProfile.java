@@ -1,6 +1,6 @@
 package org.goober.linkmod.miscstuff;
 
-import net.minecraft.particle.ParticleType;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -32,9 +32,9 @@ public class ParticleProfile {
     }
 
     public record PP(
-            ParticleType fireparticle,
-            ParticleType trailparticle,
-            ParticleType bulletparticle
+            ParticleEffect fireparticle,
+            ParticleEffect trailparticle,
+            ParticleEffect bulletparticle
     ) {
     }
 }

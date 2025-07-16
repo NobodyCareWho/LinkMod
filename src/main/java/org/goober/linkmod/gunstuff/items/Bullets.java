@@ -6,6 +6,7 @@ import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.miscstuff.ParticleProfile;
 import org.goober.linkmod.miscstuff.soundprofiles.BulletSoundProfile;
 import org.goober.linkmod.projectilestuff.BulletEntity;
+import org.goober.linkmod.projectilestuff.PillGrenadeEntity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,17 +18,22 @@ public class Bullets {
 
     // define bullet types with tags
     static {
-        register("standard", new BulletType("Standard Bullet", 1.0f, 0xFF888888, Set.of("rifle_ammo"), 1, 1,BulletSoundProfile.get("standard"),ParticleProfile.get("standard")));
-        register("silver_bullet", new BulletType("Silver Bullet", 1.2f, 0xFF888888, Set.of("rifle_ammo"), 1, 1,BulletSoundProfile.get("standard"),ParticleProfile.get("standard")));
-        register("copper_bullet", new BulletType("Copper Bullet", 0.8f, 0xFF888888, Set.of("rifle_ammo"), 1, 1,BulletSoundProfile.get("standard"),ParticleProfile.get("standard")));
-        register("diamond_bullet", new BulletType("Diamond Bullet", 3.0f, 0xFF888888, Set.of("rifle_ammo"), 1, 1,BulletSoundProfile.get("standard"),ParticleProfile.get("standard")));
-        register("ratshot_bullet", new BulletType("Ratshot", 0.15f, 0xFF888888, Set.of("rifle_ammo"), 7, 1.2f,BulletSoundProfile.get("goofyahh"),ParticleProfile.get("goofyahh")));
-        register("buckshot", new BulletType("Buckshot", 0.7f, 0xFF444444, Set.of("shotgun_shells"), 5, 1,BulletSoundProfile.get("standard"),ParticleProfile.get("standard")));
-        register("slug", new BulletType("Slug", 3, 0xFF444444, Set.of("shotgun_shells"), 1, 0.8f,BulletSoundProfile.get("standard"),ParticleProfile.get("standard")));
-        register("breezeshot", new BulletType("Breezeshot", 1.0f, 0xFF444444, Set.of("shotgun_shells"), 0, 3,BulletSoundProfile.get("goofyahh"),ParticleProfile.get("goofyahh")));
-        register("blazeshot", new BulletType("Blazeshot", 0.2f, 0xFF444444, Set.of("shotgun_shells"), 12, 0.5f,BulletSoundProfile.get("standard"),ParticleProfile.get("standard")));
-        register("pillgrenade", new BulletType("Pill Grenade", 1.0f, 0xFF444444, Set.of("grenade_shells"), 1, 1f,BulletSoundProfile.get("grenadelaunch"),ParticleProfile.get("goofyahh")));
-        register("thumpershell", new BulletType("Thumper Shell", 0.6f, 0xFF444444, Set.of("grenade_shells"), 8, 3f,BulletSoundProfile.get("goofyahh"),ParticleProfile.get("goofyahh")));
+        // standard bullet projectile factory
+        ProjectileFactory bulletFactory = BulletEntity::new;
+        // grenade projectile factory
+        ProjectileFactory grenadeFactory = PillGrenadeEntity::new;
+        
+        register("standard", new BulletType("Standard Bullet", 1.0f, 0xFF888888, Set.of("rifle_ammo"), 1, 1,BulletSoundProfile.get("standard"),ParticleProfile.get("standard"), bulletFactory));
+        register("silver_bullet", new BulletType("Silver Bullet", 1.2f, 0xFF888888, Set.of("rifle_ammo"), 1, 1,BulletSoundProfile.get("standard"),ParticleProfile.get("standard"), bulletFactory));
+        register("copper_bullet", new BulletType("Copper Bullet", 0.8f, 0xFF888888, Set.of("rifle_ammo"), 1, 1,BulletSoundProfile.get("standard"),ParticleProfile.get("standard"), bulletFactory));
+        register("diamond_bullet", new BulletType("Diamond Bullet", 3.0f, 0xFF888888, Set.of("rifle_ammo"), 1, 1,BulletSoundProfile.get("standard"),ParticleProfile.get("standard"), bulletFactory));
+        register("ratshot_bullet", new BulletType("Ratshot", 0.15f, 0xFF888888, Set.of("rifle_ammo"), 7, 1.2f,BulletSoundProfile.get("goofyahh"),ParticleProfile.get("goofyahh"), bulletFactory));
+        register("buckshot", new BulletType("Buckshot", 0.7f, 0xFF444444, Set.of("shotgun_shells"), 5, 1,BulletSoundProfile.get("standard"),ParticleProfile.get("standard"), bulletFactory));
+        register("slug", new BulletType("Slug", 3, 0xFF444444, Set.of("shotgun_shells"), 1, 0.8f,BulletSoundProfile.get("standard"),ParticleProfile.get("standard"), bulletFactory));
+        register("breezeshot", new BulletType("Breezeshot", 1.0f, 0xFF444444, Set.of("shotgun_shells"), 0, 3,BulletSoundProfile.get("goofyahh"),ParticleProfile.get("goofyahh"), bulletFactory));
+        register("blazeshot", new BulletType("Blazeshot", 0.2f, 0xFF444444, Set.of("shotgun_shells"), 12, 0.5f,BulletSoundProfile.get("standard"),ParticleProfile.get("standard"), bulletFactory));
+        register("pillgrenade", new BulletType("Pill Grenade", 1.0f, 0xFF444444, Set.of("grenade_shells"), 1, 1f,BulletSoundProfile.get("grenadelaunch"),ParticleProfile.get("goofyahh"), grenadeFactory));
+        register("thumpershell", new BulletType("Thumper Shell", 0.6f, 0xFF444444, Set.of("grenade_shells"), 8, 3f,BulletSoundProfile.get("goofyahh"),ParticleProfile.get("goofyahh"), bulletFactory));
     }
     
     public static void register(String id, BulletType bulletType) {
@@ -50,7 +56,8 @@ public class Bullets {
         int pelletsPerShot,
         float sRMultiplier, // spatial recoil multiplier
         BulletSoundProfile.BSP soundprofile,
-        ParticleProfile.PP particleprofile
+        ParticleProfile.PP particleprofile,
+        ProjectileFactory projectileFactory
     ) {
         // check if this bullet has a specific tag
         public boolean hasTag(String tag) {

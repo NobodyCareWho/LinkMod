@@ -20,6 +20,8 @@ import net.minecraft.world.World;
 import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.gunstuff.items.BulletItem;
 import org.goober.linkmod.gunstuff.items.Bullets;
+import org.goober.linkmod.miscstuff.soundprofiles.BulletSoundProfile;
+import org.goober.linkmod.miscstuff.ParticleProfile;
 
 public class BulletEntity extends PersistentProjectileEntity {
     private float damage = 5.0F;
@@ -57,34 +59,39 @@ public class BulletEntity extends PersistentProjectileEntity {
     public void tick() {
         super.tick();
         
-        // add particle trail
-        if (this.getWorld() instanceof ServerWorld serverWorld) {
-            Vec3d pos = this.getPos();
-            Vec3d velocity = this.getVelocity();
-            
-            // create a trail of particles
-            for (int i = 0; i < 3; i++) {
-                double factor = i * 0.3;
-                serverWorld.spawnParticles(
-                    ParticleTypes.SMOKE,
-                    pos.x - velocity.x * factor,
-                    pos.y - velocity.y * factor,
-                    pos.z - velocity.z * factor,
-                    1,
-                    0.0, 0.0, 0.0,
-                    0.01
-                );
-            }
-            
-            // add spark particles
-            if (this.age % 2 == 0) {
-                serverWorld.spawnParticles(
-                    ParticleTypes.ELECTRIC_SPARK,
-                    pos.x, pos.y, pos.z,
-                    1,
-                    0.05, 0.05, 0.05,
-                    0.02
-                );
+        // add particle trail using particle profile
+        if (this.getWorld() instanceof ServerWorld serverWorld && !bulletStack.isEmpty() && bulletStack.getItem() instanceof BulletItem bulletItem) {
+            Bullets.BulletType bulletType = bulletItem.getBulletType();
+            if (bulletType.particleprofile() != null) {
+                Vec3d pos = this.getPos();
+                Vec3d velocity = this.getVelocity();
+                
+                // create a trail of particles using trail particle
+                if (bulletType.particleprofile().trailparticle() != null) {
+                    for (int i = 0; i < 3; i++) {
+                        double factor = i * 0.3;
+                        serverWorld.spawnParticles(
+                            bulletType.particleprofile().trailparticle(),
+                            pos.x - velocity.x * factor,
+                            pos.y - velocity.y * factor,
+                            pos.z - velocity.z * factor,
+                            1,
+                            0.0, 0.0, 0.0,
+                            0.01
+                        );
+                    }
+                }
+                
+                // add bullet particles
+                if (this.age % 2 == 0 && bulletType.particleprofile().bulletparticle() != null) {
+                    serverWorld.spawnParticles(
+                        bulletType.particleprofile().bulletparticle(),
+                        pos.x, pos.y, pos.z,
+                        1,
+                        0.05, 0.05, 0.05,
+                        0.02
+                    );
+                }
             }
         }
 
@@ -126,18 +133,29 @@ public class BulletEntity extends PersistentProjectileEntity {
         // add impact particles
         if (this.getWorld() instanceof ServerWorld serverWorld) {
             Vec3d hitPos = entityHitResult.getPos();
-            serverWorld.spawnParticles(
-                ParticleTypes.DAMAGE_INDICATOR,
-                hitPos.x, hitPos.y, hitPos.z,
-                5,
-                0.2, 0.2, 0.2,
-                0.1
-            );
+            // use fire particle from profile for impact
+            if (!bulletStack.isEmpty() && bulletStack.getItem() instanceof BulletItem bulletItem) {
+                Bullets.BulletType bulletType = bulletItem.getBulletType();
+                if (bulletType.particleprofile() != null && bulletType.particleprofile().fireparticle() != null) {
+                    serverWorld.spawnParticles(
+                        bulletType.particleprofile().fireparticle(),
+                        hitPos.x, hitPos.y, hitPos.z,
+                        5,
+                        0.2, 0.2, 0.2,
+                        0.1
+                    );
+                }
+            }
         }
         
-        // play impact sound
-        this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), 
-            SoundEvents.ENTITY_ARROW_HIT, SoundCategory.PLAYERS, 1.0F, 1.2F);
+        // play impact sound from bullet sound profile
+        if (!bulletStack.isEmpty() && bulletStack.getItem() instanceof BulletItem bulletItem) {
+            Bullets.BulletType bulletType = bulletItem.getBulletType();
+            if (bulletType.soundprofile() != null && bulletType.soundprofile().entityhitsound() != null) {
+                this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), 
+                    bulletType.soundprofile().entityhitsound(), SoundCategory.PLAYERS, 1.0F, 1.2F);
+            }
+        }
         
         this.discard();
     }
@@ -149,18 +167,29 @@ public class BulletEntity extends PersistentProjectileEntity {
         // add impact particles
         if (this.getWorld() instanceof ServerWorld serverWorld) {
             Vec3d hitPos = blockHitResult.getPos();
-            serverWorld.spawnParticles(
-                ParticleTypes.SMOKE,
-                hitPos.x, hitPos.y, hitPos.z,
-                10,
-                0.1, 0.1, 0.1,
-                0.05
-            );
+            // use fire particle from profile for impact
+            if (!bulletStack.isEmpty() && bulletStack.getItem() instanceof BulletItem bulletItem) {
+                Bullets.BulletType bulletType = bulletItem.getBulletType();
+                if (bulletType.particleprofile() != null && bulletType.particleprofile().fireparticle() != null) {
+                    serverWorld.spawnParticles(
+                        bulletType.particleprofile().fireparticle(),
+                        hitPos.x, hitPos.y, hitPos.z,
+                        10,
+                        0.1, 0.1, 0.1,
+                        0.05
+                    );
+                }
+            }
         }
         
-        // play impact sound
-        this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), 
-            SoundEvents.ENTITY_ARROW_HIT_PLAYER, SoundCategory.PLAYERS, 0.8F, 1.5F);
+        // play impact sound from bullet sound profile
+        if (!bulletStack.isEmpty() && bulletStack.getItem() instanceof BulletItem bulletItem) {
+            Bullets.BulletType bulletType = bulletItem.getBulletType();
+            if (bulletType.soundprofile() != null && bulletType.soundprofile().groundhitsound() != null) {
+                this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), 
+                    bulletType.soundprofile().groundhitsound(), SoundCategory.PLAYERS, 0.8F, 1.5F);
+            }
+        }
         
         this.discard();
     }
