@@ -197,21 +197,23 @@ public class GunItem extends Item {
                     stack.set(LmodDataComponentTypes.GUN_CONTENTS, builder.build());
 
                     // play gun sound using sound profile
-                    if (gunType.soundprofile() != null && gunType.soundprofile().primesound() != null) {
+                    if (bulletType.soundprofile() != null && bulletType.soundprofile().firesound() != null) {
                         world.playSound(null, user.getX(), user.getY(), user.getZ(),
-                                gunType.soundprofile().primesound(),
+                                bulletType.soundprofile().firesound(),
                                 SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
                     }
+
+
                     
                     // spawn fire particle from gun particle profile
-                    if (gunType.particleprofile() != null && gunType.particleprofile().fireparticle() != null) {
+                    if (bulletType.particleprofile() != null && bulletType.particleprofile().fireparticle() != null) {
                         if (world instanceof ServerWorld serverWorld) {
                             // get muzzle position (slightly in front of player)
                             Vec3d lookDirection = user.getRotationVec(1.0F);
                             Vec3d muzzlePos = user.getEyePos().add(lookDirection.multiply(0.5));
                             
                             serverWorld.spawnParticles(
-                                gunType.particleprofile().fireparticle(),
+                                bulletType.particleprofile().fireparticle(),
                                 muzzlePos.x, muzzlePos.y - 0.1, muzzlePos.z,
                                 5, // particle count
                                 0.1, 0.1, 0.1, // offset
@@ -225,9 +227,18 @@ public class GunItem extends Item {
 
                     user.incrementStat(Stats.USED.getOrCreateStat(this));
 
+                    //primesound w/ delay
+                    if (gunType.soundprofile() != null && gunType.soundprofile().primesound() != null) {
+                       // Thread.sleep((50*gunType.cooldownTicks())-100);
+                        world.playSound(null, user.getX(), user.getY(), user.getZ(),
+                                gunType.soundprofile().primesound(),
+                                SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
+                    }
 
 
                     return ActionResult.SUCCESS;
+
+
 
 
                 }

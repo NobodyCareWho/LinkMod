@@ -136,9 +136,9 @@ public class BulletEntity extends PersistentProjectileEntity {
             // use fire particle from profile for impact
             if (!bulletStack.isEmpty() && bulletStack.getItem() instanceof BulletItem bulletItem) {
                 Bullets.BulletType bulletType = bulletItem.getBulletType();
-                if (bulletType.particleprofile() != null && bulletType.particleprofile().fireparticle() != null) {
+                if (bulletType.particleprofile() != null && bulletType.particleprofile().entityimpactparticle() != null) {
                     serverWorld.spawnParticles(
-                        bulletType.particleprofile().fireparticle(),
+                        bulletType.particleprofile().entityimpactparticle(),
                         hitPos.x, hitPos.y, hitPos.z,
                         5,
                         0.2, 0.2, 0.2,
@@ -170,9 +170,9 @@ public class BulletEntity extends PersistentProjectileEntity {
             // use fire particle from profile for impact
             if (!bulletStack.isEmpty() && bulletStack.getItem() instanceof BulletItem bulletItem) {
                 Bullets.BulletType bulletType = bulletItem.getBulletType();
-                if (bulletType.particleprofile() != null && bulletType.particleprofile().fireparticle() != null) {
+                if (bulletType.particleprofile() != null && bulletType.particleprofile().impactparticle() != null) {
                     serverWorld.spawnParticles(
-                        bulletType.particleprofile().fireparticle(),
+                        bulletType.particleprofile().impactparticle(),
                         hitPos.x, hitPos.y, hitPos.z,
                         10,
                         0.1, 0.1, 0.1,

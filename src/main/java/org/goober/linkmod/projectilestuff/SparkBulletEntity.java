@@ -64,7 +64,7 @@ public class SparkBulletEntity extends PersistentProjectileEntity {
             for (int i = 0; i < 3; i++) {
                 double factor = i * 0.3;
                 serverWorld.spawnParticles(
-                    ParticleTypes.ELECTRIC_SPARK,
+                    ParticleTypes.LAVA,
                     pos.x - velocity.x * factor,
                     pos.y - velocity.y * factor,
                     pos.z - velocity.z * factor,
@@ -116,7 +116,8 @@ public class SparkBulletEntity extends PersistentProjectileEntity {
             if (entity instanceof LivingEntity livingEntity) {
                 livingEntity.hurtTime = 0;
                 livingEntity.timeUntilRegen = 0;
-                livingEntity.setOnFireFor(4); // Sets the entity on fire for 4 seconds
+                int fireticks = livingEntity.getFireTicks();
+                livingEntity.setOnFireFor(2+fireticks); // Sets the entity on fire for 4 seconds
             }
         }
         

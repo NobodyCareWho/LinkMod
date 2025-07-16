@@ -1,9 +1,11 @@
 package org.goober.linkmod.miscstuff;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import org.apache.commons.lang3.ObjectUtils;
 import org.goober.linkmod.miscstuff.soundprofiles.BulletSoundProfile;
 
 import java.util.HashMap;
@@ -15,8 +17,9 @@ public class ParticleProfile {
 
     // define bullet types with tags
     static {
-        register("standard", new ParticleProfile.PP( ParticleTypes.ANGRY_VILLAGER, ParticleTypes.ASH, ParticleTypes.ELECTRIC_SPARK));
-        register("goofyahh", new ParticleProfile.PP( ParticleTypes.GUST_EMITTER_LARGE, ParticleTypes.CRIMSON_SPORE, ParticleTypes.SONIC_BOOM));
+        register("standard", new ParticleProfile.PP( ParticleTypes.EXPLOSION, null, ParticleTypes.ELECTRIC_SPARK, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
+        register("goofyahh", new ParticleProfile.PP( ParticleTypes.GUST_EMITTER_SMALL, ParticleTypes.CRIMSON_SPORE, ParticleTypes.SONIC_BOOM, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
+        register("breeze", new ParticleProfile.PP( ParticleTypes.GUST_EMITTER_LARGE, ParticleTypes.CRIMSON_SPORE, ParticleTypes.SONIC_BOOM, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
     }
 
     public static void register(String id, ParticleProfile.PP pP) {
@@ -34,7 +37,9 @@ public class ParticleProfile {
     public record PP(
             ParticleEffect fireparticle,
             ParticleEffect trailparticle,
-            ParticleEffect bulletparticle
+            ParticleEffect bulletparticle,
+            ParticleEffect impactparticle,
+            ParticleEffect entityimpactparticle
     ) {
     }
 }
