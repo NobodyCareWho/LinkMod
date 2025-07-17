@@ -110,21 +110,9 @@ public class GunItem extends Item {
                             // use projectile factory to create the correct projectile type
                             PersistentProjectileEntity projectile = bulletType.projectileFactory().create(world, user, bulletStack);
                             
-                            // set damage if the projectile supports it
-                            if (projectile instanceof BulletEntity bullet) {
-                                bullet.setDamage(gunType.damage());
-                            } else if (projectile instanceof PillGrenadeEntity grenade) {
-                                grenade.setDamage(gunType.damage());
-                            } else if (projectile instanceof HPBulletEntity bullet) {
-                                bullet.setDamage(gunType.damage());
-                            } else if (projectile instanceof SparkBulletEntity bullet) {
-                                bullet.setDamage(gunType.damage());
-                            } else if (projectile instanceof SilverBulletEntity bullet) {
-                            bullet.setDamage(gunType.damage());
-                            } else if (projectile instanceof GyrojetBulletEntity bullet) {
-                                bullet.setDamage(gunType.damage());
-                            } else if (projectile instanceof FreezeBulletEntity bullet) {
-                                bullet.setDamage(gunType.damage());
+                            // set damage if projectile implements DamageableProjectile (This makes it so that you dont need a big if statement)
+                            if (projectile instanceof DamageableProjectile damageable) {
+                                damageable.setDamage(gunType.damage());
                             }
 
                             // get current bloom value

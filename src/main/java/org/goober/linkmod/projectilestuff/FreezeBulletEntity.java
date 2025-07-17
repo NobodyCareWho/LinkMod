@@ -22,7 +22,7 @@ import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.gunstuff.items.BulletItem;
 import org.goober.linkmod.gunstuff.items.Bullets;
 
-public class FreezeBulletEntity extends PersistentProjectileEntity {
+public class FreezeBulletEntity extends PersistentProjectileEntity implements DamageableProjectile {
     private float damage = 5.0F;
     private ItemStack bulletStack;
 

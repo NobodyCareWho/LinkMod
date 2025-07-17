@@ -23,7 +23,7 @@ import org.goober.linkmod.gunstuff.items.Bullets;
 import org.goober.linkmod.miscstuff.soundprofiles.BulletSoundProfile;
 import org.goober.linkmod.miscstuff.ParticleProfile;
 
-public class BulletEntity extends PersistentProjectileEntity {
+public class BulletEntity extends PersistentProjectileEntity implements DamageableProjectile {
     private float damage = 5.0F;
     private ItemStack bulletStack;
     

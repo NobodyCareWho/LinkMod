@@ -22,7 +22,7 @@ import org.goober.linkmod.gunstuff.items.Bullets;
 import net.minecraft.entity.attribute.EntityAttributes;
 
 
-public class HPBulletEntity extends PersistentProjectileEntity {
+public class HPBulletEntity extends PersistentProjectileEntity implements DamageableProjectile {
     private float damage = 5.0F;
     private ItemStack bulletStack;
 

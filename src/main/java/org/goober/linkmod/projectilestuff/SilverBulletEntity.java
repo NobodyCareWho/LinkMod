@@ -19,7 +19,7 @@ import org.goober.linkmod.gunstuff.items.BulletItem;
 import org.goober.linkmod.gunstuff.items.Bullets;
 
 
-public class SilverBulletEntity extends PersistentProjectileEntity {
+public class SilverBulletEntity extends PersistentProjectileEntity implements DamageableProjectile {
     private float damage = 5.0F;
     private ItemStack bulletStack;
 
