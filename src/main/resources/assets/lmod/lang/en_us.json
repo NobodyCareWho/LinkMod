@@ -12,6 +12,7 @@
   "item.lmod.copper_bullet": "Copper Bullet",
   "item.lmod.silver_bullet": "Silver Bullet",
   "item.lmod.diamond_bullet": "Diamond Bullet",
+  "item.lmod.hollowpointbullet": "Hollow Point Bullet",
   "item.lmod.ratshot_bullet": "Ratshot",
   "item.lmod.hp_bullet": "Hollow Point",
   "item.lmod.subsonic_bullet": "SubSonic Round",
@@ -21,6 +22,7 @@
   "item.lmod.slugshell": "Slugshot",
   "item.lmod.shotgunshellempty": "Empty Shotgun Shell",
   "item.lmod.blazeshell": "Blazeshot",
+  "item.lmod.freezeshell": "Freezeshot",
   "item.lmod.pillgrenade": "Pill Grenade",
   "item.lmod.thumpershell": "Thumper Shell",
   "item.lmod.grenadeshellempty": "Empty Grenade Shell",
@@ -30,5 +32,20 @@
   "advancement.lmod.get_seed_bag.description": "Obtain a Seed Bag",
   "block.lmod.rounded_sandstone": "Embossed Sandstone",
   "block.lmod.gilded_sandstone": "Gilded Sandstone",
-  "block.lmod.auros_bloom": "Auros Bloom"
+  "block.lmod.auros_bloom": "Auros Bloom",
+
+  "items.skibidi":  "craftingmaterials",
+
+  "item.lmod.pinch_of_gunpowder": "Pinch of Gunpowder",
+  "item.lmod.rocket_compound": "Rocket Compound",
+  "item.lmod.copper_cap": "Copper Cap",
+  "item.lmod.iron_barrel": "Iron Barrel",
+  "item.lmod.copper_barrel": "Copper Barrel",
+  "item.lmod.iron_tip": "Iron Tip",
+  "item.lmod.copper_tip": "Copper Tip",
+  "item.lmod.hollowpoint_tip": "Hollow Point Tip",
+  "item.lmod.slug": "Slug",
+  "item.lmod.shot_pellets": "Shot Pellets",
+  "item.lmod.diamond_spine": "Diamond Spine",
+  "item.lmod.gun_components": "Gun Components"
 }

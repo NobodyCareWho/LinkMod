@@ -22,6 +22,10 @@ public class LinkmodClient implements ClientModInitializer {
         // register empty renderer for bullet entity
         EntityRendererRegistry.register(LmodEntityRegistry.BULLET, EmptyEntityRenderer::new);
         EntityRendererRegistry.register(LmodEntityRegistry.SPARKBULLET, EmptyEntityRenderer::new);
+        EntityRendererRegistry.register(LmodEntityRegistry.HPBULLET, EmptyEntityRenderer::new);
+        EntityRendererRegistry.register(LmodEntityRegistry.SILVERBULLET, EmptyEntityRenderer::new);
+        EntityRendererRegistry.register(LmodEntityRegistry.GYROJETBULLET, EmptyEntityRenderer::new);
+        EntityRendererRegistry.register(LmodEntityRegistry.ICEBULLET, EmptyEntityRenderer::new);
         // register renderer for pill grenade entity
         EntityRendererRegistry.register(LmodEntityRegistry.PILLGRENADE, EmptyEntityRenderer::new);
         // Register tooltip components

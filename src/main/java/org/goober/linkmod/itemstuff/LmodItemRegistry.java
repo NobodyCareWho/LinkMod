@@ -133,6 +133,21 @@ public class LmodItemRegistry {
             new Item.Settings()
                     .maxCount(64)
     );
+
+    public static final Item HPBULLET = register(
+            "hollowpointbullet",
+            settings -> new BulletItem(settings, "hollowpointbullet"),
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item GYROJETBULLET = register(
+            "gyrojetbullet",
+            settings -> new BulletItem(settings, "gyrojetbullet"),
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
     public static final Item RATSHOT = register(
             "ratshot_bullet",
             settings -> new BulletItem(settings, "ratshot_bullet"),
@@ -164,6 +179,13 @@ public class LmodItemRegistry {
     public static final Item BLAZESHELL = register(
             "blazeshell",
             settings -> new BulletItem(settings, "blazeshot"),
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item FREEZESHELL = register(
+            "freezeshell",
+            settings -> new BulletItem(settings, "freezeshot"),
             new Item.Settings()
                     .maxCount(64)
     );
@@ -201,6 +223,92 @@ public class LmodItemRegistry {
             settings -> new BulletItem(settings, "grenadeshellempty"),
             new Item.Settings()
                     .maxCount(32)
+    );
+
+    // INGREDIENTS
+
+    public static final Item GUNCOMPONENTS = register(
+            "gun_components",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item COPPERBARREL = register(
+            "copper_barrel",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item IRONBARREL = register(
+            "iron_barrel",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item COPPERTIP = register(
+            "copper_tip",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item IRONTIP = register(
+            "iron_tip",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item PINCHOFGUNPOWDER = register(
+            "pinch_of_gunpowder",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item ROCKETCOMPOUND = register(
+            "rocket_compound",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item DIAMONDSPINE = register(
+            "diamond_spine",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item COPPERCAP = register(
+            "copper_cap",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item SLUG = register(
+            "slug",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item SHOTPELLETS = register(
+            "shot_pellets",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item HOLLOWPOINTTIP = register(
+            "hollowpoint_tip",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
     );
 
     public static void initialize() {

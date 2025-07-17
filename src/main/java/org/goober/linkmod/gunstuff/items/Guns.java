@@ -19,13 +19,13 @@ public class Guns {
     
     // define gun types using ammo tags
     static {
-        register("rifle", new GunType("Rifle", 14.0f, 10.0f, 20, 8, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_WORLD, 0.2f,GunSoundProfile.get("standard")));
-        register("shotgun", new GunType("D.B. Shotgun", 7.5f, 2.5f, 2, 2, Set.of("shotgun_shells"), "shotgunshellempty", ShellEjectionMode.TO_BUNDLE, 0.6f,GunSoundProfile.get("standard")));
-        register("revolver", new GunType("Revolver", 9.2f, 8.0f, 3, 6, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_BUNDLE, 0,GunSoundProfile.get("goofyahh")));
-        register("ejectorpistol", new GunType("Ejector Pistol", 7.5f, 5.6f, 8, 8, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_WORLD, 0,GunSoundProfile.get("standard")));
-        register("boilerpistol", new GunType("Boiler Pistol", 8.5f, 2.3f, 43, 1, Set.of("rifle_ammo"), "bulletcasing", ShellEjectionMode.TO_BUNDLE, 0,GunSoundProfile.get("goofyahh")));
-        register("pumpsg", new GunType("Pump Shotgun", 6.5f, 4.0f, 14, 5, Set.of("shotgun_shells"), "shotgunshellempty", ShellEjectionMode.TO_WORLD, 0.4f,GunSoundProfile.get("standard")));
-        register("grenadelauncher", new GunType("Grenade Launcher", 15.5f, 1.0f, 14, 1, Set.of("grenade_shells"), "grenadeshellempty", ShellEjectionMode.TO_BUNDLE, 0.4f,GunSoundProfile.get("goofyahh")));
+        register("rifle", new GunType("Rifle", 14.0f, 10.0f, 20, 8, 0,0, 0, 0, Set.of("rifle_ammo"),  ShellEjectionMode.TO_WORLD, 0.2f,GunSoundProfile.get("standard")));
+        register("shotgun", new GunType("D.B. Shotgun", 7.5f, 2.5f, 2, 2, 0,0, 0, 0, Set.of("shotgun_shells"), ShellEjectionMode.TO_BUNDLE, 0.6f,GunSoundProfile.get("standard")));
+        register("revolver", new GunType("Revolver", 9.2f, 8.0f, 3, 6, 0,0, 0, 0, Set.of("rifle_ammo"), ShellEjectionMode.TO_BUNDLE, 0,GunSoundProfile.get("goofyahh")));
+        register("ejectorpistol", new GunType("Ejector Pistol", 7.5f, 5.6f, 8, 8, 0,0, 0, 0, Set.of("rifle_ammo"), ShellEjectionMode.TO_WORLD, 0,GunSoundProfile.get("standard")));
+        register("boilerpistol", new GunType("Boiler Pistol", 8.5f, 2.3f, 43, 1, 0,0, 0, 0, Set.of("rifle_ammo"),  ShellEjectionMode.TO_BUNDLE, 0,GunSoundProfile.get("goofyahh")));
+        register("pumpsg", new GunType("Pump Shotgun", 6.5f, 4.0f, 14, 5, 0,0, 0, 0, Set.of("shotgun_shells"),  ShellEjectionMode.TO_WORLD, 0.4f,GunSoundProfile.get("standard")));
+        register("grenadelauncher", new GunType("Grenade Launcher", 15.5f, 1.0f, 14, 1, 0,0, 0, 0, Set.of("grenade_shells"), ShellEjectionMode.TO_BUNDLE, 0.4f,GunSoundProfile.get("goofyahh")));
 
 
     }
@@ -46,10 +46,16 @@ public class Guns {
         String displayName,
         float damage,
         float velocity,
+
         int cooldownTicks,  // cooldown between shots in ticks
         int maxAmmo,
+
+        float baseInaccuracy,
+        float bloomMax,
+        float bloomLength,
+        float bloomSharpness,
+
         Set<String> acceptedAmmoTags,  // changed to tags
-        String ejectShellItemId,
         ShellEjectionMode shellEjectionMode,
         float spatialRecoil,
         GunSoundProfile.GSP soundprofile
@@ -68,7 +74,7 @@ public class Guns {
         
         // check if this gun ejects shells
         public boolean ejectsShells() {
-            return shellEjectionMode != ShellEjectionMode.NONE && ejectShellItemId != null;
+            return shellEjectionMode != ShellEjectionMode.NONE;
         }
     }
 }

@@ -44,6 +44,46 @@ public class LmodEntityRegistry {
                     .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Linkmod.MOD_ID, "sparkbullet")))
     );
 
+    public static final EntityType<BulletEntity> HPBULLET = Registry.register(
+            Registries.ENTITY_TYPE,
+            Identifier.of(Linkmod.MOD_ID, "hollowpointbullet"),
+            EntityType.Builder.<BulletEntity>create(BulletEntity::new, SpawnGroup.MISC)
+                    .dimensions(0.5F, 0.5F)
+                    .maxTrackingRange(80)
+                    .trackingTickInterval(1)
+                    .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Linkmod.MOD_ID, "hollowpointbullet")))
+    );
+
+    public static final EntityType<BulletEntity> SILVERBULLET = Registry.register(
+            Registries.ENTITY_TYPE,
+            Identifier.of(Linkmod.MOD_ID, "silverbullet"),
+            EntityType.Builder.<BulletEntity>create(BulletEntity::new, SpawnGroup.MISC)
+                    .dimensions(0.5F, 0.5F)
+                    .maxTrackingRange(80)
+                    .trackingTickInterval(1)
+                    .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Linkmod.MOD_ID, "silverbullet")))
+    );
+
+    public static final EntityType<BulletEntity> GYROJETBULLET = Registry.register(
+            Registries.ENTITY_TYPE,
+            Identifier.of(Linkmod.MOD_ID, "gyrojetbullet"),
+            EntityType.Builder.<BulletEntity>create(BulletEntity::new, SpawnGroup.MISC)
+                    .dimensions(0.5F, 0.5F)
+                    .maxTrackingRange(80)
+                    .trackingTickInterval(1)
+                    .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Linkmod.MOD_ID, "gyrojetbullet")))
+    );
+
+    public static final EntityType<BulletEntity> ICEBULLET = Registry.register(
+            Registries.ENTITY_TYPE,
+            Identifier.of(Linkmod.MOD_ID, "icebullet"),
+            EntityType.Builder.<BulletEntity>create(BulletEntity::new, SpawnGroup.MISC)
+                    .dimensions(0.5F, 0.5F)
+                    .maxTrackingRange(80)
+                    .trackingTickInterval(1)
+                    .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Linkmod.MOD_ID, "icebullet")))
+    );
+
     public static final EntityType<PillGrenadeEntity> PILLGRENADE = Registry.register(
             Registries.ENTITY_TYPE,
             Identifier.of(Linkmod.MOD_ID, "pillgrenade"),

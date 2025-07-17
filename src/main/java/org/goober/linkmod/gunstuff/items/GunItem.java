@@ -28,8 +28,7 @@ import org.goober.linkmod.gunstuff.GunContentsComponent;
 import org.goober.linkmod.gunstuff.GunTooltipData;
 import org.goober.linkmod.gunstuff.RecoilTracker;
 import org.goober.linkmod.itemstuff.LmodDataComponentTypes;
-import org.goober.linkmod.projectilestuff.BulletEntity;
-import org.goober.linkmod.projectilestuff.PillGrenadeEntity;
+import org.goober.linkmod.projectilestuff.*;
 import org.goober.linkmod.gunstuff.items.Bullets.BulletType;
 import org.goober.linkmod.miscstuff.ParticleProfile;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
@@ -71,9 +70,9 @@ public class GunItem extends Item {
                     ItemStack item = items.get(i);
                     
                     // skip if it's the gun's own shell type
-                    if (gunType.ejectShellItemId() != null) {
+                    if (gunType.acceptedAmmoTags() != null) {
                         String itemId = Registries.ITEM.getId(item.getItem()).getPath();
-                        if (itemId.equals(gunType.ejectShellItemId())) {
+                        if (!itemId.equals(gunType.acceptedAmmoTags())) {
                             continue; // skip shell casings
                         }
                     }
@@ -115,10 +114,20 @@ public class GunItem extends Item {
                                 bullet.setDamage(gunType.damage());
                             } else if (projectile instanceof PillGrenadeEntity grenade) {
                                 grenade.setDamage(gunType.damage());
+                            } else if (projectile instanceof HPBulletEntity bullet) {
+                                bullet.setDamage(gunType.damage());
+                            } else if (projectile instanceof SparkBulletEntity bullet) {
+                                bullet.setDamage(gunType.damage());
+                            } else if (projectile instanceof SilverBulletEntity bullet) {
+                            bullet.setDamage(gunType.damage());
+                            } else if (projectile instanceof GyrojetBulletEntity bullet) {
+                                bullet.setDamage(gunType.damage());
+                            } else if (projectile instanceof FreezeBulletEntity bullet) {
+                                bullet.setDamage(gunType.damage());
                             }
 
                             float spread = bulletType.pelletsPerShot() > 1 ? 6.0F : 1.0F;
-                            projectile.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, gunType.velocity(), spread);
+                            projectile.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, gunType.velocity()*bulletType.vMultiplier(), spread);
                             world.spawnEntity(projectile);
                             System.out.println("Spawned projectile entity: " + projectile.getClass().getSimpleName());
                         }
@@ -151,7 +160,7 @@ public class GunItem extends Item {
 
                     // handle shell ejection based on mode
                     if (gunType.ejectsShells()) {
-                        String shellItemId = gunType.ejectShellItemId();
+                        String shellItemId = bulletType.ejectShellItemId();
                         Item shellItem = Registries.ITEM.get(Identifier.of("lmod", shellItemId));
                         if (shellItem != null && shellItem != Items.AIR) {
                             ItemStack emptyShell = new ItemStack(shellItem, 1);
@@ -216,7 +225,7 @@ public class GunItem extends Item {
                                 bulletType.particleprofile().fireparticle(),
                                 muzzlePos.x, muzzlePos.y - 0.1, muzzlePos.z,
                                 5, // particle count
-                                0.1, 0.1, 0.1, // offset
+                                0.1, -0.3, 0.1, // offset
                                 0.1 // speed
                             );
                         }
@@ -377,11 +386,12 @@ public class GunItem extends Item {
         }
         
         Guns.GunType gunType = Guns.get(gunTypeId);
+        Bullets.BulletType bulletType = Bullets.get(bulletItem.getBulletTypeId());
         
         // check if this is the gun's own ejected shell type
-        if (gunType.ejectShellItemId() != null) {
+        if (bulletType.ejectShellItemId() != null) {
             String itemId = Registries.ITEM.getId(bulletStack.getItem()).getPath();
-            if (itemId.equals(gunType.ejectShellItemId())) {
+            if (itemId.equals(bulletType.ejectShellItemId())) {
                 return false; // reject own shell type
             }
         }
@@ -396,11 +406,11 @@ public class GunItem extends Item {
         
         for (ItemStack itemStack : contents.items()) {
             // skip if it's the gun's own shell type
-            if (gunType.ejectShellItemId() != null) {
+
                 String itemId = Registries.ITEM.getId(itemStack.getItem()).getPath();
-                if (itemId.equals(gunType.ejectShellItemId())) {
+                if (!itemId.equals(gunType.acceptedAmmoTags())) {
                     continue; // skip shell casings
-                }
+
             }
             
             if (itemStack.getItem() instanceof BulletItem bulletItem) {
