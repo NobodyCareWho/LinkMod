@@ -44,6 +44,15 @@ public class Bullets {
         register("thumpershell", new BulletType("Thumper Shell", 0.6f, 0xFF444444, Set.of("grenade_shells"), 8, 3f, 1, "grenadeshellempty", BulletSoundProfile.get("goofyahh"),ParticleProfile.get("goofyahh"), bulletFactory));
 
     }
+
+    // new helper method to check if an bullet is an empty shell, used for the priority pickup
+    static boolean isEmptyShell(String itemId) {
+        // list of empty shell item IDs
+        return itemId.equals("bulletcasing") ||
+                itemId.equals("shotgunshellempty") ||
+                itemId.equals("grenadeshellempty") ||
+                itemId.equals("copper_cap");
+    }
     
     public static void register(String id, BulletType bulletType) {
         BULLET_TYPES.put(id, bulletType);

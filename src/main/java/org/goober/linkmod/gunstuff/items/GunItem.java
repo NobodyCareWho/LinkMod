@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.goober.linkmod.gunstuff.items.Bullets.isEmptyShell;
+
 public class GunItem extends Item {
     private final String gunTypeId;
 
@@ -69,12 +71,10 @@ public class GunItem extends Item {
                 for (int i = 0; i < items.size(); i++) {
                     ItemStack item = items.get(i);
                     
-                    // skip if it's the gun's own shell type
-                    if (gunType.acceptedAmmoTags() != null) {
-                        String itemId = Registries.ITEM.getId(item.getItem()).getPath();
-                        if (!itemId.equals(gunType.acceptedAmmoTags())) {
-                            continue; // skip shell casings
-                        }
+                    // skip empty shell casings
+                    String itemId = Registries.ITEM.getId(item.getItem()).getPath();
+                    if (isEmptyShell(itemId)) {
+                        continue; // skip shell casings
                     }
                     
                     if (item.getItem() instanceof BulletItem bulletItem) {
@@ -385,17 +385,13 @@ public class GunItem extends Item {
             return false;
         }
         
-        Guns.GunType gunType = Guns.get(gunTypeId);
-        Bullets.BulletType bulletType = Bullets.get(bulletItem.getBulletTypeId());
-        
-        // check if this is the gun's own ejected shell type
-        if (bulletType.ejectShellItemId() != null) {
-            String itemId = Registries.ITEM.getId(bulletStack.getItem()).getPath();
-            if (itemId.equals(bulletType.ejectShellItemId())) {
-                return false; // reject own shell type
-            }
+        // reject empty shells
+        String itemId = Registries.ITEM.getId(bulletStack.getItem()).getPath();
+        if (isEmptyShell(itemId)) {
+            return false;
         }
         
+        Guns.GunType gunType = Guns.get(gunTypeId);
         return gunType.acceptsBullet(bulletItem);
     }
     
@@ -405,10 +401,9 @@ public class GunItem extends Item {
         Guns.GunType gunType = Guns.get(gunTypeId);
         
         for (ItemStack itemStack : contents.items()) {
-            // skip if it's the gun's own shell type
-
-                String itemId = Registries.ITEM.getId(itemStack.getItem()).getPath();
-                if (!itemId.equals(gunType.acceptedAmmoTags())) {
+            // skip empty shell casings
+            String itemId = Registries.ITEM.getId(itemStack.getItem()).getPath();
+            if (isEmptyShell(itemId)) {
                     continue; // skip shell casings
 
             }
@@ -424,20 +419,15 @@ public class GunItem extends Item {
     }
     
     private ItemStack removeWithPriority(GunContentsComponent contents) {
-        // priority list for removal - empty shells first
-        String[] priorityItems = {"bulletcasing", "shotgunshellempty"};
-        
-        // first, try to remove priority items (empty shells)
-        for (String priorityItemId : priorityItems) {
-            for (ItemStack item : contents.items()) {
-                Item itemType = item.getItem();
-                if (Registries.ITEM.getId(itemType).getPath().equals(priorityItemId)) {
-                    return item;
-                }
+        // first, try to remove empty shells
+        for (ItemStack item : contents.items()) {
+            String itemId = Registries.ITEM.getId(item.getItem()).getPath();
+            if (isEmptyShell(itemId)) {
+                return item;
             }
         }
         
-        // if no priority items found, remove the first item
+        // if no empty shells found, remove the first item
         if (!contents.items().isEmpty()) {
             return contents.items().get(0);
         }
