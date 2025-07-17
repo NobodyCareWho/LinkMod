@@ -1,29 +1,21 @@
 package org.goober.linkmod.projectilestuff;
 
-import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.gunstuff.items.BulletItem;
 import org.goober.linkmod.gunstuff.items.Bullets;
-import org.goober.linkmod.miscstuff.soundprofiles.BulletSoundProfile;
-import org.goober.linkmod.miscstuff.ParticleProfile;
-import org.joml.Vector3d;
 
 public class GyrojetBulletEntity extends PersistentProjectileEntity {
     private float damage = 5.0F;
@@ -60,20 +52,27 @@ public class GyrojetBulletEntity extends PersistentProjectileEntity {
     @Override
     public void tick() {
         super.tick();
-
+        
+        // exponentially increase velocity (on both client and server)
+        if (!this.getWorld().isClient) {
+            Vec3d currentVelocity = this.getVelocity();
+            float accelerationFactor = 1.2f;
+            Vec3d newVelocity = currentVelocity.multiply(accelerationFactor);
+            
+            // Here is a max cap for the velocity to prevent it from getting too fast, its optional but thought it'd fit
+            double maxSpeed = 5.0;
+            if (newVelocity.length() > maxSpeed) {
+                newVelocity = newVelocity.normalize().multiply(maxSpeed);
+            }
+            
+            this.setVelocity(newVelocity);
+        }
 
         // add particle trail using particle profile
         if (this.getWorld() instanceof ServerWorld serverWorld && !bulletStack.isEmpty() && bulletStack.getItem() instanceof BulletItem bulletItem) {
             Bullets.BulletType bulletType = bulletItem.getBulletType();
             if (bulletType.particleprofile() != null) {
                 Vec3d pos = this.getPos();
-
-                Vec3d oldspeed = this.getVelocity();
-                Vec3d directionOfSpeed = oldspeed.normalize();
-                float velocitymultiplier = 1.2f;
-                Vec3d finalSpeed = directionOfSpeed.multiply(velocitymultiplier);
-                this.setVelocity(finalSpeed);
-
                 Vec3d velocity = this.getVelocity();
 
                 // create a trail of particles using trail particle
@@ -126,14 +125,19 @@ public class GyrojetBulletEntity extends PersistentProjectileEntity {
         float finalDamage = this.damage;
         if (!bulletStack.isEmpty() && bulletStack.getItem() instanceof BulletItem bulletItem) {
             Bullets.BulletType bulletType = bulletItem.getBulletType();
-            finalDamage *= (bulletType.damageMultiplier()*this.getVelocityMultiplier());
+            // calculate velocity-based damage multiplier
+            double velocityMagnitude = this.getVelocity().length();
+            // assuming initial velocity is around 1.0, scale damage based on current velocity
+            float velocityDamageMultiplier = (float)(velocityMagnitude / 1.0);
+            finalDamage *= (bulletType.damageMultiplier() * velocityDamageMultiplier);
         }
 
         // deal damage
         DamageSource damageSource = this.getDamageSources().arrow(this, this.getOwner());
         if (this.getWorld() instanceof ServerWorld serverWorld) {
             entity.damage(serverWorld, damageSource, finalDamage);
-            System.out.println("damage dealt: " + finalDamage + " (after multiplied by) " + this.getVelocityMultiplier());
+            double velocityMagnitude = this.getVelocity().length();
+            System.out.println("damage dealt: " + finalDamage + " (velocity: " + velocityMagnitude + ")");
             // remove immunity frames so shotgun pellets can all hit
             if (entity instanceof LivingEntity livingEntity) {
                 livingEntity.hurtTime = 0;
