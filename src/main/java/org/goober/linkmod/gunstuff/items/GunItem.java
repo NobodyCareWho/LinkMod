@@ -27,6 +27,7 @@ import net.minecraft.world.World;
 import org.goober.linkmod.gunstuff.GunContentsComponent;
 import org.goober.linkmod.gunstuff.GunTooltipData;
 import org.goober.linkmod.gunstuff.RecoilTracker;
+import org.goober.linkmod.gunstuff.BloomTracker;
 import org.goober.linkmod.itemstuff.LmodDataComponentTypes;
 import org.goober.linkmod.projectilestuff.*;
 import org.goober.linkmod.gunstuff.items.Bullets.BulletType;
@@ -126,11 +127,17 @@ public class GunItem extends Item {
                                 bullet.setDamage(gunType.damage());
                             }
 
+                            // get current bloom value
+                            float currentBloom = BloomTracker.getCurrentBloom(user, stack, 2.0f); // 2.0f decay rate per second
+                            
                             float spread = bulletType.pelletsPerShot() > 1 ? 6.0F : 1.0F;
                             projectile.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, gunType.velocity()*bulletType.vMultiplier(), spread);
                             world.spawnEntity(projectile);
                             System.out.println("Spawned projectile entity: " + projectile.getClass().getSimpleName());
                         }
+                        
+                        // update bloom after shooting
+                        BloomTracker.updateBloom(user, stack, gunType.bloomSharpness(), gunType.bloomMax());
                     }
 
                     if (gunType.spatialRecoil() > 0) {
