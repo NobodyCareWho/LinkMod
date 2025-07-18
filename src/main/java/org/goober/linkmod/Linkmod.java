@@ -7,6 +7,7 @@ import net.minecraft.registry.Registry;
 import org.goober.linkmod.blockstuff.LmodBlockRegistry;
 import org.goober.linkmod.itemstuff.LmodItemRegistry;
 import org.goober.linkmod.itemstuff.LmodDataComponentTypes;
+import org.goober.linkmod.itemstuff.LmodItemGroups;
 import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.particlestuff.LmodParticleRegistry;
 
@@ -17,9 +18,9 @@ public class Linkmod implements ModInitializer {
     public void onInitialize() {
         LmodDataComponentTypes.initialize();
         LmodItemRegistry.initialize();
+        LmodItemGroups.initialize();
         LmodEntityRegistry.initialize();
         LmodBlockRegistry.initialize();
-        LmodEntityRegistry.initialize();
     }
 
 }
