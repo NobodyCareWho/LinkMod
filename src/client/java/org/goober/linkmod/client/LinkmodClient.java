@@ -3,9 +3,22 @@ package org.goober.linkmod.client;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.BlockRenderLayer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.option.AttackIndicator;
+import net.minecraft.client.render.RenderLayer;
+import org.goober.linkmod.gunstuff.items.GunItem;
+import org.goober.linkmod.gunstuff.items.Guns;
+import org.goober.linkmod.gunstuff.BloomTracker;
+import net.minecraft.item.ItemStack;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import org.goober.linkmod.blockstuff.LmodBlockRegistry;
 import org.goober.linkmod.entitystuff.LmodEntityRegistry;
@@ -41,5 +54,57 @@ public class LinkmodClient implements ClientModInitializer {
         BlockRenderLayerMap.putBlock(LmodBlockRegistry.AUROS_BLOOM, BlockRenderLayer.CUTOUT);
 
         ParticleFactoryRegistry.getInstance().register(LmodParticleRegistry.SMOKERING, SmokeRingParticle.SmokeRingFactory::new);
+        
+        // register HUD rendering
+        HudRenderCallback.EVENT.register(LinkmodClient::renderHud);
+    }
+
+    // texture identifiers for custom bloom bar (as GUI textures, not raw textures)
+    private static final Identifier BLOOM_BAR_BACKGROUND = Identifier.of("lmod", "hud/bloombarempty");
+    private static final Identifier BLOOM_BAR_FULL = Identifier.of("lmod", "hud/bloombarfull");
+    private static final Identifier BLOOM_BAR_PROGRESS = Identifier.of("lmod", "hud/bloombarprogress2");
+    
+    private static void renderHud(DrawContext ctx, RenderTickCounter counter) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.player == null) return;
+
+        if (client.options.getAttackIndicator().getValue() != AttackIndicator.CROSSHAIR) {
+            return;
+        }
+        
+        // check if holding a gun
+        ItemStack heldItem = client.player.getMainHandStack();
+        if (!(heldItem.getItem() instanceof GunItem gunItem)) {
+            return;
+        }
+
+        // get gun type and check if it has bloom
+        Guns.GunType gunType = Guns.get(gunItem.getGunTypeId());
+        if (gunType.bloomMax() <= 0) {
+            return;
+        }
+
+        int screenWidth = client.getWindow().getScaledWidth();
+        int screenHeight = client.getWindow().getScaledHeight();
+
+        Float progress = null; // this is placeholder
+
+        int j = screenHeight / 2 - 7 + 16;
+        int k = screenWidth / 2 - 8;
+
+        if (progress >= 1.0f) {
+            // fully charged - draw full texture
+            ctx.drawGuiTexture(RenderPipelines.CROSSHAIR, BLOOM_BAR_FULL, k, j, 16, 16);
+        } else if (progress < 1.0f) {
+            // draw background bar (horizontal)
+            ctx.drawGuiTexture(RenderPipelines.CROSSHAIR, BLOOM_BAR_BACKGROUND, k, j, 16, 4);
+            
+            if (progress > 0.0f) {
+                // draw progress bar (horizontal, partial width)
+                int progressWidth = (int)(progress * 17.0f);
+                ctx.drawGuiTexture(RenderPipelines.CROSSHAIR, BLOOM_BAR_PROGRESS, 16, 4, 0, 0, k, j, progressWidth, 4);
+            }
+        }
     }
 }
+
