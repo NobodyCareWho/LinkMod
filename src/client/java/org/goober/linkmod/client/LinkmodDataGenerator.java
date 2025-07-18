@@ -34,7 +34,7 @@ public class LinkmodDataGenerator implements DataGeneratorEntrypoint {
                             LmodItemRegistry.SEEDBAG,
                             Text.translatable("advancement.lmod.root.title"),
                             Text.translatable("advancement.lmod.root.description"),
-                            Identifier.of("minecraft", "textures/gui/advancements/backgrounds/adventure.png"),
+                            Identifier.of("minecraft", "gui/advancements/backgrounds/adventure"),
                             AdvancementFrame.TASK,
                             false,
                             false,
