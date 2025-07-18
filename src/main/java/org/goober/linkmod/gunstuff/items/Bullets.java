@@ -34,7 +34,7 @@ public class Bullets {
         register("diamond_bullet", new BulletType("Diamond Bullet", 3.0f, 0xFF888888, Set.of("rifle_ammo"), 1, 1, 1, "bulletcasing", BulletSoundProfile.get("standard"),ParticleProfile.get("standard"), bulletFactory));
         register("hollowpointbullet", new BulletType("Hollow Point Bullet", 3.0f, 0xFF888888, Set.of("rifle_ammo"), 1, 1, 1, "bulletcasing", BulletSoundProfile.get("standard"),ParticleProfile.get("standard"), hpbulletFactory));
         register("ratshot_bullet", new BulletType("Ratshot", 0.15f, 0xFF888888, Set.of("rifle_ammo"), 7, 1.2f, 1, "bulletcasing", BulletSoundProfile.get("goofyahh"),ParticleProfile.get("goofyahh"), bulletFactory));
-        register("gyrojetbullet", new BulletType("Gyrojet Bullet", 1.0f, 0xFF888888, Set.of("rifle_ammo"), 1, 1, 0.3f, "none", BulletSoundProfile.get("standard"),ParticleProfile.get("standard"), gyrojetbulletFactory));
+        register("gyrojetbullet", new BulletType("Gyrojet Bullet", 0.5f, 0xFF888888, Set.of("rifle_ammo"), 1, 1, 0.1f, "none", BulletSoundProfile.get("standard"),ParticleProfile.get("standard"), gyrojetbulletFactory));
         register("buckshot", new BulletType("Buckshot", 0.7f, 0xFF444444, Set.of("shotgun_shells"), 5, 1, 1, "copper_cap", BulletSoundProfile.get("standard"),ParticleProfile.get("standard"), bulletFactory));
         register("freezeshot", new BulletType("Freezeshot", 0.4f, 0xFF444444, Set.of("shotgun_shells"), 8, 1, 0.7f, "shotgunshellempty", BulletSoundProfile.get("standard"),ParticleProfile.get("standard"), icebulletFactory));
         register("slug", new BulletType("Slug", 3, 0xFF444444, Set.of("shotgun_shells"), 1, 0.8f, 1, "copper_cap", BulletSoundProfile.get("standard"),ParticleProfile.get("standard"), bulletFactory));

@@ -56,11 +56,11 @@ public class GyrojetBulletEntity extends PersistentProjectileEntity implements D
         // exponentially increase velocity (on both client and server)
         if (!this.getWorld().isClient) {
             Vec3d currentVelocity = this.getVelocity();
-            float accelerationFactor = 1.2f;
+            float accelerationFactor = 1.11f;
             Vec3d newVelocity = currentVelocity.multiply(accelerationFactor);
             
             // Here is a max cap for the velocity to prevent it from getting too fast, its optional but thought it'd fit
-            double maxSpeed = 5.0;
+            double maxSpeed = 6.0;
             if (newVelocity.length() > maxSpeed) {
                 newVelocity = newVelocity.normalize().multiply(maxSpeed);
             }
@@ -106,8 +106,8 @@ public class GyrojetBulletEntity extends PersistentProjectileEntity implements D
 
 
 
-        // remove bullet after 3 seconds
-        if (this.age > 60) {
+        // remove bullet after 6 seconds
+        if (this.age > 120) {
             this.discard();
         }
     }
