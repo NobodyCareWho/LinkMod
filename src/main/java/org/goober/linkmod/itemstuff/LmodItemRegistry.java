@@ -311,6 +311,13 @@ public class LmodItemRegistry {
                     .maxCount(64)
     );
 
+    public static final Item EMPTYGYROJET = register(
+            "empty_gyrojet",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
     public static void initialize() {
         // Force class loading
     }

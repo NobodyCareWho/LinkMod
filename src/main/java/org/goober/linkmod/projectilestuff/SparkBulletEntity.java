@@ -56,33 +56,38 @@ public class SparkBulletEntity extends PersistentProjectileEntity implements Dam
         super.tick();
 
         // add particle trail
-        if (this.getWorld() instanceof ServerWorld serverWorld) {
-            Vec3d pos = this.getPos();
-            Vec3d velocity = this.getVelocity();
-            
-            // create a trail of particles
-            for (int i = 0; i < 3; i++) {
-                double factor = i * 0.3;
-                serverWorld.spawnParticles(
-                    ParticleTypes.LAVA,
-                    pos.x - velocity.x * factor,
-                    pos.y - velocity.y * factor,
-                    pos.z - velocity.z * factor,
-                    1,
-                    0.0, 0.0, 0.0,
-                    0.01
-                );
-            }
-            
-            // add spark particles
-            if (this.age % 2 == 0) {
-                serverWorld.spawnParticles(
-                    ParticleTypes.ELECTRIC_SPARK,
-                    pos.x, pos.y, pos.z,
-                    1,
-                    0.05, 0.05, 0.05,
-                    0.02
-                );
+        if (this.getWorld() instanceof ServerWorld serverWorld && !bulletStack.isEmpty() && bulletStack.getItem() instanceof BulletItem bulletItem) {
+            Bullets.BulletType bulletType = bulletItem.getBulletType();
+            if (bulletType.particleprofile() != null) {
+                Vec3d pos = this.getPos();
+                Vec3d velocity = this.getVelocity();
+
+                // create a trail of particles using trail particle
+                if (bulletType.particleprofile().trailparticle() != null) {
+                    for (int i = 0; i < 3; i++) {
+                        double factor = i * 0.3;
+                        serverWorld.spawnParticles(
+                                bulletType.particleprofile().trailparticle(),
+                                pos.x - velocity.x * factor,
+                                pos.y - velocity.y * factor,
+                                pos.z - velocity.z * factor,
+                                1,
+                                0.0, 0.0, 0.0,
+                                0.01
+                        );
+                    }
+                }
+
+                // add bullet particles
+                if (this.age % 2 == 0 && bulletType.particleprofile().bulletparticle() != null) {
+                    serverWorld.spawnParticles(
+                            bulletType.particleprofile().bulletparticle(),
+                            pos.x, pos.y, pos.z,
+                            1,
+                            0.05, 0.05, 0.05,
+                            0.02
+                    );
+                }
             }
         }
         

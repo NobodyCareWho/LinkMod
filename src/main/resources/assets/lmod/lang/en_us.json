@@ -48,5 +48,17 @@
   "item.lmod.slug": "Slug",
   "item.lmod.shot_pellets": "Shot Pellets",
   "item.lmod.diamond_spine": "Diamond Spine",
-  "item.lmod.gun_components": "Gun Components"
+  "item.lmod.gun_components": "Gun Components",
+  "item.lmod.empty_gyrojet": "Empty Gyrojet",
+
+  "sounds.skibidi":  "subtitles",
+
+  "sound.lmod.bolt_action": "Bolt Action Primes",
+  "sound.lmod.eject": "Shell Ejects",
+  "sound.lmod.weaponcocking": "Pistol Cocks",
+  "sound.lmod.grenadelaunch": "Grenade Launched",
+  "sound.lmod.jet2": "🎵Nothing Beats a Jet2 Holiday!🎶",
+  "sound.lmod.shotgunpump": "Pump Action Primes",
+  "sound.lmod.gunloading": "Gun Loaded",
+  "sound.lmod.shogunshelleject": "Shotgun Shell Ejects"
 }

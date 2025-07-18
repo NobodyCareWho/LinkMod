@@ -9,6 +9,7 @@ import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Vec3d;
@@ -16,6 +17,8 @@ import net.minecraft.world.World;
 import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.gunstuff.items.BulletItem;
 import org.goober.linkmod.gunstuff.items.Bullets;
+import org.goober.linkmod.soundstuff.LmodSoundRegistry;
+import software.bernie.geckolib.loading.math.function.random.RandomIntegerFunction;
 
 public class GyrojetBulletEntity extends PersistentProjectileEntity implements DamageableProjectile {
     private float damage = 5.0F;
@@ -47,6 +50,7 @@ public class GyrojetBulletEntity extends PersistentProjectileEntity implements D
             return bulletStack.copy();
         }
         return new ItemStack(org.goober.linkmod.itemstuff.LmodItemRegistry.BULLET);
+
     }
 
     @Override
@@ -115,6 +119,7 @@ public class GyrojetBulletEntity extends PersistentProjectileEntity implements D
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
         Entity entity = entityHitResult.getEntity();
+        int fun = random.nextInt(123) + 1; // Generates a random integer from 1 to 100
 
         // don't hit the owner
         if (entity == this.getOwner()) {
@@ -130,6 +135,7 @@ public class GyrojetBulletEntity extends PersistentProjectileEntity implements D
             // assuming initial velocity is around 1.0, scale damage based on current velocity
             float velocityDamageMultiplier = (float)(velocityMagnitude / 1.0);
             finalDamage *= (bulletType.damageMultiplier() * velocityDamageMultiplier);
+
         }
 
         // deal damage
@@ -169,6 +175,10 @@ public class GyrojetBulletEntity extends PersistentProjectileEntity implements D
             if (bulletType.soundprofile() != null && bulletType.soundprofile().entityhitsound() != null) {
                 this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(),
                         bulletType.soundprofile().entityhitsound(), SoundCategory.PLAYERS, 1.0F, 1.2F);
+                if (fun==3) {
+                    this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(),
+                            LmodSoundRegistry.JET2HOLIDAY, SoundCategory.PLAYERS, 1, 1);
+                }
             }
         }
 

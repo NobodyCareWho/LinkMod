@@ -37,6 +37,8 @@ import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+
 
 import static org.goober.linkmod.gunstuff.items.Bullets.isEmptyShell;
 
@@ -116,16 +118,20 @@ public class GunItem extends Item {
                             }
 
                             // get current bloom value
-                            float currentBloom = BloomTracker.getCurrentBloom(user, stack, 2.0f); // 2.0f decay rate per second
-                            
-                            float spread = bulletType.pelletsPerShot() > 1 ? 6.0F : 1.0F;
+                            float currentBloom = BloomTracker.getCurrentBloom(user, stack, 0.1f); // 2.0f decay rate per second
+
+                            float bloomOutput = (float) (gunType.bloomMax() / (1 + Math.exp(-gunType.bloomSharpness() * (currentBloom - gunType.bloomLength()))));
+
+                            float maxSpread = (gunType.baseInaccuracy()+bulletType.baseSpreadIncrease())*bulletType.baseSpreadMultiplier() + bloomOutput;
+                            float spread = bulletType.pelletsPerShot() > 0 ? world.random.nextFloat() * maxSpread : 0.0F;
+
                             projectile.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, gunType.velocity()*bulletType.vMultiplier(), spread);
                             world.spawnEntity(projectile);
-                            System.out.println("Spawned projectile entity: " + projectile.getClass().getSimpleName());
+                            System.out.println("Spawned projectile entity: " + projectile.getClass().getSimpleName()+" with spread: " + spread + "/" + maxSpread);
                         }
                         
                         // update bloom after shooting
-                        BloomTracker.updateBloom(user, stack, gunType.bloomSharpness(), gunType.bloomMax());
+                        BloomTracker.updateBloom(user, stack, 1*bulletType.bloomIncrMultiplier(), gunType.bloomMax());
                     }
 
                     if (gunType.spatialRecoil() > 0) {

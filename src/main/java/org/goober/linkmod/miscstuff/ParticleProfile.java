@@ -17,9 +17,14 @@ public class ParticleProfile {
 
     // define bullet types with tags
     static {
-        register("standard", new ParticleProfile.PP( ParticleTypes.EXPLOSION, null, ParticleTypes.ELECTRIC_SPARK, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
+        register("standard", new ParticleProfile.PP( null, null, ParticleTypes.ELECTRIC_SPARK, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
+        register("sparkle", new ParticleProfile.PP( null, null, ParticleTypes.FIREWORK, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
         register("goofyahh", new ParticleProfile.PP( ParticleTypes.GUST_EMITTER_SMALL, ParticleTypes.CRIMSON_SPORE, ParticleTypes.SONIC_BOOM, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
         register("breeze", new ParticleProfile.PP( ParticleTypes.GUST_EMITTER_LARGE, ParticleTypes.CRIMSON_SPORE, ParticleTypes.SONIC_BOOM, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
+        register("blaze", new ParticleProfile.PP( null, ParticleTypes.LAVA, ParticleTypes.ELECTRIC_SPARK, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
+        register("freeze", new ParticleProfile.PP( null, ParticleTypes.SNOWFLAKE, ParticleTypes.ELECTRIC_SPARK, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
+        register("flare", new ParticleProfile.PP( null, ParticleTypes.CAMPFIRE_COSY_SMOKE, ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
+
     }
 
     public static void register(String id, ParticleProfile.PP pP) {

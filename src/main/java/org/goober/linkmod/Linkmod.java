@@ -10,6 +10,7 @@ import org.goober.linkmod.itemstuff.LmodDataComponentTypes;
 import org.goober.linkmod.itemstuff.LmodItemGroups;
 import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.particlestuff.LmodParticleRegistry;
+import org.goober.linkmod.soundstuff.LmodSoundRegistry;
 
 
 public class Linkmod implements ModInitializer {
@@ -21,6 +22,8 @@ public class Linkmod implements ModInitializer {
         LmodItemGroups.initialize();
         LmodEntityRegistry.initialize();
         LmodBlockRegistry.initialize();
+        LmodEntityRegistry.initialize();
+        LmodSoundRegistry.initialize();
     }
 
 }

@@ -1,0 +1,77 @@
+{
+  "bolt_action": {
+    "subtitle": "sound.lmod.bolt_action",
+    "sounds": [
+      "lmod:boltaction"
+    ]
+  },
+  "eject1": {
+    "subtitle": "sound.lmod.eject",
+    "sounds": [
+      "lmod:casingeject1"
+    ]
+  },
+  "cocking1": {
+    "subtitle": "sound.lmod.weaponcocking",
+    "sounds": [
+      "lmod:pistolcocking1"
+    ]
+  },
+  "cocking2": {
+    "subtitle": "sound.lmod.weaponcocking",
+    "sounds": [
+      "lmod:cocking2"
+    ]
+  },
+  "revolvercocking": {
+    "subtitle": "sound.lmod.weaponcocking",
+    "sounds": [
+      "lmod:revolvercocking1"
+    ]
+  },
+  "grenadelaunch": {
+    "subtitle": "sound.lmod.grenadelaunch",
+    "sounds": [
+      "lmod:grenadelaunch1"
+    ]
+  },
+  "grenadelaunch2": {
+    "subtitle": "sound.lmod.grenadelaunch",
+    "sounds": [
+      "lmod:grenadelaunch2",
+      "lmod:grenadelaunch3"
+    ]
+  },
+  "jet2": {
+    "subtitle": "sound.lmod.jet2",
+    "sounds": [
+      "lmod:jet2"
+    ]
+  },
+  "shotgunpump": {
+    "subtitle": "sound.lmod.shotgunpumping",
+    "sounds": [
+      "lmod:shotgunpump"
+    ]
+  },
+  "gunload1": {
+    "subtitle": "sound.lmod.gunloading",
+    "sounds": [
+      "lmod:shell1"
+    ]
+  },
+  "gunload2": {
+    "subtitle": "sound.lmod.gunloading",
+    "sounds": [
+      "lmod:bulletload1",
+      "lmod:bulletload2"
+    ]
+  },
+  "shotguneject": {
+    "subtitle": "sound.lmod.shotgunshelleject",
+    "sounds": [
+      "lmod:shotguneject1",
+      "lmod:shotguneject2"
+    ]
+  }
+}
