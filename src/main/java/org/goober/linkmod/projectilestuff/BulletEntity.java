@@ -22,10 +22,15 @@ import org.goober.linkmod.gunstuff.items.BulletItem;
 import org.goober.linkmod.gunstuff.items.Bullets;
 import org.goober.linkmod.miscstuff.soundprofiles.BulletSoundProfile;
 import org.goober.linkmod.miscstuff.ParticleProfile;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
 
 public class BulletEntity extends PersistentProjectileEntity implements DamageableProjectile {
     private float damage = 5.0F;
     private ItemStack bulletStack;
+    
+    // static map to track cumulative block damage
+    private static final java.util.Map<BlockPos, Float> blockDamageMap = new java.util.HashMap<>();
     
     public BulletEntity(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
         super(entityType, world);
@@ -164,6 +169,45 @@ public class BulletEntity extends PersistentProjectileEntity implements Damageab
     @Override
     protected void onBlockHit(BlockHitResult blockHitResult) {
         super.onBlockHit(blockHitResult);
+        
+        // handle block damage
+        if (this.getWorld() instanceof ServerWorld serverWorld) {
+            BlockPos hitBlockPos = blockHitResult.getBlockPos();
+            BlockState blockState = serverWorld.getBlockState(hitBlockPos);
+            
+            // calculate damage based on bullet damage and block resistance
+            float bulletDamage = this.damage;
+            if (!bulletStack.isEmpty() && bulletStack.getItem() instanceof BulletItem bulletItem) {
+                Bullets.BulletType bulletType = bulletItem.getBulletType();
+                bulletDamage *= bulletType.damageMultiplier();
+            }
+            
+            // get block blast resistance (higher = harder to break)
+            float blastResistance = blockState.getBlock().getBlastResistance();
+            
+            // get current accumulated damage for this block
+            float currentDamage = blockDamageMap.getOrDefault(hitBlockPos.toImmutable(), 0f);
+            currentDamage += bulletDamage;
+            
+            // calculate total damage needed to break block
+            float damageNeeded = blastResistance * 10.0f; // base threshold
+            
+            if (currentDamage >= damageNeeded) {
+                // accumulated enough damage - break the block without drops
+                serverWorld.breakBlock(hitBlockPos, false, this.getOwner());
+                blockDamageMap.remove(hitBlockPos.toImmutable());
+            } else {
+                // add to damage accumulation
+                blockDamageMap.put(hitBlockPos.toImmutable(), currentDamage);
+
+                // show crack progress (0-9 stages)
+                int crackStage = (int) ((currentDamage / damageNeeded) * 10);
+                crackStage = Math.min(crackStage, 9); // cap at stage 9
+
+                // set block breaking progress for all players
+                serverWorld.setBlockBreakingInfo(this.getId(), hitBlockPos, crackStage);
+            }
+        }
         
         // add impact particles
         if (this.getWorld() instanceof ServerWorld serverWorld) {
