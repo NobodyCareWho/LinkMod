@@ -148,6 +148,13 @@ public class LmodItemRegistry {
                     .maxCount(64)
     );
 
+    public static final Item SUBSONICBULLET = register(
+            "subsonic_bullet",
+            settings -> new BulletItem(settings, "subsonic_bullet"),
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
     public static final Item RATSHOT = register(
             "ratshot_bullet",
             settings -> new BulletItem(settings, "ratshot_bullet"),
