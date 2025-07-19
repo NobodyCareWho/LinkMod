@@ -39,7 +39,12 @@ public class BloomTracker {
         data.lastShotTime = System.currentTimeMillis();
     }
     
-    public static float getCurrentBloom(PlayerEntity player, ItemStack gunStack, float bloomDecayRate) {
+    public static float getCurrentBloom(PlayerEntity player, ItemStack gunStack) {
+        BloomData data = getBloomData(player, gunStack);
+        return data.currentBloom;
+    }
+    
+    public static void applyBloomDecay(PlayerEntity player, ItemStack gunStack, float bloomDecayRate) {
         BloomData data = getBloomData(player, gunStack);
         
         // calculate time-based decay
@@ -50,8 +55,7 @@ public class BloomTracker {
         // decay bloom over time
         float decayAmount = secondsSinceLastShot * bloomDecayRate;
         data.currentBloom = Math.max(0, data.currentBloom - decayAmount);
-        
-        return data.currentBloom;
+        data.lastShotTime = currentTime; // update time to prevent multiple decay calculations
     }
     
     public static void clearPlayerData(PlayerEntity player) {

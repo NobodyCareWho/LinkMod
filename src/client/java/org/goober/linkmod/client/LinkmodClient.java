@@ -87,7 +87,8 @@ public class LinkmodClient implements ClientModInitializer {
         int screenWidth = client.getWindow().getScaledWidth();
         int screenHeight = client.getWindow().getScaledHeight();
 
-        Float progress = null; // this is placeholder
+
+        float progress = 1f; // placeholder
 
         int j = screenHeight / 2 - 7 + 16;
         int k = screenWidth / 2 - 8;

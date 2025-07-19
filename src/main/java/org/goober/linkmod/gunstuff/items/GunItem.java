@@ -118,7 +118,8 @@ public class GunItem extends Item {
                             }
 
                             // get current bloom value
-                            float currentBloom = BloomTracker.getCurrentBloom(user, stack, 0.1f); // 2.0f decay rate per second
+                            BloomTracker.applyBloomDecay(user, stack, gunType.bloomDecayRate());
+                            float currentBloom = BloomTracker.getCurrentBloom(user, stack);
 
                             float bloomOutput = (float) (gunType.bloomMax() / (1 + Math.exp(-gunType.bloomSharpness() * (currentBloom - gunType.bloomLength()))));
 
