@@ -1,5 +1,6 @@
 package org.goober.linkmod.gunstuff.items;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -108,35 +109,38 @@ public class GunItem extends Item {
                     if (bulletStack.getItem() instanceof BulletItem bulletItem) {
                         bulletType = bulletItem.getBulletType();
 
+                        // get current bloom value from item component ONCE before shooting
+                        GunBloomComponent bloomComp = stack.getOrDefault(LmodDataComponentTypes.GUN_BLOOM, GunBloomComponent.DEFAULT);
+                        bloomComp = bloomComp.withDecay(gunType.bloomDecayRate());
+                        float currentBloom = bloomComp.currentBloom();
+                        
+                        // save the decayed bloom back to the item
+                        stack.set(LmodDataComponentTypes.GUN_BLOOM, bloomComp);
+                        
+                        // calculate bloom spread modifier once
+                        float bloomOutput = (float) (gunType.bloomMax() / (1 + Math.exp(-gunType.bloomSharpness() * (currentBloom - gunType.bloomLength()))));
+                        float maxSpread = (gunType.baseInaccuracy() + bulletType.baseSpreadIncrease()) * bulletType.baseSpreadMultiplier() + bloomOutput;
+                        
                         // shoot multiple bullets for shotgun
                         for (int i = 0; i < bulletType.pelletsPerShot(); i++) {
                             // use projectile factory to create the correct projectile type
                             PersistentProjectileEntity projectile = bulletType.projectileFactory().create(world, user, bulletStack);
-                            
+
                             // set damage if projectile implements DamageableProjectile (This makes it so that you dont need a big if statement)
                             if (projectile instanceof DamageableProjectile damageable) {
                                 damageable.setDamage(gunType.damage());
                             }
 
-                            // get current bloom value from item component
-                            GunBloomComponent bloomComp = stack.getOrDefault(LmodDataComponentTypes.GUN_BLOOM, GunBloomComponent.DEFAULT);
-                            bloomComp = bloomComp.withDecay(gunType.bloomDecayRate());
-                            float currentBloom = bloomComp.currentBloom();
-
-                            float bloomOutput = (float) (gunType.bloomMax() / (1 + Math.exp(-gunType.bloomSharpness() * (currentBloom - gunType.bloomLength()))));
-
-                            float maxSpread = (gunType.baseInaccuracy()+bulletType.baseSpreadIncrease())*bulletType.baseSpreadMultiplier() + bloomOutput;
                             float spread = bulletType.pelletsPerShot() > 0 ? world.random.nextFloat() * maxSpread : 0.0F;
 
-                            projectile.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, gunType.velocity()*bulletType.vMultiplier(), spread);
+                            projectile.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, gunType.velocity() * bulletType.vMultiplier(), spread);
                             world.spawnEntity(projectile);
-                            System.out.println("Spawned projectile entity: " + projectile.getClass().getSimpleName()+" with spread: " + spread + "/" + maxSpread);
+                            System.out.println("Spawned projectile entity: " + projectile.getClass().getSimpleName() + " with spread: " + spread + "/" + maxSpread);
                         }
-                        
-                        // update bloom after shooting
-                        GunBloomComponent currentBloomComp = stack.getOrDefault(LmodDataComponentTypes.GUN_BLOOM, GunBloomComponent.DEFAULT);
-                        float newBloom = Math.min(currentBloomComp.currentBloom() + gunType.bloomSharpness() * bulletType.bloomIncrMultiplier(), gunType.bloomMax());
-                        stack.set(LmodDataComponentTypes.GUN_BLOOM, currentBloomComp.withBloom(newBloom));
+
+                        // update bloom after shooting (increase bloom based on shot)
+                        float newBloom = Math.min(currentBloom + gunType.bloomSharpness() * bulletType.bloomIncrMultiplier(), gunType.bloomMax());
+                        stack.set(LmodDataComponentTypes.GUN_BLOOM, bloomComp.withBloom(newBloom));
                     }
 
                     if (gunType.spatialRecoil() > 0) {
@@ -466,6 +470,24 @@ public class GunItem extends Item {
             player.playSound(gunType.soundprofile().unloadsound(), 0.8F, 0.8F + player.getWorld().getRandom().nextFloat() * 0.4F);
         } else {
             player.playSound(SoundEvents.ITEM_BUNDLE_REMOVE_ONE, 0.8F, 0.8F + player.getWorld().getRandom().nextFloat() * 0.4F);
+        }
+    }
+
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        
+        // decay bloom on server side
+        if (!world.isClient) {
+            Guns.GunType gunType = Guns.get(gunTypeId);
+            if (gunType.bloomMax() > 0) {
+                // get current bloom and decay it
+                GunBloomComponent bloomComp = stack.getOrDefault(LmodDataComponentTypes.GUN_BLOOM, GunBloomComponent.DEFAULT);
+                GunBloomComponent decayedBloom = bloomComp.withDecay(gunType.bloomDecayRate());
+                
+                // only update if bloom actually changed (to avoid unnecessary updates)
+                if (decayedBloom.currentBloom() != bloomComp.currentBloom()) {
+                    stack.set(LmodDataComponentTypes.GUN_BLOOM, decayedBloom);
+                }
+            }
         }
     }
 }
