@@ -17,7 +17,8 @@ import net.minecraft.client.option.AttackIndicator;
 import net.minecraft.client.render.RenderLayer;
 import org.goober.linkmod.gunstuff.items.GunItem;
 import org.goober.linkmod.gunstuff.items.Guns;
-import org.goober.linkmod.gunstuff.BloomTracker;
+import org.goober.linkmod.gunstuff.GunBloomComponent;
+import org.goober.linkmod.itemstuff.LmodDataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import org.goober.linkmod.blockstuff.LmodBlockRegistry;
@@ -84,11 +85,17 @@ public class LinkmodClient implements ClientModInitializer {
             return;
         }
 
+        // get bloom from item component
+        GunBloomComponent bloomComp = heldItem.getOrDefault(LmodDataComponentTypes.GUN_BLOOM, GunBloomComponent.DEFAULT);
+        bloomComp = bloomComp.withDecay(gunType.bloomDecayRate());
+        float currentBloom = bloomComp.currentBloom();
+     //   System.out.println("Bloom: " + currentBloom);
+
         int screenWidth = client.getWindow().getScaledWidth();
         int screenHeight = client.getWindow().getScaledHeight();
 
 
-        float progress = 1f; // placeholder
+        float progress = currentBloom / gunType.bloomMax();
 
         int j = screenHeight / 2 - 7 + 16;
         int k = screenWidth / 2 - 8;

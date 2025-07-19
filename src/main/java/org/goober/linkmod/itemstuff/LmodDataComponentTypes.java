@@ -6,6 +6,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import org.goober.linkmod.Linkmod;
 import org.goober.linkmod.gunstuff.GunContentsComponent;
+import org.goober.linkmod.gunstuff.GunBloomComponent;
 
 public class LmodDataComponentTypes {
     public static final ComponentType<SeedBagContentsComponent> SEEDBAG_CONTENTS = Registry.register(
@@ -23,6 +24,15 @@ public class LmodDataComponentTypes {
             ComponentType.<GunContentsComponent>builder()
                     .codec(GunContentsComponent.CODEC)
                     .packetCodec(GunContentsComponent.PACKET_CODEC)
+                    .build()
+    );
+    
+    public static final ComponentType<GunBloomComponent> GUN_BLOOM = Registry.register(
+            Registries.DATA_COMPONENT_TYPE,
+            Identifier.of(Linkmod.MOD_ID, "gun_bloom"),
+            ComponentType.<GunBloomComponent>builder()
+                    .codec(GunBloomComponent.CODEC)
+                    .packetCodec(GunBloomComponent.PACKET_CODEC)
                     .build()
     );
     

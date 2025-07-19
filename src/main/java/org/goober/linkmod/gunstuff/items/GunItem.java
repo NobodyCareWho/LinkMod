@@ -26,6 +26,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.goober.linkmod.gunstuff.GunContentsComponent;
 import org.goober.linkmod.gunstuff.GunTooltipData;
+import org.goober.linkmod.gunstuff.GunBloomComponent;
 import org.goober.linkmod.gunstuff.RecoilTracker;
 import org.goober.linkmod.gunstuff.BloomTracker;
 import org.goober.linkmod.itemstuff.LmodDataComponentTypes;
@@ -117,9 +118,10 @@ public class GunItem extends Item {
                                 damageable.setDamage(gunType.damage());
                             }
 
-                            // get current bloom value
-                            BloomTracker.applyBloomDecay(user, stack, gunType.bloomDecayRate());
-                            float currentBloom = BloomTracker.getCurrentBloom(user, stack);
+                            // get current bloom value from item component
+                            GunBloomComponent bloomComp = stack.getOrDefault(LmodDataComponentTypes.GUN_BLOOM, GunBloomComponent.DEFAULT);
+                            bloomComp = bloomComp.withDecay(gunType.bloomDecayRate());
+                            float currentBloom = bloomComp.currentBloom();
 
                             float bloomOutput = (float) (gunType.bloomMax() / (1 + Math.exp(-gunType.bloomSharpness() * (currentBloom - gunType.bloomLength()))));
 
@@ -132,7 +134,9 @@ public class GunItem extends Item {
                         }
                         
                         // update bloom after shooting
-                        BloomTracker.updateBloom(user, stack, 1*bulletType.bloomIncrMultiplier(), gunType.bloomMax());
+                        GunBloomComponent currentBloomComp = stack.getOrDefault(LmodDataComponentTypes.GUN_BLOOM, GunBloomComponent.DEFAULT);
+                        float newBloom = Math.min(currentBloomComp.currentBloom() + gunType.bloomSharpness() * bulletType.bloomIncrMultiplier(), gunType.bloomMax());
+                        stack.set(LmodDataComponentTypes.GUN_BLOOM, currentBloomComp.withBloom(newBloom));
                     }
 
                     if (gunType.spatialRecoil() > 0) {
