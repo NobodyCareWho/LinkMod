@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "": "",
+  "category": "misc",
+  "ingredients": [
+    "lmod:shotgunshellempty",
+    "lmod:shotgunshellempty",
+    "lmod:shotgunshellempty",
+    "lmod:shotgunshellempty",
+    "minecraft:blaze_powder",
+    "minecraft:blaze_powder",
+    "lmod:pinch_of_gunpowder"
+  ],
+  "result": {
+    "id": "lmod:blazeshell",
+    "count": 4
+  }
+}

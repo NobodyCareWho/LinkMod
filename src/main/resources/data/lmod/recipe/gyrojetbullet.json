@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "": "",
+  "category": "misc",
+  "ingredients": [
+    "lmod:rocket_compound",
+    "lmod:empty_gyrojet"
+  ],
+  "result": {
+    "id": "lmod:gyrojetbullet",
+    "count": 1
+  }
+}

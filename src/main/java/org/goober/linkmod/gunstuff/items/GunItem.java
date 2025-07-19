@@ -184,6 +184,13 @@ public class GunItem extends Item {
                                     // drop empty shell as item entity to the right
                                     Vec3d lookDirection = user.getRotationVector();
                                     Vec3d rightVector = new Vec3d(-lookDirection.z, 0, lookDirection.x).normalize();
+                                    if (gunType.soundprofile() != null && gunType.soundprofile().unloadsound() != null) {
+                                        world.playSound(null, user.getX() + rightVector.x * 0.5,
+                                                user.getY() + 0.5,
+                                                user.getZ() + rightVector.z * 0.5,
+                                                gunType.soundprofile().unloadsound(),
+                                                SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
+                                    }
 
                                     // spawn shell to the right with some velocity
                                     ItemEntity shellEntity = new ItemEntity(

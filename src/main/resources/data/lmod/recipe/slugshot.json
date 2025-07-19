@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "": "",
+  "category": "misc",
+  "ingredients": [
+    "lmod:shotgunshellempty",
+    "lmod:slug",
+    "lmod:pinch_of_gunpowder"
+  ],
+  "result": {
+    "id": "lmod:slugshell",
+    "count": 1
+  }
+}

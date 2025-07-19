@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "": "",
+  "category": "misc",
+  "ingredients": [
+    "lmod:bulletcasing",
+    "lmod:shot_pellets",
+    "lmod:pinch_of_gunpowder"
+  ],
+  "result": {
+    "id": "lmod:ratshot_bullet",
+    "count": 1
+  }
+}

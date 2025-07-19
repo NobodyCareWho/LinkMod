@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "": "",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:copper_ingot",
+    "minecraft:flint"
+  ],
+  "result": {
+    "id": "lmod:copper_cap",
+    "count": 8
+  }
+}

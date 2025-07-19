@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "": "",
+  "category": "misc",
+  "ingredients": [
+    "lmod:bulletcasing",
+    "lmod:hollowpoint_tip",
+    "lmod:pinch_of_gunpowder"
+  ],
+  "result": {
+    "id": "lmod:hollowpointbullet",
+    "count": 1
+  }
+}

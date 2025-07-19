@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "": "",
+  "category": "misc",
+  "ingredients": [
+    "lmod:shotgunshellempty",
+    "lmod:shotgunshellempty",
+    "lmod:shotgunshellempty",
+    "lmod:shotgunshellempty",
+    "minecraft:wind_charge"
+  ],
+  "result": {
+    "id": "lmod:breezeshell",
+    "count": 4
+  }
+}

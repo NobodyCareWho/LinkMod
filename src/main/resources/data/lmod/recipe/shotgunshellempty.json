@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "": "",
+  "category": "misc",
+  "ingredients": [
+    "lmod:copper_cap",
+    "minecraft:paper"
+  ],
+  "result": {
+    "id": "lmod:shotgunshellempty",
+    "count": 1
+  }
+}

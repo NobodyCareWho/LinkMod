@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "": "",
+  "category": "misc",
+  "ingredients": [
+    "lmod:shotgunshellempty",
+    "minecraft:snowball",
+    "minecraft:snowball",
+    "minecraft:snowball",
+    "minecraft:snowball",
+    "minecraft:snowball",
+    "minecraft:snowball",
+    "lmod:pinch_of_gunpowder"
+  ],
+  "result": {
+    "id": "lmod:freezeshell",
+    "count": 1
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "": "",
+  "category": "misc",
+  "ingredients": [
+
+    "minecraft:gunpowder"
+  ],
+  "result": {
+    "id": "lmod:pinch_of_gunpowder",
+    "count": 4
+  }
+}

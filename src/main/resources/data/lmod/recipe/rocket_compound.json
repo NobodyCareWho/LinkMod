@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "": "",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:gunpowder",
+    "minecraft:sugar"
+  ],
+  "result": {
+    "id": "lmod:rocket_compound",
+    "count": 6
+  }
+}
