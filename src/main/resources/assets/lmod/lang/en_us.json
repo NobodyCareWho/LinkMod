@@ -34,6 +34,8 @@
   "block.lmod.rounded_sandstone": "Embossed Sandstone",
   "block.lmod.gilded_sandstone": "Gilded Sandstone",
   "block.lmod.auros_bloom": "Auros Bloom",
+  "block.lmod.lathe": "Lathe",
+  "container.lmod.lathe": "Lathe",
 
   "items.skibidi":  "craftingmaterials",
 

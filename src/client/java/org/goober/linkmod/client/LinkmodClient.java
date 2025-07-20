@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.BlockRenderLayer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
@@ -26,11 +27,15 @@ import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.itemstuff.SeedBagTooltipData;
 import org.goober.linkmod.gunstuff.GunTooltipData;
 import org.goober.linkmod.particlestuff.LmodParticleRegistry;
+import org.goober.linkmod.screenstuff.LmodScreenHandlerType;
 
 public class LinkmodClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        // Register screens
+        HandledScreens.register(LmodScreenHandlerType.LATHE, LatheScreen::new);
+        
         // Register entity renderers
         EntityRendererRegistry.register(LmodEntityRegistry.SEEDBAG_ENTITY, FlyingItemEntityRenderer::new);
         // register empty renderer for bullet entity
