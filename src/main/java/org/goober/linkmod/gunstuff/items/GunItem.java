@@ -139,7 +139,7 @@ public class GunItem extends Item {
                         }
 
                         // update bloom after shooting (increase bloom based on shot)
-                        float newBloom = Math.min(currentBloom + gunType.bloomSharpness() * bulletType.bloomIncrMultiplier(), gunType.bloomMax());
+                        float newBloom = Math.min(currentBloom + gunType.bloomIncreaseRate() * bulletType.bloomIncrMultiplier(), gunType.bloomMax());
                         stack.set(LmodDataComponentTypes.GUN_BLOOM, bloomComp.withBloom(newBloom));
                     }
 

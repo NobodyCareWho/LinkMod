@@ -1,0 +1,32 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "cases": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "lmod:item/bullseyetome"
+        },
+        "when": [
+          "gui",
+          "ground"
+        ]
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "lmod:item/bullseyehand"
+        },
+        "when": [
+          "firstperson_righthand",
+          "firstperson_lefthand"
+        ]
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "lmod:item/none"
+    },
+    "property": "minecraft:display_context"
+  }
+}

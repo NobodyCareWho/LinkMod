@@ -1,9 +1,5 @@
 {
   "variants": {
-    "facing=east": {
-      "model": "lmod:block/lathe",
-      "y": 90
-    },
     "facing=north": {
       "model": "lmod:block/lathe"
     },
@@ -11,10 +7,14 @@
       "model": "lmod:block/lathe",
       "y": 180
     },
+    "facing=east": {
+      "model": "lmod:block/lathe",
+      "y": 90
+    },
     "facing=west": {
       "model": "lmod:block/lathe",
+
       "y": 270
-    },
-    "model": "lmod:block/lathe"
+    }
   }
 }

@@ -33,7 +33,7 @@ public class LatheBlock extends Block {
     public static final MapCodec<LatheBlock> CODEC = createCodec(LatheBlock::new);
     private static final Text TITLE = Text.translatable("container.lmod.lathe");
     public static final EnumProperty<Direction> FACING = HorizontalFacingBlock.FACING;
-    private static final VoxelShape SHAPE = Block.createColumnShape(16.0, 0.0, 9.0);
+    private static final VoxelShape SHAPE = Block.createColumnShape(16.0, 0.0, 8.0);
 
     public MapCodec<LatheBlock> getCodec() {
         return CODEC;

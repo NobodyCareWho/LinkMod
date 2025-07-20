@@ -6,7 +6,7 @@
 		"1": "lmod:block/lathesides",
 		"2": "lmod:block/lathesupports",
 		"3": "lmod:block/lathetop",
-		"4": "lmod:block/latebottom",
+		"4": "lmod:block/lathebottom",
 		"particle": "lmod:block/lathebottom"
 	},
 	"elements": [

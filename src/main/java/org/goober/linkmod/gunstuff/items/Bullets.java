@@ -42,7 +42,7 @@ public class Bullets {
         register("breezeshot", new BulletType("Breezeshot",false ,  1.0f, 0xFF444444, Set.of("shotgun_shells"), 0, 3, 1, 0, 0,1,"shotgunshellempty", BulletSoundProfile.get("breeze"),ParticleProfile.get("breeze"), bulletFactory));
         register("blazeshot", new BulletType("Blazeshot",false ,  0.2f, 0xFF444444, Set.of("shotgun_shells"), 12, 0.5f, 1, 1.5f, 2,1,"copper_cap", BulletSoundProfile.get("blaze"),ParticleProfile.get("blaze"), sparkbulletFactory));
         register("pillgrenade", new BulletType("Pill Grenade",true ,  1.0f, 0xFF444444, Set.of("grenade_shells"), 1, 1f, 1, 1, 0, 1,"grenadeshellempty", BulletSoundProfile.get("grenadelaunch"),ParticleProfile.get("goofyahh"), grenadeFactory));
-        register("thumpershell", new BulletType("Thumper Shell",false ,  0.6f, 0xFF444444, Set.of("grenade_shells"), 8, 3f, 1, 1, 0, 1, "grenadeshellempty", BulletSoundProfile.get("goofyahh"),ParticleProfile.get("goofyahh"), bulletFactory));
+        register("thumpershell", new BulletType("Thumper Shell",false ,  0.6f, 0xFF444444, Set.of("grenade_shells"), 8, 3f, 1, 1.2f, 6, 1, "grenadeshellempty", BulletSoundProfile.get("goofyahh"),ParticleProfile.get("goofyahh"), bulletFactory));
 
     }
 

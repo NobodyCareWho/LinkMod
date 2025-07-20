@@ -1,5 +1,9 @@
 package org.goober.linkmod.itemstuff;
 
+import net.minecraft.component.ComponentType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.EquippableComponent;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -52,6 +56,14 @@ public class LmodItemRegistry {
     public static final Item RIFLE = register(
             "rifle",
             settings -> new GunItem(settings, "rifle"),
+            new Item.Settings()
+                    .maxCount(1)
+                    .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
+    );
+
+    public static final Item BULLSEYE = register(
+            "bullseye_tome",
+            settings -> new GunItem(settings, "bullseye_tome"),
             new Item.Settings()
                     .maxCount(1)
                     .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
@@ -324,6 +336,8 @@ public class LmodItemRegistry {
             new Item.Settings()
                     .maxCount(64)
     );
+
+    //armor
 
     public static void initialize() {
         // Force class loading
