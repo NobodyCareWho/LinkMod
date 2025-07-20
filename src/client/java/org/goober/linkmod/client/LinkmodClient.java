@@ -58,6 +58,8 @@ public class LinkmodClient implements ClientModInitializer {
         });
         // set render layer to be transparent for the flower
         BlockRenderLayerMap.putBlock(LmodBlockRegistry.AUROS_BLOOM, BlockRenderLayer.CUTOUT);
+        // set render layer for lathe to handle transparency
+        BlockRenderLayerMap.putBlock(LmodBlockRegistry.LATHE, BlockRenderLayer.CUTOUT);
 
         ParticleFactoryRegistry.getInstance().register(LmodParticleRegistry.SMOKERING, SmokeRingParticle.SmokeRingFactory::new);
         
