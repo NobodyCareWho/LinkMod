@@ -1,0 +1,40 @@
+{
+	"format_version": "1.21.6",
+	"credit": "Made By NobodyCareWho",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "lmod:item/mask3d",
+		"particle": "lmod:item/mask3d"
+	},
+	"elements": [
+		{
+			"from": [4, 0, 4],
+			"to": [12, 8, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [4, 0, 4]},
+			"faces": {
+				"north": {"uv": [0, 0, 4, 4], "texture": "#0"},
+				"east": {"uv": [0, 4, 4, 8], "texture": "#0"},
+				"south": {"uv": [4, 0, 8, 4], "texture": "#0"},
+				"west": {"uv": [4, 4, 8, 8], "texture": "#0"},
+				"up": {"uv": [4, 12, 0, 8], "texture": "#0"},
+				"down": {"uv": [12, 0, 8, 4], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"firstperson_righthand": {
+			"rotation": [149.27, 35.22, -150.26],
+			"translation": [2.25, 6.25, -1.5],
+			"scale": [0.75, 0.75, 0.75]
+		},
+		"firstperson_lefthand": {
+			"rotation": [149.27, 35.22, -150.26],
+			"translation": [2.25, 6.25, -1.5],
+			"scale": [0.75, 0.75, 0.75]
+		},
+		"head": {
+			"translation": [0, 7.25, 0],
+			"scale": [1.85, 1.85, 1.85]
+		}
+	}
+}

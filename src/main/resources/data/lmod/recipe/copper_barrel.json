@@ -1,0 +1,8 @@
+{
+  "type": "lmod:lathe",
+  "ingredient": "minecraft:copper_ingot",
+  "result": {
+    "id": "lmod:copper_barrel",
+    "count": 1
+  }
+}

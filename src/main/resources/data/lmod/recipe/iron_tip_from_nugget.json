@@ -1,0 +1,8 @@
+{
+  "type": "lmod:lathe",
+  "ingredient": "minecraft:iron_nugget",
+  "result": {
+    "id": "lmod:iron_tip",
+    "count": 1
+  }
+}

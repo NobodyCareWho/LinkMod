@@ -70,7 +70,7 @@ public class LinkmodClient implements ClientModInitializer {
     // texture identifiers for custom bloom bar (as GUI textures, not raw textures)
     private static final Identifier BLOOM_BAR_BACKGROUND = Identifier.of("lmod", "hud/bloombarempty");
     private static final Identifier BLOOM_BAR_FULL = Identifier.of("lmod", "hud/bloombarfull");
-    private static final Identifier BLOOM_BAR_PROGRESS = Identifier.of("lmod", "hud/bloombarprogress2");
+    private static final Identifier BLOOM_BAR_PROGRESS = Identifier.of("lmod", "hud/bloombarprogress1");
     
     private static void renderHud(DrawContext ctx, RenderTickCounter counter) {
         MinecraftClient client = MinecraftClient.getInstance();
@@ -107,10 +107,10 @@ public class LinkmodClient implements ClientModInitializer {
         int j = screenHeight / 2 - 7 + 16;
         int k = screenWidth / 2 - 8;
 
-        if (progress >= 1.0f) {
+        if (progress >= 0.9f) {
             // fully charged - draw full texture
             ctx.drawGuiTexture(RenderPipelines.CROSSHAIR, BLOOM_BAR_FULL, k, j, 16, 16);
-        } else if (progress < 1.0f) {
+        } else if (progress < 0.9f) {
             // draw background bar (horizontal)
             ctx.drawGuiTexture(RenderPipelines.CROSSHAIR, BLOOM_BAR_BACKGROUND, k, j, 16, 4);
             

@@ -1,0 +1,32 @@
+{
+	"format_version": "1.21.6",
+	"credit": "Made By NobodyCareWho",
+	"textures": {
+		"10": "lmod:item/bullseye"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 17, 0],
+			"faces": {
+				"north": {"uv": [16, 0, 0, 16], "texture": "#10"},
+				"east": {"uv": [0, 0, 0, 16], "texture": "#10"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#10"},
+				"west": {"uv": [0, 0, 0, 16], "texture": "#10"},
+				"up": {"uv": [0, 0, 16, 0], "texture": "#10"},
+				"down": {"uv": [0, 0, 16, 0], "texture": "#10"}
+			}
+		}
+	],
+	"display": {
+		"firstperson_righthand": {
+			"translation": [6.75, 1.5, 0],
+			"scale": [1.48438, 1.375, 1]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, -180, 0],
+			"translation": [6.75, 1.5, -16],
+			"scale": [1.48438, 1.375, 1]
+		}
+	}
+}

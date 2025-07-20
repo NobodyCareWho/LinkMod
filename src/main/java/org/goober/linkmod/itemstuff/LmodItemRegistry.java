@@ -117,6 +117,14 @@ public class LmodItemRegistry {
                     .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
     );
 
+    public static final Item AUTORIFLE = register(
+            "autorifle",
+            settings -> new GunItem(settings, "autorifle"),
+            new Item.Settings()
+                    .maxCount(1)
+                    .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
+    );
+
     // bullets
     public static final Item BULLET = register(
             "bullet",
@@ -338,6 +346,13 @@ public class LmodItemRegistry {
     );
 
     //armor
+
+    public static final Item MASK = register(
+            "mask_of_obscurity",
+            settings -> new MaskItem(settings),
+            new Item.Settings()
+                    .maxCount(8)
+    );
 
     public static void initialize() {
         // Force class loading
