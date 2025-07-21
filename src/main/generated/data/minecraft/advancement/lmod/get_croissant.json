@@ -1,10 +1,11 @@
 {
+  "parent": "minecraft:lmod/get_lathe",
   "criteria": {
-    "has_seeds": {
+    "has_croissant": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:wheat_seeds"
+            "items": "lmod:croissant"
           }
         ]
       },
@@ -12,23 +13,20 @@
     }
   },
   "display": {
-    "announce_to_chat": false,
-    "background": "lmod:gui/advancements/backgrounds/lmod",
     "description": {
-      "translate": "advancement.lmod.root.description"
+      "translate": "advancement.lmod.get_croissant.description"
     },
     "icon": {
       "count": 1,
-      "id": "lmod:seed_bag"
+      "id": "lmod:croissant"
     },
-    "show_toast": false,
     "title": {
-      "translate": "advancement.lmod.root.title"
+      "translate": "advancement.lmod.get_croissant.title"
     }
   },
   "requirements": [
     [
-      "has_seeds"
+      "has_croissant"
     ]
   ],
   "sends_telemetry_event": true

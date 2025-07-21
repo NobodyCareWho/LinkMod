@@ -18,7 +18,6 @@ import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.gunstuff.items.BulletItem;
 import org.goober.linkmod.gunstuff.items.Bullets;
 import org.goober.linkmod.soundstuff.LmodSoundRegistry;
-import software.bernie.geckolib.loading.math.function.random.RandomIntegerFunction;
 
 public class GyrojetBulletEntity extends PersistentProjectileEntity implements DamageableProjectile {
     private float damage = 5.0F;

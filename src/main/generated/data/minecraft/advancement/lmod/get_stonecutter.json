@@ -29,12 +29,10 @@
       "has_stonecutter"
     ]
   ],
-
-  "sends_telemetry_event": true,
-
   "rewards": {
     "recipes": [
       "lmod:lathe"
     ]
-  }
+  },
+  "sends_telemetry_event": true
 }

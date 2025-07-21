@@ -1,3 +1,7 @@
 // 1.21.6	-999999999-01-01T00:00:00	LinkMod/Advancements
+6ab25cfa510cdbe8efd388dd38ee0d00ac8c5614 data/minecraft/advancement/lmod/get_croissant.json
+3cc30096b26758464eb06341e7ccb19591c51349 data/minecraft/advancement/lmod/get_gun_components.json
+84924b02de5ca363b19ed440c12ed0c994424c87 data/minecraft/advancement/lmod/get_lathe.json
 ac9e6cc46aa537c495a6302d821b1ee3d380eec5 data/minecraft/advancement/lmod/get_seed_bag.json
-7a2abb00245dd5c18b8b1083cb278d87f54e1da3 data/minecraft/advancement/lmod/root.json
+12390acdd2170dbb0e24919e1a858dbd0b1fbdc3 data/minecraft/advancement/lmod/get_stonecutter.json
+c56e284055286ff432a1753894987dbfc594a628 data/minecraft/advancement/lmod/root.json

@@ -34,11 +34,15 @@
   "advancement.lmod.root.title": "LinkMod",
   "advancement.lmod.root.description": "Linkmerd",
   "advancement.lmod.get_seed_bag.title": "Lazy Farmer",
-  "advancement.lmod.get_seed_bag.description": "Obtain a Seed Bag",
+  "advancement.lmod.get_seed_bag.description": "Craft a Seed Bag",
   "advancement.lmod.get_stonecutter.title": "The Stones on this guy",
   "advancement.lmod.get_stonecutter.description": "Obtain a Stonecutter",
   "advancement.lmod.get_gun_components.title": "Gunsmith's First Steps",
-  "advancement.lmod.get_gun_components.description": "Obtain Gun Components",
+  "advancement.lmod.get_gun_components.description": "Craft Gun Components",
+  "advancement.lmod.get_lathe.title": "Bound to Happen Sooner or Lather",
+  "advancement.lmod.get_lathe.description": "Craft a Lathe",
+  "advancement.lmod.get_croissant.title": "w h a t...?",
+  "advancement.lmod.get_croissant.description": "qwuassaan",
 
 
   "block.lmod.rounded_sandstone": "Embossed Sandstone",
@@ -63,6 +67,10 @@
   "item.lmod.gun_components": "Gun Components",
   "item.lmod.empty_gyrojet": "Empty Gyrojet",
   "item.lmod.rotating_mechanism": "Rotating Mechanism",
+
+  "foods.skibidi":  "food",
+
+  "item.lmod.croissant": "Croissant",
 
   "sounds.skibidi":  "subtitles",
 

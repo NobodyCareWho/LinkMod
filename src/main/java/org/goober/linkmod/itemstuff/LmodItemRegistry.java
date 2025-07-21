@@ -3,6 +3,7 @@ package org.goober.linkmod.itemstuff;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.EquippableComponent;
+import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -359,6 +360,16 @@ public class LmodItemRegistry {
             settings -> new MaskItem(settings),
             new Item.Settings()
                     .maxCount(1)
+    );
+
+    //food
+
+    public static final Item CROISSANT = register(
+            "croissant",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+                    .food(LmodFoodComponents.CROISSANT)
     );
 
     public static void initialize() {

@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:lmod/root",
+  "parent": "minecraft:lmod/get_lathe",
   "criteria": {
     "has_gun_components": {
       "conditions": {
@@ -29,10 +29,8 @@
       "has_gun_components"
     ]
   ],
-
-  "sends_telemetry_event": true,
-
   "rewards": {
+    "experience": 352,
     "recipes": [
       "lmod:autorifle",
       "lmod:blazeshot",
@@ -57,5 +55,6 @@
       "lmod:copper_bullet",
       "lmod:slugshot"
     ]
-  }
+  },
+  "sends_telemetry_event": true
 }

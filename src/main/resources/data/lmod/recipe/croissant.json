@@ -1,0 +1,8 @@
+{
+  "type": "lmod:lathe",
+  "ingredient": "minecraft:bread",
+  "result": {
+    "id": "lmod:croissant",
+    "count": 1
+  }
+}
