@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "": "",
+  "category": "misc",
+  "ingredients": [
+
+    "minecraft:diamond"
+  ],
+  "result": {
+    "id": "lmod:diamond_spine",
+    "count": 4
+  }
+}

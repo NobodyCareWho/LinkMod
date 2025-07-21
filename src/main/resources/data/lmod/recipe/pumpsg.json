@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "XIZ",
+    "WXW"
+  ],
+  "key": {
+    "W": "#minecraft:planks",
+    "I": "minecraft:iron_ingot",
+    "X": "lmod:gun_components",
+    "Z": "lmod:iron_barrel"
+  },
+  "result": {
+    "id": "lmod:pumpshotgun",
+    "count": 1
+  },
+  "show_notification": true
+}

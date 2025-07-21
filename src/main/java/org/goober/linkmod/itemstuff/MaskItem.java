@@ -1,16 +1,20 @@
 package org.goober.linkmod.itemstuff;
 
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import net.minecraft.util.ActionResult;
+import org.jetbrains.annotations.NotNull;
 
 
 public class MaskItem extends Item{
@@ -36,4 +40,5 @@ public class MaskItem extends Item{
             return ActionResult.FAIL;
         }
     }
+
 }

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "XYZ",
+    "WI "
+  ],
+  "key": {
+    "W": "#minecraft:planks",
+    "I": "minecraft:iron_ingot",
+    "X": "lmod:gun_components",
+    "Y": "lmod:rotating_mechanism",
+    "Z": "lmod:iron_barrel"
+  },
+  "result": {
+    "id": "lmod:revolver",
+    "count": 1
+  },
+  "show_notification": true
+}

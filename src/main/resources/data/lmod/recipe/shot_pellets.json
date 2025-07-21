@@ -1,0 +1,8 @@
+{
+  "type": "lmod:lathe",
+  "ingredient": "minecraft:iron_ingot",
+  "result": {
+    "id": "lmod:shot_pellets",
+    "count": 6
+  }
+}

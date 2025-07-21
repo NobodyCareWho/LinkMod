@@ -1,12 +1,7 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "": "",
+  "type": "minecraft:crafting_transmute",
   "category": "equipment",
-  "ingredients": [
-    "minecraft:wheat",
-    "minecraft:bundle"
-  ],
-  "result": {
-    "id": "lmod:seed_bag_custom"
-  }
+  "input": "#minecraft:bundles",
+  "material": "minecraft:wheat",
+  "result": "lmod:seed_bag_custom"
 }

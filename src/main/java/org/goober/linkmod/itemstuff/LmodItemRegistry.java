@@ -345,13 +345,20 @@ public class LmodItemRegistry {
                     .maxCount(64)
     );
 
+    public static final Item ROTATINGMECHANISM = register(
+            "rotating_mechanism",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
     //armor
 
     public static final Item MASK = register(
             "mask_of_obscurity",
             settings -> new MaskItem(settings),
             new Item.Settings()
-                    .maxCount(8)
+                    .maxCount(1)
     );
 
     public static void initialize() {

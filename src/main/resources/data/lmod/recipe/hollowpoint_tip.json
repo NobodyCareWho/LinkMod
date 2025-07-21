@@ -1,0 +1,8 @@
+{
+  "type": "lmod:lathe",
+  "ingredient": "lmod:copper_tip",
+  "result": {
+    "id": "lmod:hollowpoint_tip",
+    "count": 1
+  }
+}
