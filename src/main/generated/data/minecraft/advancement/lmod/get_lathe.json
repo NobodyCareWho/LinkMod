@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:lmod/get_stonecutter",
+  "criteria": {
+    "has_lathe": {
+      "conditions": {
+        "items": [
+          {
+            "items": "lmod:lathe"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.lmod.get_lathe.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "lmod:lathe"
+    },
+    "title": {
+      "translate": "advancement.lmod.get_lathe.title"
+    }
+  },
+  "requirements": [
+    [
+      "has_lathe"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

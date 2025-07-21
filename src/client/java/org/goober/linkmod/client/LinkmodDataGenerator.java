@@ -7,8 +7,10 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancement.*;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.item.Items;
+import net.minecraft.recipe.Recipe;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.goober.linkmod.blockstuff.LmodBlockRegistry;
 import org.goober.linkmod.itemstuff.LmodItemRegistry;
 
 import java.util.function.Consumer;
@@ -34,7 +36,7 @@ public class LinkmodDataGenerator implements DataGeneratorEntrypoint {
                             LmodItemRegistry.SEEDBAG,
                             Text.translatable("advancement.lmod.root.title"),
                             Text.translatable("advancement.lmod.root.description"),
-                            Identifier.of("minecraft", "gui/advancements/backgrounds/adventure"),
+                            Identifier.of("lmod", "gui/advancements/backgrounds/lmod"),
                             AdvancementFrame.TASK,
                             false,
                             false,
@@ -71,7 +73,21 @@ public class LinkmodDataGenerator implements DataGeneratorEntrypoint {
                     .criterion("has_stonecutter", InventoryChangedCriterion.Conditions.items(Items.STONECUTTER))
                     .build(consumer, "lmod/get_stonecutter");
 
-            AdvancementEntry gunComponentsAdvancement = Advancement.Builder.create().parent(rootAdvancement)
+            AdvancementEntry latheAdvancement = Advancement.Builder.create().parent(stoneCutterAdvancement)
+                    .display(
+                            LmodBlockRegistry.LATHE,
+                            Text.translatable("advancement.lmod.get_lathe.title"),
+                            Text.translatable("advancement.lmod.get_lathe.description"),
+                            null,
+                            AdvancementFrame.TASK,
+                            true,
+                            true,
+                            false
+                    )
+                    .criterion("has_lathe", InventoryChangedCriterion.Conditions.items(LmodBlockRegistry.LATHE))
+                    .build(consumer, "lmod/get_lathe");
+
+            AdvancementEntry gunComponentsAdvancement = Advancement.Builder.create().parent(latheAdvancement)
                     .display(
                             LmodItemRegistry.GUNCOMPONENTS,
                             Text.translatable("advancement.lmod.get_gun_components.title"),
