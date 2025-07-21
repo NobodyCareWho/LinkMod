@@ -56,6 +56,34 @@ public class LinkmodDataGenerator implements DataGeneratorEntrypoint {
                     )
                     .criterion("has_seed_bag", InventoryChangedCriterion.Conditions.items(LmodItemRegistry.SEEDBAG_CUSTOM))
                     .build(consumer, "lmod/get_seed_bag");
+
+            AdvancementEntry stoneCutterAdvancement = Advancement.Builder.create().parent(rootAdvancement)
+                    .display(
+                            Items.STONECUTTER,
+                            Text.translatable("advancement.lmod.get_stonecutter.title"),
+                            Text.translatable("advancement.lmod.get_stonecutter.description"),
+                            null,
+                            AdvancementFrame.TASK,
+                            true,
+                            true,
+                            false
+                    )
+                    .criterion("has_stonecutter", InventoryChangedCriterion.Conditions.items(Items.STONECUTTER))
+                    .build(consumer, "lmod/get_stonecutter");
+
+            AdvancementEntry gunComponentsAdvancement = Advancement.Builder.create().parent(rootAdvancement)
+                    .display(
+                            LmodItemRegistry.GUNCOMPONENTS,
+                            Text.translatable("advancement.lmod.get_gun_components.title"),
+                            Text.translatable("advancement.lmod.get_gun_components.description"),
+                            null,
+                            AdvancementFrame.TASK,
+                            true,
+                            true,
+                            false
+                    )
+                    .criterion("has_gun_components", InventoryChangedCriterion.Conditions.items(LmodItemRegistry.GUNCOMPONENTS))
+                    .build(consumer, "lmod/get_gun_components");
         }
     }
 }

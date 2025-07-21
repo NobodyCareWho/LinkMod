@@ -1,0 +1,61 @@
+{
+  "parent": "minecraft:lmod/root",
+  "criteria": {
+    "has_gun_components": {
+      "conditions": {
+        "items": [
+          {
+            "items": "lmod:gun_components"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.lmod.get_gun_components.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "lmod:gun_components"
+    },
+    "title": {
+      "translate": "advancement.lmod.get_gun_components.title"
+    }
+  },
+  "requirements": [
+    [
+      "has_gun_components"
+    ]
+  ],
+
+  "sends_telemetry_event": true,
+
+  "rewards": {
+    "recipes": [
+      "lmod:autorifle",
+      "lmod:blazeshot",
+      "lmod:boilerpistol",
+      "lmod:breezeshot",
+      "lmod:buckshot",
+      "lmod:bullet",
+      "lmod:diamond_spine",
+      "lmod:diamond_bullet",
+      "lmod:ejectorpistol",
+      "lmod:freezeshot",
+      "lmod:gyrojetbullet",
+      "lmod:pinch_of_gunpowder",
+      "lmod:pumpsg",
+      "lmod:ratshot_bullet",
+      "lmod:revolver",
+      "lmod:rifle",
+      "lmod:rocket_compound",
+      "lmod:shotgun",
+      "lmod:shotgunshellempty",
+      "lmod:copper_cap",
+      "lmod:copper_bullet",
+      "lmod:slugshot"
+    ]
+  }
+}

@@ -30,10 +30,17 @@
   "item.lmod.thumpershell": "Thumper Shell",
   "item.lmod.grenadeshellempty": "Empty Grenade Shell",
   "item.lmod.mask_of_obscurity": "Mask of Obscurity",
+
   "advancement.lmod.root.title": "LinkMod",
   "advancement.lmod.root.description": "Linkmerd",
   "advancement.lmod.get_seed_bag.title": "Lazy Farmer",
   "advancement.lmod.get_seed_bag.description": "Obtain a Seed Bag",
+  "advancement.lmod.get_stonecutter.title": "The Stones on this guy",
+  "advancement.lmod.get_stonecutter.description": "Obtain a Stonecutter",
+  "advancement.lmod.get_gun_components.title": "Gunsmith's First Steps",
+  "advancement.lmod.get_gun_components.description": "Obtain Gun Components",
+
+
   "block.lmod.rounded_sandstone": "Embossed Sandstone",
   "block.lmod.gilded_sandstone": "Gilded Sandstone",
   "block.lmod.auros_bloom": "Auros Bloom",

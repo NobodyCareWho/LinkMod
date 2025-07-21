@@ -1,0 +1,40 @@
+{
+  "parent": "minecraft:lmod/root",
+  "criteria": {
+    "has_stonecutter": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:stonecutter"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.lmod.get_stonecutter.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:stonecutter"
+    },
+    "title": {
+      "translate": "advancement.lmod.get_stonecutter.title"
+    }
+  },
+  "requirements": [
+    [
+      "has_stonecutter"
+    ]
+  ],
+
+  "sends_telemetry_event": true,
+
+  "rewards": {
+    "recipes": [
+      "lmod:lathe"
+    ]
+  }
+}
