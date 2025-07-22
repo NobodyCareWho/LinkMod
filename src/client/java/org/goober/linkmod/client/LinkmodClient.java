@@ -27,7 +27,15 @@ import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.itemstuff.SeedBagTooltipData;
 import org.goober.linkmod.gunstuff.GunTooltipData;
 import org.goober.linkmod.particlestuff.LmodParticleRegistry;
+import java.util.List;
+import java.util.ArrayList;
 import org.goober.linkmod.screenstuff.LmodScreenHandlerType;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.recipe.RecipeEntry;
+import org.goober.linkmod.recipestuff.LatheRecipe;
+import org.goober.linkmod.recipestuff.LatheRecipeRegistry;
+import org.goober.linkmod.Linkmod;
+import org.goober.linkmod.networking.SyncLatheRecipesPayload;
 
 public class LinkmodClient implements ClientModInitializer {
 
@@ -65,6 +73,23 @@ public class LinkmodClient implements ClientModInitializer {
         
         // register HUD rendering
         HudRenderCallback.EVENT.register(LinkmodClient::renderHud);
+        
+        // Register recipe sync handler
+        ClientPlayNetworking.registerGlobalReceiver(SyncLatheRecipesPayload.ID, (payload, context) -> {
+            context.client().execute(() -> {
+                // Clear and repopulate the registry on the client thread
+                LatheRecipeRegistry.clearRecipes();
+                for (SyncLatheRecipesPayload.RecipeData data : payload.recipes()) {
+                    LatheRecipeRegistry.registerRecipeFromData(
+                        data.id(),
+                        data.group(),
+                        data.ingredient(),
+                        data.result()
+                    );
+                }
+                System.out.println("Client received " + payload.recipes().size() + " lathe recipes");
+            });
+        });
     }
 
     // texture identifiers for custom bloom bar (as GUI textures, not raw textures)

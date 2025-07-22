@@ -2,7 +2,6 @@ package org.goober.linkmod;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
@@ -25,10 +24,15 @@ import org.goober.linkmod.recipestuff.LmodRecipeTypes;
 import org.goober.linkmod.recipestuff.LmodRecipeSerializers;
 import org.goober.linkmod.recipestuff.LatheRecipe;
 import org.goober.linkmod.recipestuff.LatheRecipeRegistry;
+import org.goober.linkmod.networking.SyncLatheRecipesPayload;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import java.util.List;
+import java.util.ArrayList;
 
 
 public class Linkmod implements ModInitializer {
     public static final String MOD_ID = "lmod";
+    public static final Identifier SYNC_LATHE_RECIPES_ID = Identifier.of(MOD_ID, "sync_lathe_recipes");
     @Override
     public void onInitialize() {
         LmodDataComponentTypes.initialize();
@@ -42,12 +46,20 @@ public class Linkmod implements ModInitializer {
         LmodEntityRegistry.initialize();
         LmodSoundRegistry.initialize();
         
+        // Register network payload
+        PayloadTypeRegistry.playS2C().register(SyncLatheRecipesPayload.ID, SyncLatheRecipesPayload.CODEC);
+        
         // Register recipe loading callback
         ServerLifecycleEvents.SERVER_STARTED.register(this::onServerStarted);
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, success) -> {
             if (success) {
                 loadLatheRecipes(server);
             }
+        });
+        
+        // Sync recipes to clients when they join
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            syncLathRecipesToClient(handler.player);
         });
     }
     
@@ -71,6 +83,28 @@ public class Linkmod implements ModInitializer {
             }
         }
         System.out.println("Found " + latheCount + " lathe recipes");
+        
+        // Sync to all connected players after loading
+        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+            syncLathRecipesToClient(player);
+        }
+    }
+    
+    private void syncLathRecipesToClient(ServerPlayerEntity player) {
+        var allRecipes = LatheRecipeRegistry.getAllRecipes();
+        List<SyncLatheRecipesPayload.RecipeData> recipeData = new ArrayList<>();
+        
+        for (RecipeEntry<LatheRecipe> entry : allRecipes) {
+            LatheRecipe recipe = entry.value();
+            recipeData.add(new SyncLatheRecipesPayload.RecipeData(
+                entry.id().getValue(),
+                recipe.getGroup(),
+                recipe.getInput(),
+                recipe.getResultItem()
+            ));
+        }
+        
+        ServerPlayNetworking.send(player, new SyncLatheRecipesPayload(recipeData));
     }
 
 }
