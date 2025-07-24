@@ -1,9 +1,7 @@
 package org.goober.linkmod.blockstuff;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FlowerBlock;
+import net.minecraft.block.*;
+import net.minecraft.block.enums.NoteBlockInstrument;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKey;
@@ -14,9 +12,9 @@ import org.goober.linkmod.blockstuff.blocks.LatheBlock;
 import java.util.function.Function;
 
 public class LmodBlockRegistry {
-    public static final Block ROUNDED_SANDSTONE = register("rounded_sandstone", Block::new, Block.Settings.create().strength(4.0f).requiresTool());
-    public static final Block GILDED_SANDSTONE = register("gilded_sandstone", Block::new, Block.Settings.create().strength(4.0f).requiresTool());
-    public static final Block LATHE = register("lathe", LatheBlock::new, Block.Settings.create().strength(4.0f).requiresTool());
+    public static final Block ROUNDED_SANDSTONE = register("rounded_sandstone", Block::new, Block.Settings.create().mapColor(MapColor.PALE_YELLOW).instrument(NoteBlockInstrument.BASEDRUM).requiresTool().strength(1.5F, 6.0F));
+    public static final Block GILDED_SANDSTONE = register("gilded_sandstone", Block::new, Block.Settings.create().mapColor(MapColor.PALE_YELLOW).instrument(NoteBlockInstrument.BASEDRUM).requiresTool().strength(1.5F, 6.0F));
+    public static final Block LATHE = register("lathe", LatheBlock::new, Block.Settings.create().mapColor(MapColor.DARK_AQUA).requiresTool().strength(1.5F, 6.0F));
     public static final Block AUROS_BLOOM = register("auros_bloom", 
             settings -> new FlowerBlock(StatusEffects.SATURATION, 0.1F, settings),
             AbstractBlock.Settings.copy(Blocks.POPPY));

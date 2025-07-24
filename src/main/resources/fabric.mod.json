@@ -7,7 +7,7 @@
   "authors": [],
   "contact": {},
   "license": "All-Rights-Reserved",
-  "icon": "assets/linkmod/icon.png",
+  "icon": "assets/lmod/icon.png",
   "environment": "*",
   "entrypoints": {
     "fabric-datagen": [

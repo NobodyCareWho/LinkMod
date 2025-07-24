@@ -41,6 +41,7 @@ public class Linkmod implements ModInitializer {
         LmodRecipeSerializers.initialize();
         LmodEntityRegistry.initialize();
         LmodSoundRegistry.initialize();
+
         
         // Register recipe loading callback
         ServerLifecycleEvents.SERVER_STARTED.register(this::onServerStarted);
@@ -49,6 +50,7 @@ public class Linkmod implements ModInitializer {
                 loadLatheRecipes(server);
             }
         });
+
     }
     
     private void onServerStarted(MinecraftServer server) {
@@ -58,10 +60,10 @@ public class Linkmod implements ModInitializer {
     private void loadLatheRecipes(MinecraftServer server) {
         // Clear existing recipes
         LatheRecipeRegistry.clearRecipes();
-        
+
         // Log total recipes
         System.out.println("Total recipes in manager: " + server.getRecipeManager().values().size());
-        
+
         // Load all lathe recipes
         int latheCount = 0;
         for (RecipeEntry<?> entry : server.getRecipeManager().values()) {
