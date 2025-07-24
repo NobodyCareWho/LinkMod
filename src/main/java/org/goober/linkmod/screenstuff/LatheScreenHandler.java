@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import net.fabricmc.fabric.api.recipe.v1.FabricServerRecipeManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -161,42 +160,11 @@ public class LatheScreenHandler extends ScreenHandler {
         this.selectedRecipe.set(-1);
         this.outputSlot.setStackNoCallbacks(ItemStack.EMPTY);
         if (!stack.isEmpty()) {
-            // Try to get recipes from the recipe manager if we're on server side
-            List<CuttingRecipeDisplay.GroupEntry<LatheRecipe>> entries = new ArrayList<>();
-            SingleStackRecipeInput input = new SingleStackRecipeInput(stack);
-            
             LOGGER.info("World type: {}, isClient: {}", this.world.getClass().getName(), this.world.isClient);
             
-            // Get recipes from the world's recipe manager if available
-            if (this.world instanceof net.minecraft.server.world.ServerWorld serverWorld) {
-                var recipeManager = serverWorld.getServer().getRecipeManager();
-                LOGGER.info("Recipe manager type: {}", recipeManager.getClass().getName());
-                if (recipeManager instanceof FabricServerRecipeManager fm) {
-                    Collection<RecipeEntry<LatheRecipe>> latheRecipes = fm.getAllOfType(LmodRecipeTypes.LATHE);
-                    LOGGER.info("Found {} lathe recipes", latheRecipes.size());
-                    
-                    for (RecipeEntry<LatheRecipe> entry : latheRecipes) {
-                        LatheRecipe latheRecipe = entry.value();
-                        LOGGER.info("Checking recipe: {} -> {}", latheRecipe.getInput(), latheRecipe.getResultItem());
-                        if (latheRecipe.matches(input, this.world)) {
-                            LOGGER.info("Recipe matches!");
-                            CuttingRecipeDisplay<LatheRecipe> display = new CuttingRecipeDisplay<>(
-                                latheRecipe.createResultDisplay(),
-                                Optional.of(entry)
-                            );
-                            entries.add(new CuttingRecipeDisplay.GroupEntry<>(latheRecipe.getInput(), display));
-                        }
-                    }
-                }
-            } else {
-                LOGGER.info("Not a ServerWorld, trying registry approach");
-                // Fallback to registry for client side
-                this.availableRecipes = LatheRecipeRegistry.getFilteredRecipes(stack);
-                return;
-            }
-            
-            LOGGER.info("Total matching entries: {}", entries.size());
-            this.availableRecipes = entries.isEmpty() ? Grouping.empty() : new CuttingRecipeDisplay.Grouping<>(entries);
+            // Use the synced LatheRecipeRegistry which works on both client and server
+            this.availableRecipes = LatheRecipeRegistry.getFilteredRecipes(stack);
+            LOGGER.info("Found {} matching recipes from registry", this.availableRecipes.size());
         } else {
             this.availableRecipes = Grouping.empty();
         }
@@ -211,13 +179,25 @@ public class LatheScreenHandler extends ScreenHandler {
             optional = Optional.empty();
         }
 
-        optional.ifPresentOrElse((recipe) -> {
-            this.output.setLastRecipe(recipe);
-            this.outputSlot.setStackNoCallbacks(((LatheRecipe)recipe.value()).craft(new SingleStackRecipeInput(this.input.getStack(0)), this.world.getRegistryManager()));
-        }, () -> {
-            this.outputSlot.setStackNoCallbacks(ItemStack.EMPTY);
-            this.output.setLastRecipe((RecipeEntry)null);
-        });
+        // Handle the case where we don't have a RecipeEntry (client-side)
+        if (optional.isEmpty() && !this.availableRecipes.isEmpty() && this.isInBounds(selectedId)) {
+            // Get the recipe directly from the registry
+            Optional<LatheRecipe> recipeOpt = LatheRecipeRegistry.getRecipeByIndex(this.input.getStack(0), selectedId);
+            recipeOpt.ifPresent(recipe -> {
+                this.outputSlot.setStackNoCallbacks(recipe.craft(new SingleStackRecipeInput(this.input.getStack(0)), this.world.getRegistryManager()));
+            });
+            if (recipeOpt.isEmpty()) {
+                this.outputSlot.setStackNoCallbacks(ItemStack.EMPTY);
+            }
+        } else {
+            optional.ifPresentOrElse((recipe) -> {
+                this.output.setLastRecipe(recipe);
+                this.outputSlot.setStackNoCallbacks(((LatheRecipe)recipe.value()).craft(new SingleStackRecipeInput(this.input.getStack(0)), this.world.getRegistryManager()));
+            }, () -> {
+                this.outputSlot.setStackNoCallbacks(ItemStack.EMPTY);
+                this.output.setLastRecipe((RecipeEntry)null);
+            });
+        }
         this.sendContentUpdates();
     }
 
@@ -234,26 +214,8 @@ public class LatheScreenHandler extends ScreenHandler {
     }
 
     private boolean isValidIngredient(ItemStack stack) {
-        if (stack.isEmpty()) {
-            return false;
-        }
-        
-        // Check on server side
-        if (this.world instanceof net.minecraft.server.world.ServerWorld serverWorld) {
-            var recipeManager = serverWorld.getServer().getRecipeManager();
-            if (recipeManager instanceof FabricServerRecipeManager fm) {
-                SingleStackRecipeInput input = new SingleStackRecipeInput(stack);
-                Collection<RecipeEntry<LatheRecipe>> latheRecipes = fm.getAllOfType(LmodRecipeTypes.LATHE);
-                
-                for (RecipeEntry<LatheRecipe> entry : latheRecipes) {
-                    if (entry.value().matches(input, this.world)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        
-        return false;
+        // Use the synced LatheRecipeRegistry which works on both client and server
+        return LatheRecipeRegistry.isValidInput(stack);
     }
     public ItemStack quickMove(PlayerEntity player, int slot) {
         ItemStack itemStack = ItemStack.EMPTY;
