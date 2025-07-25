@@ -7,6 +7,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -111,11 +112,23 @@ public class SilverBulletEntity extends PersistentProjectileEntity implements Da
         
         // calculate damage with bullet type multiplier
         float finalDamage = this.damage;
+
+
         if (!bulletStack.isEmpty() && bulletStack.getItem() instanceof BulletItem bulletItem) {
             Bullets.BulletType bulletType = bulletItem.getBulletType();
             finalDamage *= bulletType.damageMultiplier();
             DamageSource damageSource = this.getDamageSources().arrow(this, this.getOwner());
             if (this.getWorld() instanceof ServerWorld serverWorld) {
+                // Check if the target is blocking with a shield
+                if (entity instanceof PlayerEntity player && player.isBlocking()) {
+                    ItemStack activeItem = player.getActiveItem();
+                    if (activeItem.getItem() == Items.SHIELD) {
+                        float effectiveDamage = entity.getType().isIn(EntityTypeTags.UNDEAD) ? finalDamage * 4 : finalDamage;
+                        int shieldDamage = 1 + (int)(effectiveDamage / 5);
+                        activeItem.damage(shieldDamage, player);
+                    }
+                }
+                
                 if (entity instanceof LivingEntity livingEntity && entity.getType().isIn(EntityTypeTags.UNDEAD)) {
                     entity.damage(serverWorld, damageSource, (finalDamage * 4));
                     System.out.println("damage was multiplied from: " + finalDamage + "by: " + 4);

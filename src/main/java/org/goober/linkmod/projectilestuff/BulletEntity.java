@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
@@ -122,6 +123,15 @@ public class BulletEntity extends PersistentProjectileEntity implements Damageab
         // deal damage
         DamageSource damageSource = this.getDamageSources().arrow(this, this.getOwner());
         if (this.getWorld() instanceof ServerWorld serverWorld) {
+            // Check if the target is blocking with a shield
+            if (entity instanceof PlayerEntity player && player.isBlocking()) {
+                ItemStack activeItem = player.getActiveItem();
+                if (activeItem.getItem() == Items.SHIELD) {
+                    int shieldDamage = 1 + (int)(finalDamage / 5); // 1 durability + 1 per 5 damage
+                    activeItem.damage(shieldDamage, player);
+                }
+            }
+            
             entity.damage(serverWorld, damageSource, finalDamage);
             System.out.println("damage dealt: " + finalDamage);
             // remove immunity frames so shotgun pellets can all hit

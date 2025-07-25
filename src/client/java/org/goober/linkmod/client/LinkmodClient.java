@@ -9,6 +9,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.BlockRenderLayer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.render.RenderTickCounter;
@@ -27,6 +28,8 @@ import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.itemstuff.SeedBagTooltipData;
 import org.goober.linkmod.gunstuff.GunTooltipData;
 import org.goober.linkmod.particlestuff.LmodParticleRegistry;
+import org.goober.linkmod.client.model.PillGrenadeEntityModel;
+import org.goober.linkmod.client.renderer.PillGrenadeEntityRenderer;
 import java.util.List;
 import java.util.ArrayList;
 import org.goober.linkmod.screenstuff.LmodScreenHandlerType;
@@ -44,6 +47,9 @@ public class LinkmodClient implements ClientModInitializer {
         // Register screens
         HandledScreens.register(LmodScreenHandlerType.LATHE, LatheScreen::new);
         
+        // Register model layers
+        EntityModelLayerRegistry.registerModelLayer(PillGrenadeEntityRenderer.MODEL_LAYER, PillGrenadeEntityModel::getTexturedModelData);
+        
         // Register entity renderers
         EntityRendererRegistry.register(LmodEntityRegistry.SEEDBAG_ENTITY, FlyingItemEntityRenderer::new);
         // register empty renderer for bullet entity
@@ -54,7 +60,7 @@ public class LinkmodClient implements ClientModInitializer {
         EntityRendererRegistry.register(LmodEntityRegistry.GYROJETBULLET, EmptyEntityRenderer::new);
         EntityRendererRegistry.register(LmodEntityRegistry.ICEBULLET, EmptyEntityRenderer::new);
         // register renderer for pill grenade entity
-        EntityRendererRegistry.register(LmodEntityRegistry.PILLGRENADE, EmptyEntityRenderer::new);
+        EntityRendererRegistry.register(LmodEntityRegistry.PILLGRENADE, PillGrenadeEntityRenderer::new);
         // Register tooltip components
         TooltipComponentCallback.EVENT.register(data -> {
             if (data instanceof SeedBagTooltipData seedBagData) {

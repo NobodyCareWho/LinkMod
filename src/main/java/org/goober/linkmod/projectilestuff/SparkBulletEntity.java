@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
@@ -116,13 +117,22 @@ public class SparkBulletEntity extends PersistentProjectileEntity implements Dam
         // deal damage
         DamageSource damageSource = this.getDamageSources().arrow(this, this.getOwner());
         if (this.getWorld() instanceof ServerWorld serverWorld) {
+            // Check if the target is blocking with a shield
+            if (entity instanceof PlayerEntity player && player.isBlocking()) {
+                ItemStack activeItem = player.getActiveItem();
+                if (activeItem.getItem() == Items.SHIELD) {
+                    int shieldDamage = 1 + (int)(finalDamage / 5); 
+                    activeItem.damage(shieldDamage, player);
+                }
+            }
+            
             entity.damage(serverWorld, damageSource, finalDamage);
             // remove immunity frames so shotgun pellets can all hit
             if (entity instanceof LivingEntity livingEntity) {
                 livingEntity.hurtTime = 0;
                 livingEntity.timeUntilRegen = 0;
-                int fireticks = livingEntity.getFireTicks();
-                livingEntity.setOnFireFor(2+fireticks); // Sets the entity on fire for 4 seconds
+                int currentFireTicks = livingEntity.getFireTicks();
+                livingEntity.setFireTicks(currentFireTicks + 20);
             }
         }
         

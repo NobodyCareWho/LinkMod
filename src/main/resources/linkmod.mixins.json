@@ -4,7 +4,10 @@
   "package": "org.goober.linkmod.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "PlayerEntityMixin"
+    "PlayerEntityMixin",
+    "PiglinEntityMixin",
+    "PiglinBruteEntityMixin",
+    "SkeletonEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -7,6 +7,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -140,6 +141,14 @@ public class GyrojetBulletEntity extends PersistentProjectileEntity implements D
         // deal damage
         DamageSource damageSource = this.getDamageSources().arrow(this, this.getOwner());
         if (this.getWorld() instanceof ServerWorld serverWorld) {
+
+            if (entity instanceof PlayerEntity player && player.isBlocking()) {
+                ItemStack activeItem = player.getActiveItem();
+                if (activeItem.getItem() == Items.SHIELD) {
+                    int shieldDamage = 1 + (int)(finalDamage / 5);
+                    activeItem.damage(shieldDamage, player);
+                }
+            }
             entity.damage(serverWorld, damageSource, finalDamage);
             double velocityMagnitude = this.getVelocity().length();
             System.out.println("damage dealt: " + finalDamage + " (velocity: " + velocityMagnitude + ")");
