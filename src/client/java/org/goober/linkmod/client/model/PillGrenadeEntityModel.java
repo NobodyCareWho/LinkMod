@@ -24,7 +24,7 @@ public class PillGrenadeEntityModel extends EntityModel<EntityRenderState> {
     }
     
     public void setAngles(float ageInTicks) {
-        // Rotate the grenade as it flies
+        // rotate in the air
         this.lmod_main.yaw = ageInTicks * 0.3F;
         this.lmod_main.pitch = ageInTicks * 0.2F;
     }

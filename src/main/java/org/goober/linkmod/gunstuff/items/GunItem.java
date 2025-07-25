@@ -455,6 +455,7 @@ public class GunItem extends Item {
     public String getGunTypeId() {
         return gunTypeId;
     }
+
     
     private void playInsertSound(PlayerEntity player) {
         // use load sound from gun profile if available

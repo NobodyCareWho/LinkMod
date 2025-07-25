@@ -37,17 +37,9 @@ public class PillGrenadeEntityRenderer extends EntityRenderer<PillGrenadeEntity,
     @Override
     public void render(PillGrenadeRenderState state, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         matrices.push();
-        
-        // Adjust the position to center the model
         matrices.translate(0.0, -1.5, 0.0);
-        
-        // Set the rotation angles
         this.model.setAngles(state.age);
-        
-        // Get the vertex consumer
         var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(TEXTURE));
-        
-        // Get the root part and render it
         ModelPart root = this.model.getPart();
         root.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
         
