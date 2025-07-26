@@ -23,11 +23,13 @@ import org.goober.linkmod.gunstuff.items.Bullets;
 public class PillGrenadeEntity extends PersistentProjectileEntity implements DamageableProjectile {
     private float damage = 15.0F;
     private ItemStack bulletStack;
+    private int remainingBounces = 3; // number of bounces before exploding
 
     public PillGrenadeEntity(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
         super(entityType, world);
         this.bulletStack = ItemStack.EMPTY;
         this.setNoGravity(false);
+        this.pickupType = PickupPermission.DISALLOWED; // can't be picked up
     }
 
     public PillGrenadeEntity(World world, LivingEntity owner, ItemStack bulletStack) {
@@ -35,8 +37,10 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
         this.bulletStack = bulletStack.copy();
         this.setOwner(owner);
         this.setPosition(owner.getX(), owner.getEyeY() - 0.1, owner.getZ());
-        this.setNoGravity(true);
+        this.setNoGravity(false); // enable gravity for bouncing
         this.setCritical(false);
+        this.pickupType = PickupPermission.DISALLOWED; // can't be picked up
+        this.setNoClip(false); // ensure collision is enabled
     }
     
     public void setDamage(float damage) {
@@ -55,20 +59,8 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
     @Override
     public void tick() {
         super.tick();
-        
-        // add particle trail
-
-            
-            // does not create a trail of particles
-            
-            // add spark particles
-
-
-
-
-        
-        // remove bullet after 3 seconds
-        if (this.age > 60) {
+        // remove after 10 seconds to prevent entities from existing forever
+        if (this.age > 200) {
             this.discard();
         }
     }
@@ -124,33 +116,60 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
         // play impact sound
         this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), 
             SoundEvents.ENTITY_ARROW_HIT, SoundCategory.PLAYERS, 1.0F, 1.2F);
+
         
         this.discard();
     }
     
     @Override
     protected void onBlockHit(BlockHitResult blockHitResult) {
-        super.onBlockHit(blockHitResult);
+        // decrement bounce counter
+        this.remainingBounces--;
         
-        // add impact particles
-        if (this.getWorld() instanceof ServerWorld serverWorld) {
+        if (this.remainingBounces <= 0) {
+            // mo more bounces, just stop
+            this.discard();
+        } else {
+            
+            // calculate bounce velocity
+            Vec3d velocity = this.getVelocity();
+            Vec3d normal = Vec3d.of(blockHitResult.getSide().getVector());
+            
+            // reflect velocity off the surface
+            Vec3d newVelocity = velocity.subtract(normal.multiply(2 * velocity.dotProduct(normal)));
+            
+            // reduce velocity on bounce (energy loss)
+            newVelocity = newVelocity.multiply(0.6);
+            
+            // add a small upward component to prevent sliding
+            if (Math.abs(newVelocity.y) < 0.1 && blockHitResult.getSide().getAxis().isHorizontal()) {
+                newVelocity = newVelocity.add(0, 0.2, 0);
+            }
+            
+            // set the new velocity
+            this.setVelocity(newVelocity);
+            
+            // move the grenade away from the surface to prevent getting stuck
             Vec3d hitPos = blockHitResult.getPos();
-            serverWorld.spawnParticles(
-                ParticleTypes.SMOKE,
-                hitPos.x, hitPos.y, hitPos.z,
-                10,
-                0.1, 0.1, 0.1,
-                0.05
-            );
+            Vec3d currentPos = this.getPos();
+            
+            // calculate a safe position away from the collision point
+            Vec3d safePos = hitPos.add(normal.multiply(0.3));
+            this.setPosition(safePos.x, safePos.y, safePos.z);
         }
-        
-        // play impact sound
-        this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), 
-            SoundEvents.ENTITY_ARROW_HIT_PLAYER, SoundCategory.PLAYERS, 0.8F, 1.5F);
-        
-        this.discard();
     }
     
+    @Override
+    protected boolean canHit(Entity entity) {
+        // can hit entities but not the owner immediately after firing
+        return super.canHit(entity) && (this.age > 5 || entity != this.getOwner());
+    }
+    
+    @Override
+    public boolean isInGround() {
+        // never consider the grenade as "in ground" to prevent it from getting stuck
+        return false;
+    }
     
     @Override
     protected boolean tryPickup(PlayerEntity player) {
