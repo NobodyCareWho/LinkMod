@@ -19,6 +19,7 @@ import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.gunstuff.items.BulletItem;
 import org.goober.linkmod.gunstuff.items.Bullets;
 import org.goober.linkmod.soundstuff.LmodSoundRegistry;
+import org.goober.linkmod.util.DebugConfig;
 
 public class GyrojetBulletEntity extends PersistentProjectileEntity implements DamageableProjectile {
     private float damage = 5.0F;
@@ -151,7 +152,7 @@ public class GyrojetBulletEntity extends PersistentProjectileEntity implements D
             }
             entity.damage(serverWorld, damageSource, finalDamage);
             double velocityMagnitude = this.getVelocity().length();
-            System.out.println("damage dealt: " + finalDamage + " (velocity: " + velocityMagnitude + ")");
+            DebugConfig.debug("damage dealt: " + finalDamage + " (velocity: " + velocityMagnitude + ")");
             // remove immunity frames so shotgun pellets can all hit
             if (entity instanceof LivingEntity livingEntity) {
                 livingEntity.hurtTime = 0;

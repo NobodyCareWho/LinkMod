@@ -23,6 +23,7 @@ import org.goober.linkmod.gunstuff.items.BulletItem;
 import org.goober.linkmod.gunstuff.items.Bullets;
 import org.goober.linkmod.miscstuff.soundprofiles.BulletSoundProfile;
 import org.goober.linkmod.miscstuff.ParticleProfile;
+import org.goober.linkmod.util.DebugConfig;
 
 public class BulletEntity extends PersistentProjectileEntity implements DamageableProjectile {
     private float damage = 5.0F;
@@ -133,7 +134,7 @@ public class BulletEntity extends PersistentProjectileEntity implements Damageab
             }
             
             entity.damage(serverWorld, damageSource, finalDamage);
-            System.out.println("damage dealt: " + finalDamage);
+            DebugConfig.debug("damage dealt: " + finalDamage);
             // remove immunity frames so shotgun pellets can all hit
             if (entity instanceof LivingEntity livingEntity) {
                 livingEntity.hurtTime = 0;

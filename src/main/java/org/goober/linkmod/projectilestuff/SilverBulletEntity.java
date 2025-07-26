@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.gunstuff.items.BulletItem;
 import org.goober.linkmod.gunstuff.items.Bullets;
+import org.goober.linkmod.util.DebugConfig;
 
 
 public class SilverBulletEntity extends PersistentProjectileEntity implements DamageableProjectile {
@@ -131,13 +132,13 @@ public class SilverBulletEntity extends PersistentProjectileEntity implements Da
                 
                 if (entity instanceof LivingEntity livingEntity && entity.getType().isIn(EntityTypeTags.UNDEAD)) {
                     entity.damage(serverWorld, damageSource, (finalDamage * 4));
-                    System.out.println("damage was multiplied from: " + finalDamage + "by: " + 4);
+                    DebugConfig.debug("damage was multiplied from: " + finalDamage + "by: " + 4);
                 } else {
                     entity.damage(serverWorld, damageSource, (finalDamage));
-                    System.out.println("damage was not multiplied from: " + finalDamage);
+                    DebugConfig.debug("damage was not multiplied from: " + finalDamage);
                 }
         } else {
-                System.out.println("no boolets??");
+                DebugConfig.debug("no boolets??");
         }
 
             // remove immunity frames so shotgun pellets can all hit

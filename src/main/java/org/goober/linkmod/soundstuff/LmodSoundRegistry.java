@@ -5,6 +5,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import org.goober.linkmod.Linkmod;
+import org.goober.linkmod.util.DebugConfig;
 
 public class LmodSoundRegistry {
     private LmodSoundRegistry() {
@@ -35,7 +36,7 @@ public class LmodSoundRegistry {
     // This static method starts class initialization, which then initializes
     // the static class variables (e.g. ITEM_METAL_WHISTLE).
     public static void initialize() {
-        System.out.println("Registering " + Linkmod.MOD_ID + " Sounds");
+        DebugConfig.debug("Registering " + Linkmod.MOD_ID + " Sounds");
         // Technically this method can stay empty, but some developers like to notify
         // the console, that certain parts of the mod have been successfully initialized
     }

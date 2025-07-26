@@ -28,6 +28,7 @@ import org.goober.linkmod.networking.SyncLatheRecipesPayload;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import java.util.List;
 import java.util.ArrayList;
+import org.goober.linkmod.util.DebugConfig;
 
 
 public class Linkmod implements ModInitializer {
@@ -43,7 +44,6 @@ public class Linkmod implements ModInitializer {
         LmodScreenHandlerType.initialize();
         LmodRecipeTypes.initialize();
         LmodRecipeSerializers.initialize();
-        LmodEntityRegistry.initialize();
         LmodSoundRegistry.initialize();
         
         // Register network payload
@@ -72,7 +72,7 @@ public class Linkmod implements ModInitializer {
         LatheRecipeRegistry.clearRecipes();
         
         // Log total recipes
-        System.out.println("Total recipes in manager: " + server.getRecipeManager().values().size());
+        DebugConfig.debug("Total recipes in manager: " + server.getRecipeManager().values().size());
         
         // Load all lathe recipes
         int latheCount = 0;
@@ -82,7 +82,7 @@ public class Linkmod implements ModInitializer {
                 LatheRecipeRegistry.registerRecipe((RecipeEntry<LatheRecipe>) entry);
             }
         }
-        System.out.println("Found " + latheCount + " lathe recipes");
+        DebugConfig.debug("Found " + latheCount + " lathe recipes");
         
         // Sync to all connected players after loading
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {

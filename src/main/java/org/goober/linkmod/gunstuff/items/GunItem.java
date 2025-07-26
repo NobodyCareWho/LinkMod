@@ -29,7 +29,7 @@ import org.goober.linkmod.gunstuff.GunContentsComponent;
 import org.goober.linkmod.gunstuff.GunTooltipData;
 import org.goober.linkmod.gunstuff.GunBloomComponent;
 import org.goober.linkmod.gunstuff.RecoilTracker;
-import org.goober.linkmod.gunstuff.BloomTracker;
+import org.goober.linkmod.util.DebugConfig;
 import org.goober.linkmod.itemstuff.LmodDataComponentTypes;
 import org.goober.linkmod.projectilestuff.*;
 import org.goober.linkmod.gunstuff.items.Bullets.BulletType;
@@ -57,7 +57,7 @@ public class GunItem extends Item {
         ItemStack stack = user.getStackInHand(hand);
         GunContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY);
         
-        System.out.println("Gun use called - isEmpty: " + contents.isEmpty());
+        DebugConfig.debug("Gun use called - isEmpty: " + contents.isEmpty());
         
         if (!world.isClient && !contents.isEmpty()) {
             try {
@@ -101,7 +101,7 @@ public class GunItem extends Item {
                 }
 
                 if (!bulletStack.isEmpty()) {
-                    System.out.println("Shooting bullet: " + bulletStack);
+                    DebugConfig.debug("Shooting bullet: " + bulletStack);
 
                     // bullettype?
                     BulletType bulletType = null;
@@ -135,7 +135,7 @@ public class GunItem extends Item {
 
                             projectile.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, gunType.velocity() * bulletType.vMultiplier(), spread);
                             world.spawnEntity(projectile);
-                            System.out.println("Spawned projectile entity: " + projectile.getClass().getSimpleName() + " with spread: " + spread + "/" + maxSpread);
+                            DebugConfig.debug("Spawned projectile entity: " + projectile.getClass().getSimpleName() + " with spread: " + spread + "/" + maxSpread);
                         }
 
                         // update bloom after shooting (increase bloom based on shot)

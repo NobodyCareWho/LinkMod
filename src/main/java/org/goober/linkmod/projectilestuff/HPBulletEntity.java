@@ -20,6 +20,7 @@ import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.gunstuff.items.BulletItem;
 import org.goober.linkmod.gunstuff.items.Bullets;
 import net.minecraft.entity.attribute.EntityAttributes;
+import org.goober.linkmod.util.DebugConfig;
 
 
 public class HPBulletEntity extends PersistentProjectileEntity implements DamageableProjectile {
@@ -122,13 +123,13 @@ public class HPBulletEntity extends PersistentProjectileEntity implements Damage
                 if (entity instanceof LivingEntity livingEntity) {
                     float armorvalue = livingEntity.getArmor();
                     entity.damage(serverWorld, damageSource, (finalDamage - armorvalue));
-                    System.out.println("damage reduced from: " + finalDamage + "by: " + armorvalue);
+                    DebugConfig.debug("damage reduced from: " + finalDamage + "by: " + armorvalue);
                 } else {
                     float armorvalue = 0;
                     entity.damage(serverWorld, damageSource, (finalDamage - armorvalue));
                 }
         } else {
-                System.out.println("no boolets??");
+                DebugConfig.debug("no boolets??");
         }
 
             // remove immunity frames so shotgun pellets can all hit
