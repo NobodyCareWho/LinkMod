@@ -24,6 +24,7 @@ public class ParticleProfile {
         register("blaze", new ParticleProfile.PP( null, ParticleTypes.LAVA, ParticleTypes.ELECTRIC_SPARK, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
         register("freeze", new ParticleProfile.PP( null, ParticleTypes.SNOWFLAKE, ParticleTypes.ELECTRIC_SPARK, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
         register("flare", new ParticleProfile.PP( null, ParticleTypes.CAMPFIRE_COSY_SMOKE, ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
+        register("slime", new ParticleProfile.PP( null, ParticleTypes.ITEM_SLIME, ParticleTypes.ITEM_SLIME, ParticleTypes.ELECTRIC_SPARK, ParticleTypes.ELECTRIC_SPARK));
 
     }
 

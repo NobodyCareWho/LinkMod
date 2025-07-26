@@ -84,6 +84,16 @@ public class LmodEntityRegistry {
                     .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Linkmod.MOD_ID, "icebullet")))
     );
 
+    public static final EntityType<BulletEntity> BOUNCYBULLET = Registry.register(
+            Registries.ENTITY_TYPE,
+            Identifier.of(Linkmod.MOD_ID, "bouncybullet"),
+            EntityType.Builder.<BulletEntity>create(BulletEntity::new, SpawnGroup.MISC)
+                    .dimensions(0.5F, 0.5F)
+                    .maxTrackingRange(80)
+                    .trackingTickInterval(1)
+                    .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Linkmod.MOD_ID, "bouncy")))
+    );
+
     public static final EntityType<PillGrenadeEntity> PILLGRENADE = Registry.register(
             Registries.ENTITY_TYPE,
             Identifier.of(Linkmod.MOD_ID, "pillgrenade"),

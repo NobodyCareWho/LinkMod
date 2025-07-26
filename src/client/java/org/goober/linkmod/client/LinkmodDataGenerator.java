@@ -125,6 +125,7 @@ public class LinkmodDataGenerator implements DataGeneratorEntrypoint {
                     .criterion("has_gun_components", InventoryChangedCriterion.Conditions.items(LmodItemRegistry.GUNCOMPONENTS))
                     .rewards(AdvancementRewards.Builder.experience(352)
                             .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "autorifle")))
+                            .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "slimy_slugshot")))
                             .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "blazeshot")))
                             .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "boilerpistol")))
                             .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "breezeshot")))
@@ -146,6 +147,8 @@ public class LinkmodDataGenerator implements DataGeneratorEntrypoint {
                             .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "copper_cap")))
                             .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "copper_bullet")))
                             .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "slugshot"))))
+
+
                     .build(consumer, "lmod/get_gun_components");
         }
 

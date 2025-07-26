@@ -49,7 +49,7 @@ public class LinkmodClient implements ClientModInitializer {
         
         // Register model layers
         EntityModelLayerRegistry.registerModelLayer(PillGrenadeEntityRenderer.MODEL_LAYER, PillGrenadeEntityModel::getTexturedModelData);
-        
+
         // Register entity renderers
         EntityRendererRegistry.register(LmodEntityRegistry.SEEDBAG_ENTITY, FlyingItemEntityRenderer::new);
         // register empty renderer for bullet entity
@@ -59,6 +59,7 @@ public class LinkmodClient implements ClientModInitializer {
         EntityRendererRegistry.register(LmodEntityRegistry.SILVERBULLET, EmptyEntityRenderer::new);
         EntityRendererRegistry.register(LmodEntityRegistry.GYROJETBULLET, EmptyEntityRenderer::new);
         EntityRendererRegistry.register(LmodEntityRegistry.ICEBULLET, EmptyEntityRenderer::new);
+        EntityRendererRegistry.register(LmodEntityRegistry.BOUNCYBULLET, EmptyEntityRenderer::new);
         // register renderer for pill grenade entity
         EntityRendererRegistry.register(LmodEntityRegistry.PILLGRENADE, PillGrenadeEntityRenderer::new);
         // Register tooltip components

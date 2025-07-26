@@ -26,7 +26,7 @@ public class Guns {
         register("ejectorpistol", new GunType("Ejector Pistol", 7.5f, 5.6f, 8, 8, 1.4f, 6, 5, 0.7f,2f, 2.4f, Set.of("rifle_ammo"), ShellEjectionMode.TO_WORLD, 0,GunSoundProfile.get("autopistol")));
         register("boilerpistol", new GunType("Boiler Pistol", 8.5f, 2.3f, 43, 1, 4, 0, 0, 0, 0,2.0f, Set.of("rifle_ammo"),  ShellEjectionMode.TO_BUNDLE, 0,GunSoundProfile.get("revolver")));
         register("pumpsg", new GunType("Pump Shotgun", 6.5f, 4.0f, 14, 5, 5.5f, 3f, 7f, 0.5f, 2f, 2.2f, Set.of("shotgun_shells"),  ShellEjectionMode.TO_WORLD, 0.4f,GunSoundProfile.get("pumpshotgun")));
-        register("grenadelauncher", new GunType("Grenade Launcher", 15.5f, 1.0f, 14, 1, 1, 0, 0, 0, 0, 2.0f, Set.of("grenade_shells"), ShellEjectionMode.TO_BUNDLE, 0.4f,GunSoundProfile.get("dbshotgun")));
+        register("grenadelauncher", new GunType("Grenade Launcher", 15.5f, 2.0f, 14, 1, 1, 0, 0, 0, 0, 2.0f, Set.of("grenade_shells"), ShellEjectionMode.TO_BUNDLE, 0.4f,GunSoundProfile.get("dbshotgun")));
         register("autorifle", new GunType("Auto Rifle", 12.3f, 5.8f, 4, 30, 1.2f, 13, 12, 0.7f, 1.4f, 2.4f, Set.of("rifle_ammo"), ShellEjectionMode.TO_WORLD, 0.14f,GunSoundProfile.get("rifle")));
         register("bullseye_tome", new GunType("Bull's Eye", 20.0f, 15.0f, 22, 1, 0, 0, 0, 0, 0,2.0f, Set.of("rifle_ammo"),  ShellEjectionMode.NONE, 0,GunSoundProfile.get("rifle")));
 

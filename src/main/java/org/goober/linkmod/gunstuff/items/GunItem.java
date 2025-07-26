@@ -20,10 +20,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ClickType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
+import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.goober.linkmod.gunstuff.GunContentsComponent;
@@ -358,11 +355,11 @@ public class GunItem extends Item {
         int totalBullets = getCompatibleBulletCount(contents);
 
         Guns.GunType gunType = Guns.get(gunTypeId);
-        tooltip.accept(Text.literal("Gun Type: " + gunType.displayName()));
-        tooltip.accept(Text.literal("Damage: " + gunType.damage()));
-        tooltip.accept(Text.literal("Cooldown: " + gunType.cooldownTicks() + " ticks"));
-        tooltip.accept(Text.literal("Ammo: " + totalBullets + "/" + gunType.maxAmmo()));
-        tooltip.accept(Text.literal("Accepts: " + String.join(", ", gunType.acceptedAmmoTags())));
+        tooltip.accept(Text.literal("Gun Type: " + gunType.displayName()).formatted(Formatting.GOLD));
+        tooltip.accept(Text.literal("Base Damage: " + gunType.damage()).formatted(Formatting.RED));
+        tooltip.accept(Text.literal("Cooldown: " + (float)gunType.cooldownTicks()/20 + " seconds").formatted(Formatting.GREEN));
+        tooltip.accept(Text.literal("Ammo: " + totalBullets + "/" + gunType.maxAmmo()).formatted(Formatting.AQUA));
+        tooltip.accept(Text.literal("Accepts: " + String.join(", ", gunType.acceptedAmmoTags())).formatted(Formatting.LIGHT_PURPLE));
     }
 
     

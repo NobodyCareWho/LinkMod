@@ -190,6 +190,13 @@ public class LmodItemRegistry {
                     .maxCount(64)
     );
 
+    public static final Item BOUNCYSLUGSHELL = register(
+            "bouncy_slugshell",
+            settings -> new BulletItem(settings, "bouncy_slugshell"),
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
     public static final Item BUCKSHELL = register(
             "buckshell",
             settings -> new BulletItem(settings, "buckshot"),
@@ -320,6 +327,13 @@ public class LmodItemRegistry {
 
     public static final Item SLUG = register(
             "slug",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item SLIMYSLUG = register(
+            "slimy_slug",
             Item::new,
             new Item.Settings()
                     .maxCount(64)

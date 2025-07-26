@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "": "",
+  "category": "misc",
+  "ingredients": [
+    "lmod:slugshell",
+    "lmod:slugshell",
+    "lmod:slugshell",
+    "lmod:slugshell",
+    "minecraft:slime_ball"
+  ],
+  "result": {
+    "id": "lmod:bouncy_slugshell",
+    "count": 4
+  }
+}

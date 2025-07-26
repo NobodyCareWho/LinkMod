@@ -238,12 +238,12 @@
 			"translation": [-1.25, 4.25, -3.75]
 		},
 		"firstperson_righthand": {
-			"rotation": [10.06, 11.74, 0.28],
-			"translation": [0, 7.75, 0]
+			"rotation": [11.61, 12.96, 0.03],
+			"translation": [0, 6, 1.5]
 		},
 		"firstperson_lefthand": {
-			"rotation": [10.06, 11.74, 0.28],
-			"translation": [0, 7.75, 0]
+			"rotation": [13.56, 11.74, 0.28],
+			"translation": [0, 6, 1.25]
 		}
 	},
 	"groups": [

@@ -5,6 +5,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -31,10 +33,13 @@ public class BulletItem extends Item {
                               Consumer<Text> tooltip,
                               TooltipType type) {
         Bullets.BulletType bulletType = Bullets.get(bulletTypeId);
-        tooltip.accept(Text.literal("Type: " + bulletType.displayName()));
-        tooltip.accept(Text.literal("Damage Multiplier: " + bulletType.damageMultiplier() + "x"));
+        tooltip.accept(Text.literal("Type: " + bulletType.displayName()).formatted(Formatting.GOLD));
+        tooltip.accept(Text.literal("Damage Multiplier: " + bulletType.damageMultiplier() + "x").formatted(Formatting.RED));
         if (bulletType.pelletsPerShot() > 1) {
-            tooltip.accept(Text.literal("Pellets: " + bulletType.pelletsPerShot() + "x"));
+            tooltip.accept(Text.literal("Pellets: " + bulletType.pelletsPerShot() + "x").formatted(Formatting.AQUA));
+        }
+        if (bulletType.specialBehaviour() != "none") {
+            tooltip.accept(Text.literal("Special Behaviour: " + bulletType.specialBehaviour()).formatted(Formatting.LIGHT_PURPLE));
         }
     }
 }
