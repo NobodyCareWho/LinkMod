@@ -1,10 +1,12 @@
 package org.goober.linkmod.gunstuff.items;
 
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.Text;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class BulletItem extends Item {
     private final String bulletTypeId;
@@ -22,12 +24,17 @@ public class BulletItem extends Item {
         return Bullets.get(bulletTypeId);
     }
     
-    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type) {
+    @Override
+    public void appendTooltip(ItemStack stack,
+                              Item.TooltipContext context,
+                              TooltipDisplayComponent displayComponent,
+                              Consumer<Text> tooltip,
+                              TooltipType type) {
         Bullets.BulletType bulletType = Bullets.get(bulletTypeId);
-        tooltip.add(Text.literal("Type: " + bulletType.displayName()));
-        tooltip.add(Text.literal("Damage Multiplier: " + bulletType.damageMultiplier() + "x"));
+        tooltip.accept(Text.literal("Type: " + bulletType.displayName()));
+        tooltip.accept(Text.literal("Damage Multiplier: " + bulletType.damageMultiplier() + "x"));
         if (bulletType.pelletsPerShot() > 1) {
-            tooltip.add(Text.literal("Pellets: " + bulletType.pelletsPerShot() + "x"));
+            tooltip.accept(Text.literal("Pellets: " + bulletType.pelletsPerShot() + "x"));
         }
     }
 }

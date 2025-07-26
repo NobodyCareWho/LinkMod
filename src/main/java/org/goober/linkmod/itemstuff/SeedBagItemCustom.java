@@ -1,5 +1,6 @@
 package org.goober.linkmod.itemstuff;
 
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
@@ -8,6 +9,7 @@ import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.item.tooltip.TooltipData;
 import java.util.Optional;
+import java.util.function.Consumer;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -141,14 +143,18 @@ public class SeedBagItemCustom extends Item {
         return false;
     }
     
-    // Custom tooltip method (without @Override since it might not exist in parent)
-    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type) {
+    @Override
+    public void appendTooltip(ItemStack stack,
+                              Item.TooltipContext context,
+                              TooltipDisplayComponent displayComponent,
+                              Consumer<Text> tooltip,
+                              TooltipType type) {
         SeedBagContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.SEEDBAG_CONTENTS, SeedBagContentsComponent.EMPTY);
         int totalSeeds = contents.getTotalCount();
         int uniqueTypes = contents.items().size();
         
-        tooltip.add(Text.literal("Seeds: " + totalSeeds + "/" + MAX_CAPACITY));
-        tooltip.add(Text.literal("Types: " + uniqueTypes));
+        tooltip.accept(Text.literal("Seeds: " + totalSeeds + "/" + MAX_CAPACITY));
+        tooltip.accept(Text.literal("Types: " + uniqueTypes));
     }
     
     @Override

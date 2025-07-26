@@ -1,5 +1,6 @@
 package org.goober.linkmod.gunstuff.items;
 
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.function.Consumer;
 
 
 import static org.goober.linkmod.gunstuff.items.Bullets.isEmptyShell;
@@ -345,18 +347,24 @@ public class GunItem extends Item {
         }
         return false;
     }
-    
-    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+
+    @Override
+    public void appendTooltip(ItemStack stack,
+                              Item.TooltipContext context,
+                              TooltipDisplayComponent displayComponent,
+                              Consumer<Text> tooltip,
+                              TooltipType type) {
         GunContentsComponent contents = stack.getOrDefault(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY);
         int totalBullets = getCompatibleBulletCount(contents);
-        
+
         Guns.GunType gunType = Guns.get(gunTypeId);
-        tooltip.add(Text.literal("Gun Type: " + gunType.displayName()));
-        tooltip.add(Text.literal("Damage: " + gunType.damage()));
-        tooltip.add(Text.literal("Cooldown: " + gunType.cooldownTicks() + " ticks"));
-        tooltip.add(Text.literal("Ammo: " + totalBullets + "/" + gunType.maxAmmo()));
-        tooltip.add(Text.literal("Accepts: " + String.join(", ", gunType.acceptedAmmoTags())));
+        tooltip.accept(Text.literal("Gun Type: " + gunType.displayName()));
+        tooltip.accept(Text.literal("Damage: " + gunType.damage()));
+        tooltip.accept(Text.literal("Cooldown: " + gunType.cooldownTicks() + " ticks"));
+        tooltip.accept(Text.literal("Ammo: " + totalBullets + "/" + gunType.maxAmmo()));
+        tooltip.accept(Text.literal("Accepts: " + String.join(", ", gunType.acceptedAmmoTags())));
     }
+
     
     @Override
     public boolean isItemBarVisible(ItemStack stack) {
