@@ -29,6 +29,7 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import java.util.List;
 import java.util.ArrayList;
 import org.goober.linkmod.util.DebugConfig;
+import org.goober.linkmod.villagerstuff.LmodVillagerTrades;
 
 
 public class Linkmod implements ModInitializer {
@@ -45,6 +46,7 @@ public class Linkmod implements ModInitializer {
         LmodRecipeTypes.initialize();
         LmodRecipeSerializers.initialize();
         LmodSoundRegistry.initialize();
+        LmodVillagerTrades.initialize();
         
         // Register network payload
         PayloadTypeRegistry.playS2C().register(SyncLatheRecipesPayload.ID, SyncLatheRecipesPayload.CODEC);
