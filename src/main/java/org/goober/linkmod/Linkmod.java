@@ -1,10 +1,15 @@
 package org.goober.linkmod;
 
+import com.mojang.serialization.Codec;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -63,7 +68,17 @@ public class Linkmod implements ModInitializer {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             syncLathRecipesToClient(handler.player);
         });
+
     }
+
+    public static final AttachmentType<Integer> BANKED_EXP = AttachmentRegistry.create(
+            Identifier.of("lmod", "banked_exp"),
+            builder -> builder
+                    .initializer(() -> 0)           // default value = 0
+                    .persistent(Codec.INT)         // save to player NBT across restarts
+                    .syncWith(PacketCodecs.VAR_INT, AttachmentSyncPredicate.targetOnly()) // sync to the owning player
+                    .copyOnDeath()                 // (optional) keep value after player respawns:contentReference[oaicite:3]{index=3}
+    );
     
     private void onServerStarted(MinecraftServer server) {
         loadLatheRecipes(server);
