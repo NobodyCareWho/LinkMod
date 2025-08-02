@@ -31,13 +31,13 @@ public class LmodVillagerTrades {
         @Override
         public TradeOffer create(Entity entity, Random random) {
             // 16-32 emeralds for 4 silver bullets
-            int emeraldCost = 16 + random.nextInt(17); // 16-32 emeralds (nextInt(17) gives 0-16)
+            int emeraldCost = 3 + random.nextInt(12); // 16-32 emeralds (nextInt(17) gives 0-16)
             return new TradeOffer(
                 new TradedItem(Items.EMERALD, emeraldCost),
-                new ItemStack(LmodItemRegistry.SILVER_BULLET, 4),
-                3, // max uses before restocking
+                new ItemStack(LmodItemRegistry.SILVER_BULLET, 6),
+                5, // max uses before restocking
                 15, // villager experience
-                0.05f // price multiplier
+                0.08f // price multiplier
             );
         }
     }

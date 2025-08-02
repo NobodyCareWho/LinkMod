@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "lmod:block/exp_chest"
+    }
+  }
+}
