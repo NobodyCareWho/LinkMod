@@ -16,6 +16,7 @@ public class SmokeRingParticle extends SpriteBillboardParticle {
                              SpriteProvider spriteProvider) {
         super(clientWorld, x, y, z);
         this.spriteProvider = spriteProvider;
+        this.setSpriteForAge(spriteProvider);
         this.maxAge = 12 + this.random.nextInt(4);
         this.scale = 1.0F;
         this.setBoundingBoxSpacing(1.0F, 1.0F);
@@ -26,29 +27,30 @@ public class SmokeRingParticle extends SpriteBillboardParticle {
 
     @Override
     public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
+        return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE;
     }
 
     @Override
     public void tick() {
-        super.tick();
-        if (!this.dead) {
-            this.setSpriteForAge(this.spriteProvider);
+        if (this.age++ >= this.maxAge) {
+            this.markDead();
+        } else {
+            int frame = (this.age * 6) / this.maxAge; // Assuming 6 frames in your animation
+            this.setSprite(this.spriteProvider.getSprite(frame, 6)); // 6 is the number of frames
         }
     }
 
 
     @Environment(EnvType.CLIENT)
     public static class SmokeRingFactory implements ParticleFactory<SimpleParticleType> {
-        private final SpriteProvider spriteProvider;
+        private final SpriteProvider field_50230;
 
         public SmokeRingFactory(SpriteProvider spriteProvider) {
-            this.spriteProvider = spriteProvider;
+            this.field_50230 = spriteProvider;
         }
 
         public Particle createParticle(SimpleParticleType simpleParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
-            SmokeRingParticle particle = new SmokeRingParticle(clientWorld, d, e, f, this.spriteProvider);
-            particle.setSprite(this.spriteProvider);
+            Particle particle = new SmokeRingParticle(clientWorld, d, e, f, this.field_50230);
             particle.scale(0.15F);
             return particle;
         }
