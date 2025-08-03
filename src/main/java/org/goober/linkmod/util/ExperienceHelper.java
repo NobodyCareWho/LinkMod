@@ -1,6 +1,7 @@
 package org.goober.linkmod.util;
 
 import net.minecraft.entity.player.PlayerEntity;
+import org.goober.linkmod.Linkmod;
 
 public class ExperienceHelper {
     
@@ -52,5 +53,72 @@ public class ExperienceHelper {
         } else {
             return 7 + level * 2;
         }
+    }
+    
+    /**
+     * Gets the player's banked experience
+     * @param player The player entity
+     * @return Banked experience as a string
+     */
+    public static String getBankedExp(PlayerEntity player) {
+        if (player == null) {
+            return "0";
+        }
+        Integer banked = player.getAttached(Linkmod.BANKED_EXP);
+        return String.valueOf(banked != null ? banked : 0);
+    }
+    
+    /**
+     * Sets the player's banked experience
+     * @param player The player entity
+     * @param amount The amount to set
+     */
+    public static void setBankedExp(PlayerEntity player, int amount) {
+        if (player != null) {
+            player.setAttached(Linkmod.BANKED_EXP, Math.max(0, amount));
+        }
+    }
+    
+    /**
+     * Deposits experience from player to bank
+     * @param player The player entity
+     * @param amount The amount to deposit
+     * @return true if successful, false if player doesn't have enough exp
+     */
+    public static boolean depositExp(PlayerEntity player, int amount) {
+        if (player == null || amount <= 0) return false;
+        
+        int totalExp = Integer.parseInt(getPlayerTotalExp(player));
+        if (totalExp < amount) return false;
+        
+        // Remove exp from player
+        player.addExperience(-amount);
+        
+        // Add to bank
+        int currentBanked = Integer.parseInt(getBankedExp(player));
+        setBankedExp(player, currentBanked + amount);
+        
+        return true;
+    }
+    
+    /**
+     * Withdraws experience from bank to player
+     * @param player The player entity
+     * @param amount The amount to withdraw
+     * @return true if successful, false if bank doesn't have enough exp
+     */
+    public static boolean withdrawExp(PlayerEntity player, int amount) {
+        if (player == null || amount <= 0) return false;
+        
+        int bankedExp = Integer.parseInt(getBankedExp(player));
+        if (bankedExp < amount) return false;
+        
+        // Remove from bank
+        setBankedExp(player, bankedExp - amount);
+        
+        // Add to player
+        player.addExperience(amount);
+        
+        return true;
     }
 }

@@ -108,15 +108,6 @@ public class Linkmod implements ModInitializer {
             syncLathRecipesToClient(player);
         }
     }
-
-    public static final AttachmentType<Integer> BANKED_EXP = AttachmentRegistry.create(
-            Identifier.of("lmod", "banked_exp"),
-            builder -> builder
-                    .initializer(() -> 0)           // default value = 0
-                    .persistent(Codec.INT)         // save to player NBT across restarts
-                    .syncWith(PacketCodecs.VAR_INT, AttachmentSyncPredicate.targetOnly()) // sync to the owning player
-                    .copyOnDeath()                 // (optional) keep value after player respawns:contentReference[oaicite:3]{index=3}
-    );
     
     private void syncLathRecipesToClient(ServerPlayerEntity player) {
         var allRecipes = LatheRecipeRegistry.getAllRecipes();
