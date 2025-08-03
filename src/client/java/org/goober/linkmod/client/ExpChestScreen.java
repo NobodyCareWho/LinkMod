@@ -8,6 +8,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.sound.SoundEvents;
 import org.goober.linkmod.screenstuff.ExpChestScreenHandler;
 import org.goober.linkmod.util.ExperienceHelper;
 import org.goober.linkmod.client.widget.ExpBankButton;
@@ -41,6 +42,19 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
         BANKEXP = ExperienceHelper.getBankedExp(playerInventory.player);
     }
     
+    private void playClickSound() {
+        if (this.client != null && this.client.player != null) {
+            this.client.player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 0.25F, 1.0F);
+        }
+    }
+    
+    private void handleButtonClick() {
+        playClickSound();
+        // Refocus the text field after button click
+        this.setFocused(this.amountField);
+        this.amountField.setFocused(true);
+    }
+    
     @Override
     protected void init() {
         super.init();
@@ -60,7 +74,7 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
         this.setInitialFocus(this.amountField);
 
         // Calculate button positions relative to GUI
-        int buttonBaseY = y + 60; // Adjust this offset as needed
+        int buttonBaseY = y + 60; 
         
         // Deposit with text field button
         this.deposit1Button = new ExpBankButton(x + 125, buttonBaseY, 14, 14, "depot1", button -> {
@@ -70,6 +84,7 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
                 if (amount > 0) {
                     ExperienceHelper.depositExp(playerInventory.player, amount);
                     updatePlayerExp();
+                    handleButtonClick();
                 }
             }
         });
@@ -81,6 +96,7 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
             if (totalExp > 0) {
                 ExperienceHelper.depositExp(playerInventory.player, totalExp);
                 updatePlayerExp();
+                handleButtonClick();
             }
         });
         this.addDrawableChild(this.deposit2Button);
@@ -93,6 +109,7 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
                 if (amount > 0) {
                     ExperienceHelper.withdrawExp(playerInventory.player, amount);
                     updatePlayerExp();
+                    handleButtonClick();
                 }
             }
         });
@@ -104,6 +121,7 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
             if (bankedExp > 0) {
                 ExperienceHelper.withdrawExp(playerInventory.player, bankedExp);
                 updatePlayerExp();
+                handleButtonClick();
             }
         });
         this.addDrawableChild(this.withdraw2Button);
