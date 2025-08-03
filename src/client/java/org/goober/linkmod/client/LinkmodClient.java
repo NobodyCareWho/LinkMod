@@ -30,6 +30,9 @@ import org.goober.linkmod.gunstuff.GunTooltipData;
 import org.goober.linkmod.particlestuff.LmodParticleRegistry;
 import org.goober.linkmod.client.model.PillGrenadeEntityModel;
 import org.goober.linkmod.client.renderer.PillGrenadeEntityRenderer;
+import org.goober.linkmod.client.renderer.ExpChestBlockEntityRenderer;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
+import org.goober.linkmod.blockstuff.LmodBlockEntityTypes;
 import java.util.List;
 import java.util.ArrayList;
 import org.goober.linkmod.screenstuff.LmodScreenHandlerType;
@@ -46,10 +49,14 @@ public class LinkmodClient implements ClientModInitializer {
     public void onInitializeClient() {
         // Register screens
         HandledScreens.register(LmodScreenHandlerType.LATHE, LatheScreen::new);
+        HandledScreens.register(LmodScreenHandlerType.EXP_CHEST, ExpChestScreen::new);
         
         // Register model layers
         EntityModelLayerRegistry.registerModelLayer(PillGrenadeEntityRenderer.MODEL_LAYER, PillGrenadeEntityModel::getTexturedModelData);
 
+        // Register block entity renderers
+        BlockEntityRendererRegistry.register(LmodBlockEntityTypes.EXP_CHEST, ExpChestBlockEntityRenderer::new);
+        
         // Register entity renderers
         EntityRendererRegistry.register(LmodEntityRegistry.SEEDBAG_ENTITY, FlyingItemEntityRenderer::new);
         // register empty renderer for bullet entity

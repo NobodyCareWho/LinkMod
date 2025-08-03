@@ -2,12 +2,14 @@ package org.goober.linkmod.blockstuff;
 
 import net.minecraft.block.*;
 import net.minecraft.block.enums.NoteBlockInstrument;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import org.goober.linkmod.blockstuff.blocks.LatheBlock;
+import org.goober.linkmod.blockstuff.blocks.ExpChestBlock;
 
 import java.util.function.Function;
 
@@ -18,6 +20,7 @@ public class LmodBlockRegistry {
     public static final Block AUROS_BLOOM = register("auros_bloom", 
             settings -> new FlowerBlock(StatusEffects.SATURATION, 0.1F, settings),
             AbstractBlock.Settings.copy(Blocks.POPPY));
+    public static final Block EXP_CHEST = register("exp_chest", ExpChestBlock::new, Block.Settings.create().mapColor(MapColor.BROWN).instrument(NoteBlockInstrument.BASS).strength(2.5F).sounds(BlockSoundGroup.WOOD));
     // Flower constructors need effect parameters for some reason? That's what the saturation effect is.
     private static Block register(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
         final Identifier identifier = Identifier.of("lmod", path);

@@ -48,6 +48,8 @@
 
   "block.lmod.rounded_sandstone": "Embossed Sandstone",
   "block.lmod.gilded_sandstone": "Gilded Sandstone",
+  "block.lmod.exp_chest": "Exp Chest",
+  "container.lmod.exp_chest": "Exp Chest",
   "block.lmod.auros_bloom": "Auros Bloom",
   "block.lmod.lathe": "Lathe",
   "container.lmod.lathe": "Lathe",
