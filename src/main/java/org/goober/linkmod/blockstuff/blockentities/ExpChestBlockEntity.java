@@ -186,7 +186,7 @@ public class ExpChestBlockEntity extends BlockEntity implements NamedScreenHandl
     private void updateLidAnimation() {
         this.prevLidAngle = this.lidAngle;
         if (this.viewerCount > 0 && this.lidAngle == 0.0F) {
-            this.playSound(net.minecraft.sound.SoundEvents.BLOCK_CHEST_OPEN);
+            this.playSound(net.minecraft.sound.SoundEvents.BLOCK_ENDER_CHEST_OPEN);
         }
         
         if (this.viewerCount == 0 && this.lidAngle > 0.0F || this.viewerCount > 0 && this.lidAngle < 1.0F) {
@@ -202,7 +202,7 @@ public class ExpChestBlockEntity extends BlockEntity implements NamedScreenHandl
             }
             
             if (this.lidAngle < 0.5F && prevAngle >= 0.5F) {
-                this.playSound(net.minecraft.sound.SoundEvents.BLOCK_CHEST_CLOSE);
+                this.playSound(net.minecraft.sound.SoundEvents.BLOCK_ENDER_CHEST_CLOSE);
             }
             
             if (this.lidAngle < 0.0F) {

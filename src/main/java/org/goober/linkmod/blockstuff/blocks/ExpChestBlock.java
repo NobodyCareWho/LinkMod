@@ -27,6 +27,9 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.text.Text;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.util.math.random.Random;
+import org.goober.linkmod.particlestuff.LmodParticleRegistry;
 
 import org.jetbrains.annotations.Nullable;
 import org.goober.linkmod.blockstuff.blockentities.ExpChestBlockEntity;
@@ -133,5 +136,20 @@ public class ExpChestBlock extends BlockWithEntity implements BlockEntityProvide
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         return validateTicker(type, LmodBlockEntityTypes.EXP_CHEST, ExpChestBlockEntity::tick);
+    }
+    
+    @Override
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+        for(int i = 0; i < 3; ++i) {
+            int j = random.nextInt(2) * 2 - 1;
+            int k = random.nextInt(2) * 2 - 1;
+            double d = (double)pos.getX() + 0.5 + 0.25 * (double)j;
+            double e = (double)((float)pos.getY() + random.nextFloat());
+            double f = (double)pos.getZ() + 0.5 + 0.25 * (double)k;
+            double g = (double)(random.nextFloat() * (float)j);
+            double h = ((double)random.nextFloat() - 0.5) * 0.125;
+            double l = (double)(random.nextFloat() * (float)k);
+            world.addParticleClient(LmodParticleRegistry.EXP_CHEST, d, e, f, g, h, l);
+        }
     }
 }

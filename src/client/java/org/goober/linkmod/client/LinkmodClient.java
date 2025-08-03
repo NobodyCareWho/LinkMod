@@ -84,6 +84,7 @@ public class LinkmodClient implements ClientModInitializer {
         BlockRenderLayerMap.putBlock(LmodBlockRegistry.LATHE, BlockRenderLayer.CUTOUT);
 
         ParticleFactoryRegistry.getInstance().register(LmodParticleRegistry.SMOKERING, SmokeRingParticle.SmokeRingFactory::new);
+        ParticleFactoryRegistry.getInstance().register(LmodParticleRegistry.EXP_CHEST, ExpChestParticle.Factory::new);
         
         // register HUD rendering
         HudRenderCallback.EVENT.register(LinkmodClient::renderHud);

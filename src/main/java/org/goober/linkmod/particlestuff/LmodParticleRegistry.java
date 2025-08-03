@@ -10,10 +10,16 @@ import org.goober.linkmod.Linkmod;
 public class LmodParticleRegistry {
     public static final SimpleParticleType SMOKERING =
             registerParticle("smoke_ring", FabricParticleTypes.simple(true));
+    
+    public static final SimpleParticleType EXP_CHEST =
+            registerParticle("exp_chest", FabricParticleTypes.simple(true));
 
     private static SimpleParticleType registerParticle(String name, SimpleParticleType particleType) {
         return Registry.register(Registries.PARTICLE_TYPE, Identifier.of(Linkmod.MOD_ID, name), particleType);
-
+    }
+    
+    public static void initialize() {
+        // Force class loading
     }
 
 }

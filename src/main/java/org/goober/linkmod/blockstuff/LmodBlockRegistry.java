@@ -20,7 +20,7 @@ public class LmodBlockRegistry {
     public static final Block AUROS_BLOOM = register("auros_bloom", 
             settings -> new FlowerBlock(StatusEffects.SATURATION, 0.1F, settings),
             AbstractBlock.Settings.copy(Blocks.POPPY));
-    public static final Block EXP_CHEST = register("exp_chest", ExpChestBlock::new, Block.Settings.create().mapColor(MapColor.PALE_PURPLE).instrument(NoteBlockInstrument.BASS).requiresTool().strength(2.5F, 9900).sounds(BlockSoundGroup.STONE));
+    public static final Block EXP_CHEST = register("exp_chest", ExpChestBlock::new, Block.Settings.create().mapColor(MapColor.PALE_PURPLE).instrument(NoteBlockInstrument.BASS).requiresTool().strength(2.5F, 9900).sounds(BlockSoundGroup.STONE).luminance(state -> 7));
     // Flower constructors need effect parameters for some reason? That's what the saturation effect is.
     private static Block register(String path, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
         final Identifier identifier = Identifier.of("lmod", path);
