@@ -39,7 +39,7 @@ public class BulletItem extends Item {
             tooltip.accept(Text.literal("Pellets: " + bulletType.pelletsPerShot() + "x").formatted(Formatting.AQUA));
         }
         if (bulletType.specialBehaviour() != "none") {
-            tooltip.accept(Text.literal("Special Behaviour: " + bulletType.specialBehaviour()).formatted(Formatting.LIGHT_PURPLE));
+            tooltip.accept(Text.literal(bulletType.specialBehaviour()).formatted(Formatting.LIGHT_PURPLE));
         }
     }
 }
