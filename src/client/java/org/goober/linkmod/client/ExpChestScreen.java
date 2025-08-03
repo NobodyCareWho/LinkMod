@@ -55,6 +55,28 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
         this.amountField.setFocused(true);
     }
     
+    private void playExpSound() {
+        if (this.client != null && this.client.player != null) {
+            this.client.player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5F, 1.0F);
+        }
+    }
+    
+    private void playLevelUpSound() {
+        if (this.client != null && this.client.player != null) {
+            this.client.player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 0.5F, 1.0F);
+        }
+    }
+    
+    private void playBlockedSound() {
+        if (this.client != null && this.client.player != null) {
+            this.client.player.playSound(SoundEvents.BLOCK_DISPENSER_FAIL, 0.25F, 1.0F);
+        }
+    }
+    
+    private void refocusTextField() {
+        // Focus is now handled in mouseClicked override
+    }
+    
     @Override
     protected void init() {
         super.init();
@@ -82,9 +104,14 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
             if (!amountText.isEmpty()) {
                 int amount = Integer.parseInt(amountText);
                 if (amount > 0) {
-                    ExperienceHelper.depositExp(playerInventory.player, amount);
+                    boolean success = ExperienceHelper.depositExp(playerInventory.player, amount);
                     updatePlayerExp();
-                    handleButtonClick();
+                    if (success) {
+                        playExpSound();
+                    } else {
+                        playBlockedSound();
+                    }
+                    refocusTextField();
                 }
             }
         });
@@ -94,11 +121,18 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
         this.deposit2Button = new ExpBankButton(x + 125 + 26, buttonBaseY, 14, 14, "depot2", button -> {
             int totalExp = Integer.parseInt(ExperienceHelper.getPlayerTotalExp(playerInventory.player));
             if (totalExp > 0) {
-                ExperienceHelper.depositExp(playerInventory.player, totalExp);
+                boolean success = ExperienceHelper.depositExp(playerInventory.player, totalExp);
                 updatePlayerExp();
-                handleButtonClick();
+                if (success) {
+                    playLevelUpSound();
+                } else {
+                    playBlockedSound();
+                }
+                // Refocus text field
+                refocusTextField();
+            } else {
+                playBlockedSound();
             }
-
         });
         this.addDrawableChild(this.deposit2Button);
         
@@ -108,9 +142,14 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
             if (!amountText.isEmpty()) {
                 int amount = Integer.parseInt(amountText);
                 if (amount > 0) {
-                    ExperienceHelper.withdrawExp(playerInventory.player, amount);
+                    boolean success = ExperienceHelper.withdrawExp(playerInventory.player, amount);
                     updatePlayerExp();
-                    handleButtonClick();
+                    if (success) {
+                        playExpSound();
+                    } else {
+                        playBlockedSound();
+                    }
+                    refocusTextField();
                 }
             }
         });
@@ -120,9 +159,17 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
         this.withdraw2Button = new ExpBankButton(x + 125 + 26, buttonBaseY - 30, 14, 14, "withdraw2", button -> {
             int bankedExp = Integer.parseInt(ExperienceHelper.getBankedExp(playerInventory.player));
             if (bankedExp > 0) {
-                ExperienceHelper.withdrawExp(playerInventory.player, bankedExp);
+                boolean success = ExperienceHelper.withdrawExp(playerInventory.player, bankedExp);
                 updatePlayerExp();
-                handleButtonClick();
+                if (success) {
+                    playLevelUpSound();
+                } else {
+                    playBlockedSound();
+                }
+                // Refocus text field
+                refocusTextField();
+            } else {
+                playBlockedSound();
             }
         });
         this.addDrawableChild(this.withdraw2Button);
@@ -147,6 +194,41 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
         return this.amountField.keyPressed(keyCode, scanCode, modifiers) || 
                this.amountField.isActive() || 
                super.keyPressed(keyCode, scanCode, modifiers);
+    }
+    
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        // Check if clicking on a button
+        boolean isButtonClick = false;
+        if (this.deposit1Button.isMouseOver(mouseX, mouseY) ||
+            this.deposit2Button.isMouseOver(mouseX, mouseY) ||
+            this.withdraw1Button.isMouseOver(mouseX, mouseY) ||
+            this.withdraw2Button.isMouseOver(mouseX, mouseY)) {
+            isButtonClick = true;
+        }
+        
+        boolean result = super.mouseClicked(mouseX, mouseY, button);
+        
+        // If a button was clicked, keep text field focused
+        if (isButtonClick && result) {
+            // Don't change focus
+            return result;
+        }
+        
+        return result;
+    }
+    
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        boolean result = super.mouseReleased(mouseX, mouseY, button);
+        
+        // After releasing mouse on a button, refocus text field
+        if (button == 0) {
+            this.setFocused(this.amountField);
+            this.amountField.setFocused(true);
+        }
+        
+        return result;
     }
 
     @Override
@@ -180,6 +262,25 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
         
         renderBackground(context, mouseX, mouseY, delta);
         super.render(context, mouseX, mouseY, delta);   // no extra flush needed
+        
+        // Check if mouse is over the tooltip areas and render tooltips
+        int x = (width - backgroundWidth) / 2;
+        int y = (height - backgroundHeight) / 2;
+        int tooltipX = x + 89;
+        int tooltipY = y + 26;
+        
+        // tooltips area
+        if (mouseX >= tooltipX && mouseX < tooltipX + 10 && 
+            mouseY >= tooltipY && mouseY < tooltipY + 10) {
+            // Render tooltip
+            context.drawTooltip(this.textRenderer, Text.literal("Bank Experience"), mouseX, mouseY);
+        }
 
+        int tooltip2X = tooltipX - 79;
+        if (mouseX >= tooltip2X && mouseX < tooltip2X + 10 && 
+            mouseY >= tooltipY && mouseY < tooltipY + 10) {
+            // Render tooltip
+            context.drawTooltip(this.textRenderer, Text.literal("Player Experience"), mouseX, mouseY);
+        }
     }
 }

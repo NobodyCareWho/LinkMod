@@ -47,10 +47,18 @@ public class ExpBankButton extends ButtonWidget {
     
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (button == 0 && this.isPressed) {
+        if (button == 0) {
             this.isPressed = false;
         }
         return super.mouseReleased(mouseX, mouseY, button);
+    }
+    
+    @Override
+    public void setFocused(boolean focused) {
+        super.setFocused(focused);
+        if (!focused) {
+            this.isPressed = false;
+        }
     }
     
     private boolean isWithinBounds(double mouseX, double mouseY) {
