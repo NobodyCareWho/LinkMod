@@ -82,6 +82,7 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
                 ExperienceHelper.depositExp(playerInventory.player, totalExp);
                 updatePlayerExp();
             }
+
         });
         this.addDrawableChild(this.deposit2Button);
         
