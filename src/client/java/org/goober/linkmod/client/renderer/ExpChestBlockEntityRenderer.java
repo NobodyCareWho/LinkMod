@@ -37,11 +37,11 @@ public class ExpChestBlockEntityRenderer implements BlockEntityRenderer<ExpChest
 
         Direction facing = entity.getCachedState().get(ExpChestBlock.FACING);
         float rotation = switch (facing) {
-            case NORTH -> 0;
-            case SOUTH -> 180;
+            case NORTH -> 180;
+            case SOUTH -> 0;
             case WEST -> 270;
             case EAST -> 90;
-            default -> 0;
+            default -> 180;
         };
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation));
 
