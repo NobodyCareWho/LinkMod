@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import org.goober.linkmod.util.DebugConfig;
 import org.goober.linkmod.util.ExpChestTracker;
 import org.goober.linkmod.villagerstuff.LmodVillagerTrades;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import org.goober.linkmod.commands.ParticleTestCommand;
 
 
 public class Linkmod implements ModInitializer {
@@ -77,6 +79,9 @@ public class Linkmod implements ModInitializer {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             syncLathRecipesToClient(handler.player);
         });
+        
+        // Register commands
+        CommandRegistrationCallback.EVENT.register(ParticleTestCommand::register);
 
     }
 
