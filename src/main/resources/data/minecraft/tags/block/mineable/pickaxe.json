@@ -3,6 +3,7 @@
   "values": [
     "lmod:rounded_sandstone",
     "lmod:gilded_sandstone",
-    "lmod:lathe"
+    "lmod:lathe",
+    "lmod:exp_chest"
   ]
 }
