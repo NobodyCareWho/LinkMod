@@ -5,6 +5,8 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.tooltip.Tooltip;
 
 public class ExpBankButton extends ButtonWidget {
     private final Identifier normalTexture;
@@ -12,11 +14,16 @@ public class ExpBankButton extends ButtonWidget {
     private final Identifier pressedTexture;
     private boolean isPressed = false;
     
-    public ExpBankButton(int x, int y, int width, int height, String textureName, PressAction onPress) {
+    public ExpBankButton(int x, int y, int width, int height, String textureName, Text tooltipText, PressAction onPress) {
         super(x, y, width, height, Text.empty(), onPress, (button) -> Text.empty());
         this.normalTexture = Identifier.of("lmod", "container/exp_bank/" + textureName);
         this.hoveredTexture = Identifier.of("lmod", "container/exp_bank/" + textureName + "selected");
         this.pressedTexture = Identifier.of("lmod", "container/exp_bank/" + textureName + "pushed");
+        
+        // Set tooltip using the proper method
+        if (tooltipText != null) {
+            this.setTooltip(Tooltip.of(tooltipText));
+        }
     }
     
     @Override

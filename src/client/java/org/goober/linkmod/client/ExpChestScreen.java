@@ -99,7 +99,7 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
         int buttonBaseY = y + 60; 
         
         // Deposit with text field button
-        this.deposit1Button = new ExpBankButton(x + 125, buttonBaseY, 14, 14, "depot1", button -> {
+        this.deposit1Button = new ExpBankButton(x + 125, buttonBaseY, 14, 14, "depot1", Text.literal("Deposit Amount"), button -> {
             String amountText = this.amountField.getText();
             if (!amountText.isEmpty()) {
                 int amount = Integer.parseInt(amountText);
@@ -118,7 +118,7 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
         this.addDrawableChild(this.deposit1Button);
 
         // Deposit all button
-        this.deposit2Button = new ExpBankButton(x + 125 + 26, buttonBaseY, 14, 14, "depot2", button -> {
+        this.deposit2Button = new ExpBankButton(x + 125 + 26, buttonBaseY, 14, 14, "depot2", Text.literal("Deposit All"), button -> {
             int totalExp = Integer.parseInt(ExperienceHelper.getPlayerTotalExp(playerInventory.player));
             if (totalExp > 0) {
                 boolean success = ExperienceHelper.depositExp(playerInventory.player, totalExp);
@@ -137,7 +137,7 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
         this.addDrawableChild(this.deposit2Button);
         
         // Withdraw with text field button
-        this.withdraw1Button = new ExpBankButton(x + 125, buttonBaseY - 30, 14, 14, "withdraw1", button -> {
+        this.withdraw1Button = new ExpBankButton(x + 125, buttonBaseY - 30, 14, 14, "withdraw1", Text.literal("Withdraw Amount"), button -> {
             String amountText = this.amountField.getText();
             if (!amountText.isEmpty()) {
                 int amount = Integer.parseInt(amountText);
@@ -156,7 +156,7 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
         this.addDrawableChild(this.withdraw1Button);
 
         // Withdraw all button
-        this.withdraw2Button = new ExpBankButton(x + 125 + 26, buttonBaseY - 30, 14, 14, "withdraw2", button -> {
+        this.withdraw2Button = new ExpBankButton(x + 125 + 26, buttonBaseY - 30, 14, 14, "withdraw2", Text.literal("Withdraw All"), button -> {
             int bankedExp = Integer.parseInt(ExperienceHelper.getBankedExp(playerInventory.player));
             if (bankedExp > 0) {
                 boolean success = ExperienceHelper.withdrawExp(playerInventory.player, bankedExp);
