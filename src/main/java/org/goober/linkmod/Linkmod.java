@@ -31,10 +31,12 @@ import org.goober.linkmod.recipestuff.LmodRecipeSerializers;
 import org.goober.linkmod.recipestuff.LatheRecipe;
 import org.goober.linkmod.recipestuff.LatheRecipeRegistry;
 import org.goober.linkmod.networking.SyncLatheRecipesPayload;
+import org.goober.linkmod.networking.ExpChestOperationC2SPacket;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import java.util.List;
 import java.util.ArrayList;
 import org.goober.linkmod.util.DebugConfig;
+import org.goober.linkmod.util.ExpChestTracker;
 import org.goober.linkmod.villagerstuff.LmodVillagerTrades;
 
 
@@ -55,8 +57,13 @@ public class Linkmod implements ModInitializer {
         LmodSoundRegistry.initialize();
         LmodVillagerTrades.initialize();
         
-        // Register network payload
+        // Register network payloads
         PayloadTypeRegistry.playS2C().register(SyncLatheRecipesPayload.ID, SyncLatheRecipesPayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(ExpChestOperationC2SPacket.ID, ExpChestOperationC2SPacket.CODEC);
+        ExpChestOperationC2SPacket.register();
+        
+        // Initialize exp chest tracker
+        ExpChestTracker.initialize();
         
         // Register recipe loading callback
         ServerLifecycleEvents.SERVER_STARTED.register(this::onServerStarted);

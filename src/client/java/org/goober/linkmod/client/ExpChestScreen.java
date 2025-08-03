@@ -9,9 +9,11 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.sound.SoundEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import org.goober.linkmod.screenstuff.ExpChestScreenHandler;
 import org.goober.linkmod.util.ExperienceHelper;
 import org.goober.linkmod.client.widget.ExpBankButton;
+import org.goober.linkmod.networking.ExpChestOperationC2SPacket;
 
 public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
     private static final Identifier TEXTURE = Identifier.of("lmod", "textures/gui/container/exp_bank.png");
@@ -104,13 +106,10 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
             if (!amountText.isEmpty()) {
                 int amount = Integer.parseInt(amountText);
                 if (amount > 0) {
-                    boolean success = ExperienceHelper.depositExp(playerInventory.player, amount);
-                    updatePlayerExp();
-                    if (success) {
-                        playExpSound();
-                    } else {
-                        playBlockedSound();
-                    }
+                    // Send packet to server
+                    ClientPlayNetworking.send(new ExpChestOperationC2SPacket(
+                        ExpChestOperationC2SPacket.Operation.DEPOSIT, amount));
+                    playExpSound();
                     refocusTextField();
                 }
             }
@@ -121,14 +120,10 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
         this.deposit2Button = new ExpBankButton(x + 125 + 26, buttonBaseY, 14, 14, "depot2", Text.literal("Deposit All"), button -> {
             int totalExp = Integer.parseInt(ExperienceHelper.getPlayerTotalExp(playerInventory.player));
             if (totalExp > 0) {
-                boolean success = ExperienceHelper.depositExp(playerInventory.player, totalExp);
-                updatePlayerExp();
-                if (success) {
-                    playLevelUpSound();
-                } else {
-                    playBlockedSound();
-                }
-                // Refocus text field
+                // Send packet to server
+                ClientPlayNetworking.send(new ExpChestOperationC2SPacket(
+                    ExpChestOperationC2SPacket.Operation.DEPOSIT_ALL, 0));
+                playLevelUpSound();
                 refocusTextField();
             } else {
                 playBlockedSound();
@@ -142,13 +137,10 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
             if (!amountText.isEmpty()) {
                 int amount = Integer.parseInt(amountText);
                 if (amount > 0) {
-                    boolean success = ExperienceHelper.withdrawExp(playerInventory.player, amount);
-                    updatePlayerExp();
-                    if (success) {
-                        playExpSound();
-                    } else {
-                        playBlockedSound();
-                    }
+                    // Send packet to server
+                    ClientPlayNetworking.send(new ExpChestOperationC2SPacket(
+                        ExpChestOperationC2SPacket.Operation.WITHDRAW, amount));
+                    playExpSound();
                     refocusTextField();
                 }
             }
@@ -159,14 +151,10 @@ public class ExpChestScreen extends HandledScreen<ExpChestScreenHandler> {
         this.withdraw2Button = new ExpBankButton(x + 125 + 26, buttonBaseY - 30, 14, 14, "withdraw2", Text.literal("Withdraw All"), button -> {
             int bankedExp = Integer.parseInt(ExperienceHelper.getBankedExp(playerInventory.player));
             if (bankedExp > 0) {
-                boolean success = ExperienceHelper.withdrawExp(playerInventory.player, bankedExp);
-                updatePlayerExp();
-                if (success) {
-                    playLevelUpSound();
-                } else {
-                    playBlockedSound();
-                }
-                // Refocus text field
+                // Send packet to server
+                ClientPlayNetworking.send(new ExpChestOperationC2SPacket(
+                    ExpChestOperationC2SPacket.Operation.WITHDRAW_ALL, 0));
+                playLevelUpSound();
                 refocusTextField();
             } else {
                 playBlockedSound();

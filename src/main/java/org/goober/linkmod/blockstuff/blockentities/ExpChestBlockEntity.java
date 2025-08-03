@@ -52,8 +52,16 @@ public class ExpChestBlockEntity extends BlockEntity implements NamedScreenHandl
         // custom name
         this.customName = BlockEntity.tryParseCustomName(view, "CustomName");
         
-        // viewer count for client animation
-        view.getOptionalInt("ViewerCount").ifPresent(count -> this.viewerCount = count);
+        // Handle viewer count - don't persist, but do sync for client animations
+        view.getOptionalInt("ViewerCount").ifPresent(count -> {
+            if (this.world != null && this.world.isClient) {
+                // Only apply viewer count on client for animations
+                this.viewerCount = count;
+            } else {
+                // Server always starts at 0
+                this.viewerCount = 0;
+            }
+        });
     }
 
 
@@ -71,7 +79,7 @@ public class ExpChestBlockEntity extends BlockEntity implements NamedScreenHandl
             view.putString("CustomName", jsonElement.toString());   // or new Gson().toJson(...)
         }
         
-        // sync viewer count for client animation
+        // Write viewer count for client sync only (not for persistent storage)
         view.putInt("ViewerCount", this.viewerCount);
     }
 
@@ -84,8 +92,12 @@ public class ExpChestBlockEntity extends BlockEntity implements NamedScreenHandl
 
     @Override
     public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        return createNbt(registryLookup);
+        NbtCompound nbt = createNbt(registryLookup);
+        // Ensure viewer count is included for client sync
+        nbt.putInt("ViewerCount", this.viewerCount);
+        return nbt;
     }
+
 
     @Override
     public Text getDisplayName() {
@@ -214,8 +226,9 @@ public class ExpChestBlockEntity extends BlockEntity implements NamedScreenHandl
     @Override
     public void onOpen(PlayerEntity player) {
         if (!player.isSpectator()) {
-            this.viewerCount++;
             if (this.world != null && !this.world.isClient) {
+                this.viewerCount++;
+                this.world.updateListeners(this.pos, this.getCachedState(), this.getCachedState(), 3);
                 this.markDirty();
             }
         }
@@ -224,10 +237,22 @@ public class ExpChestBlockEntity extends BlockEntity implements NamedScreenHandl
     @Override
     public void onClose(PlayerEntity player) {
         if (!player.isSpectator()) {
-            this.viewerCount--;
             if (this.world != null && !this.world.isClient) {
+                this.viewerCount--;
+                if (this.viewerCount < 0) {
+                    this.viewerCount = 0; // Prevent negative viewer count
+                }
+                this.world.updateListeners(this.pos, this.getCachedState(), this.getCachedState(), 3);
                 this.markDirty();
             }
+        }
+    }
+    
+    // Called when a player disconnects or the chunk unloads
+    public void forceClose() {
+        this.viewerCount = 0;
+        if (this.world != null && !this.world.isClient) {
+            this.markDirty();
         }
     }
 }
