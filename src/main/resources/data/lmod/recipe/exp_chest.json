@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "XXX",
+    "XEX",
+    "CSC"
+  ],
+  "key": {
+    "X": "minecraft:obsidian",
+    "E": "minecraft:ender_eye",
+    "C": "minecraft:crying_obsidian",
+    "S": [
+      "minecraft:soul_sand",
+      "minecraft:soul_soil"
+    ]
+  },
+  "result": {
+    "id": "lmod:exp_chest"
+  }
+}
