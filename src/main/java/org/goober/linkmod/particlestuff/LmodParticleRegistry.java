@@ -13,6 +13,10 @@ public class LmodParticleRegistry {
     
     public static final SimpleParticleType EXP_CHEST =
             registerParticle("exp_chest", FabricParticleTypes.simple(true));
+    public static final SimpleParticleType GUN_SMOKE =
+            registerParticle("gun_smoke", FabricParticleTypes.simple(true));
+    public static final SimpleParticleType BULLET_SPARKLE =
+            registerParticle("bullet_sparkle", FabricParticleTypes.simple(true));
 
     private static SimpleParticleType registerParticle(String name, SimpleParticleType particleType) {
         return Registry.register(Registries.PARTICLE_TYPE, Identifier.of(Linkmod.MOD_ID, name), particleType);

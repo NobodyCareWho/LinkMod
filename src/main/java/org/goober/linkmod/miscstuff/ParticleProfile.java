@@ -7,6 +7,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import org.apache.commons.lang3.ObjectUtils;
 import org.goober.linkmod.miscstuff.soundprofiles.BulletSoundProfile;
+import org.goober.linkmod.particlestuff.LmodParticleRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,11 +18,12 @@ public class ParticleProfile {
 
     // define bullet types with tags
     static {
-        register("standard", new ParticleProfile.PP( null, null, ParticleTypes.ELECTRIC_SPARK, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
-        register("sparkle", new ParticleProfile.PP( null, null, ParticleTypes.FIREWORK, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
+        register("standard", new ParticleProfile.PP( LmodParticleRegistry.GUN_SMOKE, null, LmodParticleRegistry.BULLET_SPARKLE, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
+        register("gyrojet", new ParticleProfile.PP( LmodParticleRegistry.GUN_SMOKE, LmodParticleRegistry.SMOKERING, LmodParticleRegistry.BULLET_SPARKLE, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
+        register("sparkle", new ParticleProfile.PP( LmodParticleRegistry.GUN_SMOKE, null, ParticleTypes.FIREWORK, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
         register("goofyahh", new ParticleProfile.PP( ParticleTypes.GUST_EMITTER_SMALL, ParticleTypes.CRIMSON_SPORE, ParticleTypes.SONIC_BOOM, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
         register("breeze", new ParticleProfile.PP( ParticleTypes.GUST_EMITTER_LARGE, ParticleTypes.CRIMSON_SPORE, ParticleTypes.SONIC_BOOM, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
-        register("blaze", new ParticleProfile.PP( null, ParticleTypes.LAVA, ParticleTypes.ELECTRIC_SPARK, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
+        register("blaze", new ParticleProfile.PP( LmodParticleRegistry.GUN_SMOKE, ParticleTypes.LAVA, ParticleTypes.ELECTRIC_SPARK, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
         register("freeze", new ParticleProfile.PP( null, ParticleTypes.SNOWFLAKE, ParticleTypes.ELECTRIC_SPARK, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
         register("flare", new ParticleProfile.PP( null, ParticleTypes.CAMPFIRE_COSY_SMOKE, ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, ParticleTypes.CAMPFIRE_COSY_SMOKE, null));
         register("slime", new ParticleProfile.PP( null, ParticleTypes.ITEM_SLIME, ParticleTypes.ITEM_SLIME, ParticleTypes.ELECTRIC_SPARK, ParticleTypes.ELECTRIC_SPARK));

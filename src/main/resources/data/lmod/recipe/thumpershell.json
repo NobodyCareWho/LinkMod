@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "lmod:grenadeshellempty",
+    "minecraft:gunpowder",
+    "lmod:shot_pellets",
+    "lmod:shot_pellets"
+  ],
+  "result": {
+    "id": "lmod:thumpershell"
+  }
+}

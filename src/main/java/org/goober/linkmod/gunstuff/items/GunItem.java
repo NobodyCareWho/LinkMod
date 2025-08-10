@@ -240,7 +240,7 @@ public class GunItem extends Item {
                             serverWorld.spawnParticles(
                                 bulletType.particleprofile().fireparticle(),
                                 muzzlePos.x, muzzlePos.y - 0.1, muzzlePos.z,
-                                5, // particle count
+                                1, // particle count
                                 0.1, -0.3, 0.1, // offset
                                 0.1 // speed
                             );

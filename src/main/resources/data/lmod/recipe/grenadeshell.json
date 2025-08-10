@@ -1,0 +1,8 @@
+{
+  "type": "lmod:lathe",
+  "ingredient": "lmod:iron_ingot",
+  "result": {
+    "id": "lmod:grenadeshellempty",
+    "count": 2
+  }
+}

@@ -283,6 +283,13 @@ public class LmodItemRegistry {
                     .maxCount(64)
     );
 
+    public static final Item LARGEBARREL = register(
+            "large_barrel",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
     public static final Item COPPERTIP = register(
             "copper_tip",
             Item::new,

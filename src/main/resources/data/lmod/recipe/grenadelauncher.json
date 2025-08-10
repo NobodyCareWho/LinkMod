@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "  B",
+    " MI",
+    "WW "
+  ],
+  "key": {
+    "B": "lmod:large_barrel",
+    "M": "lmod:gun_components",
+    "I": "minecraft:iron_ingot",
+    "W": "#planks"
+  },
+  "result": {
+    "id": "lmod:grenadelauncher"
+  }
+}

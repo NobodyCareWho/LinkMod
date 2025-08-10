@@ -3,17 +3,15 @@ package org.goober.linkmod.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
-
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.SimpleParticleType;
-import org.jetbrains.annotations.Nullable;
 
-public class SmokeRingParticle extends SpriteBillboardParticle {
+public class GunSmokeParticle extends SpriteBillboardParticle {
 
     private final SpriteProvider spriteProvider;
 
-    public SmokeRingParticle(ClientWorld clientWorld, double x, double y, double z,
-                             SpriteProvider spriteProvider) {
+    public GunSmokeParticle(ClientWorld clientWorld, double x, double y, double z,
+                            SpriteProvider spriteProvider) {
         super(clientWorld, x, y, z);
         this.spriteProvider = spriteProvider;
         this.setSpriteForAge(spriteProvider);
@@ -35,23 +33,23 @@ public class SmokeRingParticle extends SpriteBillboardParticle {
         if (this.age++ >= this.maxAge) {
             this.markDead();
         } else {
-            int frame = (this.age * 6) / this.maxAge; // Assuming 6 frames in your animation
-            this.setSprite(this.spriteProvider.getSprite(frame, 6)); // 6 is the number of frames
+            int frame = (this.age * 8) / this.maxAge; // Assuming 6 frames in your animation
+            this.setSprite(this.spriteProvider.getSprite(frame, 8)); // 6 is the number of frames
         }
     }
 
 
     @Environment(EnvType.CLIENT)
-    public static class SmokeRingFactory implements ParticleFactory<SimpleParticleType> {
+    public static class GunSmokeFactory implements ParticleFactory<SimpleParticleType> {
         private final SpriteProvider field_50230;
 
-        public SmokeRingFactory(SpriteProvider spriteProvider) {
+        public GunSmokeFactory(SpriteProvider spriteProvider) {
             this.field_50230 = spriteProvider;
         }
 
         public Particle createParticle(SimpleParticleType simpleParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
-            Particle particle = new SmokeRingParticle(clientWorld, d, e, f, this.field_50230);
-            particle.scale(0.15F);
+            Particle particle = new GunSmokeParticle(clientWorld, d, e, f, this.field_50230);
+            particle.scale(1.0f);
             return particle;
         }
     }
@@ -65,7 +63,7 @@ public class SmokeRingParticle extends SpriteBillboardParticle {
         }
 
         public Particle createParticle(SimpleParticleType simpleParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
-            return new SmokeRingParticle(clientWorld, d, e, f, this.spriteProvider);
+            return new GunSmokeParticle(clientWorld, d, e, f, this.spriteProvider);
         }
     }
 

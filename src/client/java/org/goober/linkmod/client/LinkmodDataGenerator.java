@@ -146,6 +146,10 @@ public class LinkmodDataGenerator implements DataGeneratorEntrypoint {
                             .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "shotgunshellempty")))
                             .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "copper_cap")))
                             .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "copper_bullet")))
+                            .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "pillgrenade")))
+                            .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "thumpershell")))
+                            .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "large_barrel")))
+                            .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "grenadelauncher")))
                             .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "slugshot"))))
 
 
