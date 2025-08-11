@@ -227,7 +227,7 @@ public class LmodItemRegistry {
 
     public static final Item PILLGRENADE = register(
             "pillgrenade",
-            settings -> new BulletItem(settings, "standard"),
+            settings -> new BulletItem(settings, "standardgrenade"),
             new Item.Settings()
                     .maxCount(8)
     );

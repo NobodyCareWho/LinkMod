@@ -18,7 +18,7 @@ public class Grenades {
     static {
         ProjectileFactory grenadeFactory = PillGrenadeEntity::new;
         
-        register("standard", new Grenades.GrenadeType("Grenade", false, false, 4f, 3, 5, 0.6f, 1.0f, "none", grenadeFactory, null));
+        register("standardgrenade", new Grenades.GrenadeType("Grenade", false, false, 4f, 3, 5, 0.6f, 1.0f, "none", grenadeFactory, null));
         register("demo", new Grenades.GrenadeType("Demo Grenade", true, false, 4f, 1, 10, 0.6f, 1.3f, "none", grenadeFactory, null));
         register("he", new Grenades.GrenadeType("HE Grenade", false, false, 6f, 3, 5, 0.6f, 1.5f, "none", grenadeFactory, null));
         register("incendiary", new Grenades.GrenadeType("Incendiary Grenade", false, true, 3.5f, 3, 5, 0.6f, 1.0f, "none", grenadeFactory, null));
