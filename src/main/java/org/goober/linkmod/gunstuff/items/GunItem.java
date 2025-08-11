@@ -104,6 +104,7 @@ public class GunItem extends Item {
 
                     // bullettype?
                     BulletType bulletType = null;
+                    Grenades.GrenadeType grenadeType = null;
 
                     if (bulletStack.getItem() instanceof BulletItem bulletItem) {
                         bulletType = bulletItem.getBulletType();
@@ -120,19 +121,34 @@ public class GunItem extends Item {
                         float bloomOutput = (float) (gunType.bloomMax() / (1 + Math.exp(-gunType.bloomSharpness() * (currentBloom - gunType.bloomLength()))));
                         float maxSpread = (gunType.baseInaccuracy() + bulletType.baseSpreadIncrease()) * bulletType.baseSpreadMultiplier() + bloomOutput;
                         
-                        // shoot multiple bullets for shotgun
-                        for (int i = 0; i < bulletType.pelletsPerShot(); i++) {
+                        // Check if this is a grenade
+                        grenadeType = Grenades.get(bulletItem.getBulletTypeId());
+                        ProjectileFactory projectileFactory = null;
+                        int pelletsPerShot = 1;
+                        
+                        if (grenadeType != null) {
+                            // It's a grenade, use grenade's projectile factory
+                            projectileFactory = grenadeType.getProjectileFactory();
+                        } else {
+                            // It's a bullet, use bullet's projectile factory
+                            projectileFactory = bulletType.projectileFactory();
+                            pelletsPerShot = bulletType.pelletsPerShot();
+                        }
+                        
+                        // shoot multiple projectiles for shotgun
+                        for (int i = 0; i < pelletsPerShot; i++) {
                             // use projectile factory to create the correct projectile type
-                            PersistentProjectileEntity projectile = bulletType.projectileFactory().create(world, user, bulletStack);
+                            PersistentProjectileEntity projectile = projectileFactory.create(world, user, bulletStack);
 
                             // set damage if projectile implements DamageableProjectile (This makes it so that you dont need a big if statement)
                             if (projectile instanceof DamageableProjectile damageable) {
                                 damageable.setDamage(gunType.damage());
                             }
 
-                            float spread = bulletType.pelletsPerShot() > 0 ? world.random.nextFloat() * maxSpread : 0.0F;
+                            float spread = pelletsPerShot > 1 ? world.random.nextFloat() * maxSpread : 0.0F;
+                            float velocityMultiplier = grenadeType != null ? 0.75f : bulletType.vMultiplier(); // grenades are slower
 
-                            projectile.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, gunType.velocity() * bulletType.vMultiplier(), spread);
+                            projectile.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, gunType.velocity() * velocityMultiplier, spread);
                             world.spawnEntity(projectile);
                             DebugConfig.debug("Spawned projectile entity: " + projectile.getClass().getSimpleName() + " with spread: " + spread + "/" + maxSpread);
                         }
@@ -169,7 +185,14 @@ public class GunItem extends Item {
 
                     // handle shell ejection based on mode
                     if (gunType.ejectsShells()) {
-                        String shellItemId = bulletType.ejectShellItemId();
+                        String shellItemId;
+                        if (grenadeType != null) {
+                            // Use grenade's eject item
+                            shellItemId = grenadeType.ejectItemId();
+                        } else {
+                            // Use bullet's eject item
+                            shellItemId = bulletType.ejectShellItemId();
+                        }
                         Item shellItem = Registries.ITEM.get(Identifier.of("lmod", shellItemId));
                         if (shellItem != null && shellItem != Items.AIR) {
                             ItemStack emptyShell = new ItemStack(shellItem, 1);

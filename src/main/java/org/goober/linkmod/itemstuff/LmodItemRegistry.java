@@ -227,7 +227,42 @@ public class LmodItemRegistry {
 
     public static final Item PILLGRENADE = register(
             "pillgrenade",
-            settings -> new BulletItem(settings, "pillgrenade"),
+            settings -> new BulletItem(settings, "standard"),
+            new Item.Settings()
+                    .maxCount(8)
+    );
+    
+    public static final Item DEMO_GRENADE = register(
+            "demo_grenade",
+            settings -> new BulletItem(settings, "demo"),
+            new Item.Settings()
+                    .maxCount(8)
+    );
+    
+    public static final Item HE_GRENADE = register(
+            "he_grenade",
+            settings -> new BulletItem(settings, "he"),
+            new Item.Settings()
+                    .maxCount(8)
+    );
+    
+    public static final Item INCENDIARY_GRENADE = register(
+            "incendiary_grenade",
+            settings -> new BulletItem(settings, "incendiary"),
+            new Item.Settings()
+                    .maxCount(8)
+    );
+    
+    public static final Item BOUNCY_GRENADE = register(
+            "bouncy_grenade",
+            settings -> new BulletItem(settings, "bouncy"),
+            new Item.Settings()
+                    .maxCount(8)
+    );
+    
+    public static final Item SHAPE_GRENADE = register(
+            "shape_grenade",
+            settings -> new BulletItem(settings, "shape"),
             new Item.Settings()
                     .maxCount(8)
     );

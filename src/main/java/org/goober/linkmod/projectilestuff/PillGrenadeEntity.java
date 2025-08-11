@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
@@ -24,6 +25,7 @@ import net.minecraft.world.explosion.ExplosionBehavior;
 import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.gunstuff.items.BulletItem;
 import org.goober.linkmod.gunstuff.items.Bullets;
+import org.goober.linkmod.gunstuff.items.Grenades;
 import org.goober.linkmod.itemstuff.LmodItemRegistry;
 
 import java.util.Optional;
@@ -32,6 +34,7 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
     private float damage = 15.0F;
     private ItemStack bulletStack;
     private int remainingBounces = 3; // number of bounces before exploding
+    private Grenades.GrenadeType grenadeType = Grenades.get("standard"); // default grenade type
 
     public PillGrenadeEntity(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
         super(entityType, world);
@@ -49,6 +52,10 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
         this.setCritical(false);
         this.pickupType = PickupPermission.DISALLOWED; // can't be picked up
         this.setNoClip(false); // ensure collision is enabled
+        
+        // get grenade type from item stack
+        this.grenadeType = Grenades.getFromItemStack(bulletStack);
+        this.remainingBounces = grenadeType.bounces();
     }
     
     public void setDamage(float damage) {
@@ -81,11 +88,16 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
     public void tick() {
         super.tick();
 
-        // remove bullet after 3 seconds
-        if (this.age > 60) {
+        // remove grenade after lifetime expires
+        if (this.age > (grenadeType.lifetime() * 20)) { // convert seconds to ticks
             if (this.getWorld() instanceof World world) {
-
-                world.createExplosion(this , null, NO_BLOCK_DAMAGE_BEHAVIOR, getX(), getY(), getZ(), 4.0F,false, World.ExplosionSourceType.MOB);
+                // use grenade type settings for explosion
+                if (grenadeType.destroysTerrain()) {
+                    world.createExplosion(this, getX(), getY(), getZ(), grenadeType.explosionSize(), grenadeType.createsFire(), World.ExplosionSourceType.MOB);
+                } else {
+                    // Use NONE source type to prevent block damage
+                    world.createExplosion(this, getX(), getY(), getZ(), grenadeType.explosionSize(), grenadeType.createsFire(), World.ExplosionSourceType.NONE);
+                }
             }
             this.discard();
         }
@@ -125,7 +137,13 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
                 livingEntity.hurtTime = 0;
                 livingEntity.timeUntilRegen = 0;
             }
-            serverWorld.createExplosion(this , null, NO_BLOCK_DAMAGE_BEHAVIOR, getX(), getY(), getZ(), 4.0F,false, World.ExplosionSourceType.MOB);
+            // use grenade type settings for explosion
+            if (grenadeType.destroysTerrain()) {
+                serverWorld.createExplosion(this, getX(), getY(), getZ(), grenadeType.explosionSize(), grenadeType.createsFire(), World.ExplosionSourceType.MOB);
+            } else {
+                // Use NONE source type to prevent block damage
+                serverWorld.createExplosion(this, getX(), getY(), getZ(), grenadeType.explosionSize(), grenadeType.createsFire(), World.ExplosionSourceType.NONE);
+            }
 
         }
         
@@ -145,19 +163,27 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
         this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), 
             SoundEvents.ENTITY_ARROW_HIT, SoundCategory.PLAYERS, 1.0F, 1.2F);
 
-
         this.discard();
     }
     
     @Override
     protected void onBlockHit(BlockHitResult blockHitResult) {
+        // Only handle bounces on the server side
+        if (this.getWorld().isClient) {
+            return;
+        }
+        
         // decrement bounce counter
         this.remainingBounces--;
         
         if (this.remainingBounces <= 0) {
-            // mo more bounces, just stop
-            this.getWorld().createExplosion(this , null, NO_BLOCK_DAMAGE_BEHAVIOR, getX(), getY(), getZ(), 4.0F,false, World.ExplosionSourceType.MOB);
-
+            // no more bounces, explode
+            if (grenadeType.destroysTerrain()) {
+                this.getWorld().createExplosion(this, getX(), getY(), getZ(), grenadeType.explosionSize(), grenadeType.createsFire(), World.ExplosionSourceType.MOB);
+            } else {
+                // Use NONE source type to prevent block damage
+                this.getWorld().createExplosion(this, getX(), getY(), getZ(), grenadeType.explosionSize(), grenadeType.createsFire(), World.ExplosionSourceType.NONE);
+            }
             this.discard();
         } else {
 
@@ -168,8 +194,8 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
             // reflect velocity off the surface
             Vec3d newVelocity = velocity.subtract(normal.multiply(2 * velocity.dotProduct(normal)));
 
-            // reduce velocity on bounce (energy loss)
-            newVelocity = newVelocity.multiply(0.5);
+            // reduce velocity on bounce based on grenade bounciness
+            newVelocity = newVelocity.multiply(grenadeType.bounciness());
 
             // add a small upward component to prevent sliding
             if (Math.abs(newVelocity.y) < 0.1 && blockHitResult.getSide().getAxis().isHorizontal()) {
@@ -200,6 +226,13 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
         // never consider the grenade as "in ground" to prevent it from getting stuck
         return false;
     }
+    
+    @Override
+    protected float getDragInWater() {
+        // grenades move slower in water
+        return 0.8F;
+    }
+    
 
     @Override
     protected boolean tryPickup(PlayerEntity player) {

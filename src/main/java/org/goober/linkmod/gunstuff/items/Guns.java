@@ -67,11 +67,22 @@ public class Guns {
     ) {
         // check if this gun accepts a bullet with specific tags
         public boolean acceptsBullet(BulletItem bulletItem) {
-            Bullets.BulletType bulletType = bulletItem.getBulletType();
-            // check if bullet has any of the accepted tags
-            for (String acceptedTag : acceptedAmmoTags) {
-                if (bulletType.hasTag(acceptedTag)) {
+            // special case for grenade launcher - accept any grenade type
+            if (acceptedAmmoTags.contains("grenade_shells")) {
+                String typeId = bulletItem.getBulletTypeId();
+                if (Grenades.get(typeId) != null) {
                     return true;
+                }
+            }
+            
+            // check regular bullets
+            Bullets.BulletType bulletType = Bullets.get(bulletItem.getBulletTypeId());
+            if (bulletType != null) {
+                // check if bullet has any of the accepted tags
+                for (String acceptedTag : acceptedAmmoTags) {
+                    if (bulletType.hasTag(acceptedTag)) {
+                        return true;
+                    }
                 }
             }
             return false;
