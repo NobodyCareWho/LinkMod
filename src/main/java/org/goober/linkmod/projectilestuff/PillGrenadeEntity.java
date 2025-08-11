@@ -150,7 +150,7 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
         Entity entity = entityHitResult.getEntity();
         
         // don't hit the owner
-        if (entity == this.getOwner()) {
+        if (entity == this.getOwner() && this.getRemainingBounces() == grenadeType.bounces()) {
             return;
         }
         

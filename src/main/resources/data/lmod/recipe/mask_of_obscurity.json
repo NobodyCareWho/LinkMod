@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "minecraft:bowl",
+    "minecraft:string",
+    "minecraft:string"
+  ],
+  "result": {
+    "id": "lmod:mask_of_obscurity"
+  }
+}
