@@ -33,6 +33,7 @@
     "experience": 352,
     "recipes": [
       "lmod:autorifle",
+      "lmod:slimy_slugshot",
       "lmod:blazeshot",
       "lmod:boilerpistol",
       "lmod:breezeshot",
@@ -53,6 +54,15 @@
       "lmod:shotgunshellempty",
       "lmod:copper_cap",
       "lmod:copper_bullet",
+      "lmod:pillgrenade",
+      "lmod:he_grenade",
+      "lmod:bouncy_grenade",
+      "lmod:shape_grenade",
+      "lmod:incendiary_grenade",
+      "lmod:demo_grenade",
+      "lmod:thumpershell",
+      "lmod:large_barrel",
+      "lmod:grenadelauncher",
       "lmod:slugshot"
     ]
   },

@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:lmod/root",
+  "criteria": {
+    "has_grenadeshell": {
+      "conditions": {
+        "items": [
+          {
+            "items": "lmod:grenadeshellempty"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_grenadeshell"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lmod:pillgrenade",
+      "lmod:he_grenade",
+      "lmod:bouncy_grenade",
+      "lmod:shape_grenade",
+      "lmod:incendiary_grenade",
+      "lmod:demo_grenade",
+      "lmod:thumpershell",
+      "lmod:large_barrel",
+      "lmod:grenadelauncher"
+    ]
+  },
+  "sends_telemetry_event": true
+}

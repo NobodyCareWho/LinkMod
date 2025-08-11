@@ -1,7 +1,7 @@
 {
-  "parent": "minecraft:recipes/root",
+  "parent": "minecraft:lmod/root",
   "criteria": {
-    "has_ender_chest": {
+    "has_echest": {
       "conditions": {
         "items": [
           {
@@ -14,12 +14,13 @@
   },
   "requirements": [
     [
-      "has_ender_chest"
+      "has_echest"
     ]
   ],
   "rewards": {
     "recipes": [
       "lmod:exp_chest"
     ]
-  }
+  },
+  "sends_telemetry_event": true
 }
