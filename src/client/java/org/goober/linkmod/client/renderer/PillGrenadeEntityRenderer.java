@@ -57,7 +57,6 @@ public class PillGrenadeEntityRenderer extends EntityRenderer<PillGrenadeEntity,
         
         // get the appropriate texture based on grenade type
         Identifier texture = GRENADE_TEXTURES.getOrDefault(state.grenadeTypeId, DEFAULT_TEXTURE);
-        System.out.println("[DEBUG] Rendering grenade with type: " + state.grenadeTypeId + ", texture: " + texture);
         var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(texture));
         ModelPart root = this.model.getPart();
         root.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);

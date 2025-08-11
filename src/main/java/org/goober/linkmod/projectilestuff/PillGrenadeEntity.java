@@ -35,10 +35,10 @@ import java.util.Optional;
 
 public class PillGrenadeEntity extends PersistentProjectileEntity implements DamageableProjectile {
     private static final TrackedData<String> GRENADE_TYPE_ID = DataTracker.registerData(PillGrenadeEntity.class, TrackedDataHandlerRegistry.STRING);
+    private static final TrackedData<Integer> REMAINING_BOUNCES = DataTracker.registerData(PillGrenadeEntity.class, TrackedDataHandlerRegistry.INTEGER);
     
     private float damage = 15.0F;
     private ItemStack bulletStack;
-    private int remainingBounces = 3; // number of bounces before exploding
     private Grenades.GrenadeType grenadeType = Grenades.get("standard"); // default grenade type
 
     public PillGrenadeEntity(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
@@ -49,9 +49,23 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
     }
     
     @Override
+    public void onTrackedDataSet(TrackedData<?> data) {
+        super.onTrackedDataSet(data);
+        // when grenade type ID is set/changed, update the grenade type
+        if (data.equals(GRENADE_TYPE_ID)) {
+            String typeId = this.dataTracker.get(GRENADE_TYPE_ID);
+            Grenades.GrenadeType type = Grenades.get(typeId);
+            if (type != null) {
+                this.grenadeType = type;
+            }
+        }
+    }
+    
+    @Override
     protected void initDataTracker(DataTracker.Builder builder) {
         super.initDataTracker(builder);
         builder.add(GRENADE_TYPE_ID, "standard");
+        builder.add(REMAINING_BOUNCES, 3);
     }
 
     public PillGrenadeEntity(World world, LivingEntity owner, ItemStack bulletStack) {
@@ -68,18 +82,17 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
         Grenades.GrenadeType type = Grenades.getFromItemStack(bulletStack);
         if (type != null) {
             this.grenadeType = type;
-            this.remainingBounces = grenadeType.bounces();
+            this.dataTracker.set(REMAINING_BOUNCES, grenadeType.bounces());
         } else {
             // fallback to standard if not a valid grenade type
             this.grenadeType = Grenades.get("standard");
-            this.remainingBounces = this.grenadeType != null ? this.grenadeType.bounces() : 3;
+            this.dataTracker.set(REMAINING_BOUNCES, this.grenadeType != null ? this.grenadeType.bounces() : 3);
         }
         
         // store the grenade type ID for rendering (synced to client)
         if (bulletStack.getItem() instanceof BulletItem bulletItem) {
             String typeId = bulletItem.getBulletTypeId();
             this.dataTracker.set(GRENADE_TYPE_ID, typeId);
-            System.out.println("[DEBUG] PillGrenadeEntity created with type: " + typeId);
         }
     }
     
@@ -121,6 +134,10 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
                     world.createExplosion(this, getX(), getY(), getZ(), grenadeType.explosionSize(), grenadeType.createsFire(), World.ExplosionSourceType.MOB);
                 } else {
                     // Use NONE source type to prevent block damage
+                    // spawn big explosion particles for non-destructive grenades
+                    if (world instanceof ServerWorld serverWorld) {
+                        serverWorld.spawnParticles(ParticleTypes.EXPLOSION_EMITTER, getX(), getY(), getZ(), 1, 0, 0, 0, 0);
+                    }
                     world.createExplosion(this, getX(), getY(), getZ(), grenadeType.explosionSize(), grenadeType.createsFire(), World.ExplosionSourceType.NONE);
                 }
             }
@@ -166,6 +183,8 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
                 serverWorld.createExplosion(this, getX(), getY(), getZ(), grenadeType.explosionSize(), grenadeType.createsFire(), World.ExplosionSourceType.MOB);
             } else {
                 // Use NONE source type to prevent block damage
+                // spawn big explosion particles for non-destructive grenades
+                serverWorld.spawnParticles(ParticleTypes.EXPLOSION_EMITTER, getX(), getY(), getZ(), 1, 0, 0, 0, 0);
                 serverWorld.createExplosion(this, getX(), getY(), getZ(), grenadeType.explosionSize(), grenadeType.createsFire(), World.ExplosionSourceType.NONE);
             }
 
@@ -197,20 +216,24 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
             return;
         }
         
-        // decrement bounce counter
-        this.remainingBounces--;
+        // decrement bounce counter (synced to client)
+        int bounces = this.dataTracker.get(REMAINING_BOUNCES) - 1;
+        this.dataTracker.set(REMAINING_BOUNCES, bounces);
         
-        if (this.remainingBounces <= 0) {
+        if (bounces <= 0) {
             // no more bounces, explode
             if (grenadeType.destroysTerrain()) {
+                // spawn big explosion particles for destructive grenades (server-side only)
                 this.getWorld().createExplosion(this, getX(), getY(), getZ(), grenadeType.explosionSize(), grenadeType.createsFire(), World.ExplosionSourceType.MOB);
             } else {
                 // Use NONE source type to prevent block damage
+                if (this.getWorld() instanceof ServerWorld serverWorld) {
+                    serverWorld.spawnParticles(ParticleTypes.EXPLOSION_EMITTER, getX(), getY(), getZ(), 1, 0, 0, 0, 0);
+                }
                 this.getWorld().createExplosion(this, getX(), getY(), getZ(), grenadeType.explosionSize(), grenadeType.createsFire(), World.ExplosionSourceType.NONE);
             }
             this.discard();
         } else {
-
             // calculate bounce velocity
             Vec3d velocity = this.getVelocity();
             Vec3d normal = Vec3d.of(blockHitResult.getSide().getVector());
@@ -267,5 +290,10 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
     // getter for grenade type ID (used by renderer)
     public String getGrenadeTypeId() {
         return this.dataTracker.get(GRENADE_TYPE_ID);
+    }
+    
+    // getter for remaining bounces (synced)
+    public int getRemainingBounces() {
+        return this.dataTracker.get(REMAINING_BOUNCES);
     }
 }
