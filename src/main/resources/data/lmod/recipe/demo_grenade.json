@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "lmod:grenadeshellempty",
+    "minecraft:gunpowder",
+    "minecraft:tnt"
+  ],
+  "result": {
+    "id": "lmod:demo_grenade"
+  }
+}

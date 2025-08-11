@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "lmod:grenadeshellempty",
+    "minecraft:blaze_powder",
+    "minecraft:gunpowder"
+  ],
+  "result": {
+    "id": "lmod:incendiary_grenade"
+  }
+}

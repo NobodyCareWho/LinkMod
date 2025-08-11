@@ -21,9 +21,9 @@ public class Grenades {
         register("standard", new Grenades.GrenadeType("Grenade", false, false, 4f, 3, 5, 0.6f, 1.0f, "none", grenadeFactory, null));
         register("demo", new Grenades.GrenadeType("Demo Grenade", true, false, 4f, 1, 10, 0.6f, 1.3f, "none", grenadeFactory, null));
         register("he", new Grenades.GrenadeType("HE Grenade", false, false, 6f, 3, 5, 0.6f, 1.5f, "none", grenadeFactory, null));
-        register("incendiary", new Grenades.GrenadeType("Incendiary Grenade", false, true, 4f, 3, 5, 0.6f, 1.0f, "none", grenadeFactory, null));
+        register("incendiary", new Grenades.GrenadeType("Incendiary Grenade", false, true, 3.5f, 3, 5, 0.6f, 1.0f, "none", grenadeFactory, null));
         register("bouncy", new Grenades.GrenadeType("Bouncy Grenade", false, false, 3f, 10, 6, 0.9f, 1.0f, "none", grenadeFactory, null));
-        register("shape", new Grenades.GrenadeType("Shape Grenade", false, false, 1f, 1, 10, 0.6f, 2.5f, "none", grenadeFactory, "Deals large direct damage"));
+        register("shape", new Grenades.GrenadeType("Shape Grenade", false, false, 1f, 1, 10, 0.6f, 4.5f, "none", grenadeFactory, "Deals large direct damage"));
     }
 
     public static void register(String id, Grenades.GrenadeType grenadeType) {

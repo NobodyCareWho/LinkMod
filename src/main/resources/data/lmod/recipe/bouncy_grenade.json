@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "lmod:pillgrenade",
+    "minecraft:slime_ball"
+  ],
+  "result": {
+    "id": "lmod:bouncy_grenade"
+  }
+}
