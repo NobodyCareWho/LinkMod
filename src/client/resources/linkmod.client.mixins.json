@@ -4,6 +4,7 @@
   "package": "org.goober.linkmod.mixin.client",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "EntityRendererMixin",
     "HeldItemRendererMixin",
     "LivingEntityRendererMixin"
   ],
