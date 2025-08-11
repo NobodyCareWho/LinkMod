@@ -22,6 +22,9 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.gunstuff.items.BulletItem;
 import org.goober.linkmod.gunstuff.items.Bullets;
@@ -31,6 +34,8 @@ import org.goober.linkmod.itemstuff.LmodItemRegistry;
 import java.util.Optional;
 
 public class PillGrenadeEntity extends PersistentProjectileEntity implements DamageableProjectile {
+    private static final TrackedData<String> GRENADE_TYPE_ID = DataTracker.registerData(PillGrenadeEntity.class, TrackedDataHandlerRegistry.STRING);
+    
     private float damage = 15.0F;
     private ItemStack bulletStack;
     private int remainingBounces = 3; // number of bounces before exploding
@@ -41,6 +46,12 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
         this.bulletStack = ItemStack.EMPTY;
         this.setNoGravity(false);
         this.pickupType = PickupPermission.DISALLOWED; // can't be picked up
+    }
+    
+    @Override
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(GRENADE_TYPE_ID, "standard");
     }
 
     public PillGrenadeEntity(World world, LivingEntity owner, ItemStack bulletStack) {
@@ -56,6 +67,13 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
         // get grenade type from item stack
         this.grenadeType = Grenades.getFromItemStack(bulletStack);
         this.remainingBounces = grenadeType.bounces();
+        
+        // store the grenade type ID for rendering (synced to client)
+        if (bulletStack.getItem() instanceof BulletItem bulletItem) {
+            String typeId = bulletItem.getBulletTypeId();
+            this.dataTracker.set(GRENADE_TYPE_ID, typeId);
+            System.out.println("[DEBUG] PillGrenadeEntity created with type: " + typeId);
+        }
     }
     
     public void setDamage(float damage) {
@@ -238,5 +256,10 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
     protected boolean tryPickup(PlayerEntity player) {
         // bullets can't be picked up
         return false;
+    }
+    
+    // getter for grenade type ID (used by renderer)
+    public String getGrenadeTypeId() {
+        return this.dataTracker.get(GRENADE_TYPE_ID);
     }
 }

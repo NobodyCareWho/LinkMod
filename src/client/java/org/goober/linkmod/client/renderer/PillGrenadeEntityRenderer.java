@@ -12,9 +12,23 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import org.goober.linkmod.projectilestuff.PillGrenadeEntity;
 import org.goober.linkmod.client.model.PillGrenadeEntityModel;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PillGrenadeEntityRenderer extends EntityRenderer<PillGrenadeEntity, PillGrenadeEntityRenderer.PillGrenadeRenderState> {
-    private static final Identifier TEXTURE = Identifier.of("lmod", "textures/entity/pillgrenade.png");
+    private static final Identifier DEFAULT_TEXTURE = Identifier.of("lmod", "textures/entity/pillgrenade.png");
+    private static final Map<String, Identifier> GRENADE_TEXTURES = new HashMap<>();
+    
+    static {
+        // map each grenade type to its texture
+        GRENADE_TEXTURES.put("standard", Identifier.of("lmod", "textures/entity/pillgrenade.png"));
+        GRENADE_TEXTURES.put("demo", Identifier.of("lmod", "textures/entity/demopillgrenade.png"));
+        GRENADE_TEXTURES.put("he", Identifier.of("lmod", "textures/entity/hepillgrenade.png"));
+        GRENADE_TEXTURES.put("incendiary", Identifier.of("lmod", "textures/entity/incendiary_grenade.png"));
+        GRENADE_TEXTURES.put("bouncy", Identifier.of("lmod", "textures/entity/bouncy_grenade.png"));
+        GRENADE_TEXTURES.put("shape", Identifier.of("lmod", "textures/entity/shapepillgrenade.png"));
+    }
+    
     public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Identifier.of("lmod", "pill_grenade"), "main");
     private final PillGrenadeEntityModel model;
     
@@ -32,6 +46,7 @@ public class PillGrenadeEntityRenderer extends EntityRenderer<PillGrenadeEntity,
     public void updateRenderState(PillGrenadeEntity entity, PillGrenadeRenderState state, float tickDelta) {
         super.updateRenderState(entity, state, tickDelta);
         state.age = entity.age + tickDelta;
+        state.grenadeTypeId = entity.getGrenadeTypeId();
     }
     
     @Override
@@ -39,7 +54,11 @@ public class PillGrenadeEntityRenderer extends EntityRenderer<PillGrenadeEntity,
         matrices.push();
         matrices.translate(0.0, -1.5, 0.0);
         this.model.setAngles(state.age);
-        var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(TEXTURE));
+        
+        // get the appropriate texture based on grenade type
+        Identifier texture = GRENADE_TEXTURES.getOrDefault(state.grenadeTypeId, DEFAULT_TEXTURE);
+        System.out.println("[DEBUG] Rendering grenade with type: " + state.grenadeTypeId + ", texture: " + texture);
+        var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(texture));
         ModelPart root = this.model.getPart();
         root.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV);
         
@@ -49,5 +68,6 @@ public class PillGrenadeEntityRenderer extends EntityRenderer<PillGrenadeEntity,
     
     public static class PillGrenadeRenderState extends EntityRenderState {
         public float age;
+        public String grenadeTypeId = "standard";
     }
 }
