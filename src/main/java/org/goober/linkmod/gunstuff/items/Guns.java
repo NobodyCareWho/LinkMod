@@ -67,15 +67,17 @@ public class Guns {
     ) {
         // check if this gun accepts a bullet with specific tags
         public boolean acceptsBullet(BulletItem bulletItem) {
-            // special case for grenade launcher - accept any grenade type
+            // special case for grenade launcher - accept grenades and thumpershell
             if (acceptedAmmoTags.contains("grenade_shells")) {
                 String typeId = bulletItem.getBulletTypeId();
-                if (Grenades.get(typeId) != null) {
+                // accept if it's a grenade OR thumpershell
+                if (Grenades.get(typeId) != null || typeId.equals("thumpershell")) {
                     return true;
                 }
+                return false; // reject all other bullets/shells
             }
             
-            // check regular bullets
+            // check regular bullets for non-grenade-launcher guns
             Bullets.BulletType bulletType = Bullets.get(bulletItem.getBulletTypeId());
             if (bulletType != null) {
                 // check if bullet has any of the accepted tags

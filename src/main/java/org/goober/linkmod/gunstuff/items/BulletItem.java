@@ -37,7 +37,8 @@ public class BulletItem extends Item {
         if (grenadeType != null) {
             // Display grenade information
             tooltip.accept(Text.literal("Type: " + grenadeType.displayName()).formatted(Formatting.GOLD));
-            tooltip.accept(Text.literal("Explosion Size: " + grenadeType.explosionSize()).formatted(Formatting.RED));
+            tooltip.accept(Text.literal("Impact Damage: " + grenadeType.impactDamageMultiplier() + "x").formatted(Formatting.RED));
+            tooltip.accept(Text.literal("Explosion Size: " + grenadeType.explosionSize()).formatted(Formatting.YELLOW));
             tooltip.accept(Text.literal("Bounces: " + grenadeType.bounces()).formatted(Formatting.AQUA));
             if (grenadeType.destroysTerrain()) {
                 tooltip.accept(Text.literal("Destroys Blocks").formatted(Formatting.DARK_RED));

@@ -18,12 +18,12 @@ public class Grenades {
     static {
         ProjectileFactory grenadeFactory = PillGrenadeEntity::new;
         
-        register("standard", new Grenades.GrenadeType("Grenade",false , false, 4f, 3, 100, 0.6f, "none", grenadeFactory));
-        register("demo", new Grenades.GrenadeType("Demo Grenade",true , false, 3f, 1, 100, 0.6f, "none", grenadeFactory));
-        register("he", new Grenades.GrenadeType("HE Grenade",false , false, 6f, 3, 100, 0.6f, "none", grenadeFactory));
-        register("incendiary", new Grenades.GrenadeType("Incendiary Grenade",false , true, 4f, 3, 100, 0.6f, "none", grenadeFactory));
-        register("bouncy", new Grenades.GrenadeType("Bouncy Grenade",false , false, 3f, 10, 100, 0.9f, "none", grenadeFactory));
-        register("shape", new Grenades.GrenadeType("Shape Grenade",false , false, 1f, 1, 100, 0.6f, "none", grenadeFactory));
+        register("standard", new Grenades.GrenadeType("Grenade", false, false, 4f, 3, 100, 0.6f, 1.0f, "none", grenadeFactory));
+        register("demo", new Grenades.GrenadeType("Demo Grenade", true, false, 3f, 1, 100, 0.6f, 1.0f, "none", grenadeFactory));
+        register("he", new Grenades.GrenadeType("HE Grenade", false, false, 6f, 3, 100, 0.6f, 1.0f, "none", grenadeFactory));
+        register("incendiary", new Grenades.GrenadeType("Incendiary Grenade", false, true, 4f, 3, 100, 0.6f, 1.0f, "none", grenadeFactory));
+        register("bouncy", new Grenades.GrenadeType("Bouncy Grenade", false, false, 3f, 10, 100, 0.9f, 1.0f, "none", grenadeFactory));
+        register("shape", new Grenades.GrenadeType("Shape Grenade", false, false, 1f, 1, 100, 0.6f, 1.0f, "none", grenadeFactory));
     }
 
     public static void register(String id, Grenades.GrenadeType grenadeType) {
@@ -31,7 +31,7 @@ public class Grenades {
     }
 
     public static Grenades.GrenadeType get(String id) {
-        return GRENADE_TYPES.getOrDefault(id, GRENADE_TYPES.get("standard"));
+        return GRENADE_TYPES.get(id);
     }
 
     public static Map<String, Grenades.GrenadeType> getAll() {
@@ -48,7 +48,7 @@ public class Grenades {
                 return GRENADE_TYPES.get(typeId);
             }
         }
-        return GRENADE_TYPES.get("standard"); // default to standard grenade
+        return null; // return null if not a grenade
     }
     
     // check if an item is a grenade that can be fired from grenade launcher
@@ -68,6 +68,7 @@ public class Grenades {
             int bounces,
             float lifetime,
             float bounciness,
+            float impactDamageMultiplier,
             String ejectItemId,
             ProjectileFactory projectileFactory
     ) {

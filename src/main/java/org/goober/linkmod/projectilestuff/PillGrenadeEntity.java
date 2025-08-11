@@ -65,8 +65,15 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
         this.setNoClip(false); // ensure collision is enabled
         
         // get grenade type from item stack
-        this.grenadeType = Grenades.getFromItemStack(bulletStack);
-        this.remainingBounces = grenadeType.bounces();
+        Grenades.GrenadeType type = Grenades.getFromItemStack(bulletStack);
+        if (type != null) {
+            this.grenadeType = type;
+            this.remainingBounces = grenadeType.bounces();
+        } else {
+            // fallback to standard if not a valid grenade type
+            this.grenadeType = Grenades.get("standard");
+            this.remainingBounces = this.grenadeType != null ? this.grenadeType.bounces() : 3;
+        }
         
         // store the grenade type ID for rendering (synced to client)
         if (bulletStack.getItem() instanceof BulletItem bulletItem) {
@@ -130,11 +137,10 @@ public class PillGrenadeEntity extends PersistentProjectileEntity implements Dam
             return;
         }
         
-        // calculate damage with bullet type multiplier
+        // calculate damage with grenade impact damage multiplier
         float finalDamage = this.damage;
-        if (!bulletStack.isEmpty() && bulletStack.getItem() instanceof BulletItem bulletItem) {
-            Bullets.BulletType bulletType = bulletItem.getBulletType();
-            finalDamage *= bulletType.damageMultiplier();
+        if (grenadeType != null) {
+            finalDamage *= grenadeType.impactDamageMultiplier();
         }
         
         // deal damage
