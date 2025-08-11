@@ -1,6 +1,6 @@
 {
   "type": "lmod:lathe",
-  "ingredient": "lmod:iron_ingot",
+  "ingredient": "minecraft:iron_ingot",
   "result": {
     "id": "lmod:grenadeshellempty",
     "count": 2
