@@ -18,12 +18,12 @@ public class Grenades {
     static {
         ProjectileFactory grenadeFactory = PillGrenadeEntity::new;
         
-        register("standard", new Grenades.GrenadeType("Grenade", false, false, 4f, 3, 100, 0.6f, 1.0f, "none", grenadeFactory));
-        register("demo", new Grenades.GrenadeType("Demo Grenade", true, false, 3f, 1, 100, 0.6f, 1.0f, "none", grenadeFactory));
-        register("he", new Grenades.GrenadeType("HE Grenade", false, false, 6f, 3, 100, 0.6f, 1.0f, "none", grenadeFactory));
-        register("incendiary", new Grenades.GrenadeType("Incendiary Grenade", false, true, 4f, 3, 100, 0.6f, 1.0f, "none", grenadeFactory));
-        register("bouncy", new Grenades.GrenadeType("Bouncy Grenade", false, false, 3f, 10, 100, 0.9f, 1.0f, "none", grenadeFactory));
-        register("shape", new Grenades.GrenadeType("Shape Grenade", false, false, 1f, 1, 100, 0.6f, 1.0f, "none", grenadeFactory));
+        register("standard", new Grenades.GrenadeType("Grenade", false, false, 4f, 3, 5, 0.6f, 1.0f, "none", grenadeFactory, null));
+        register("demo", new Grenades.GrenadeType("Demo Grenade", true, false, 4f, 1, 10, 0.6f, 1.3f, "none", grenadeFactory, null));
+        register("he", new Grenades.GrenadeType("HE Grenade", false, false, 6f, 3, 5, 0.6f, 1.5f, "none", grenadeFactory, null));
+        register("incendiary", new Grenades.GrenadeType("Incendiary Grenade", false, true, 4f, 3, 5, 0.6f, 1.0f, "none", grenadeFactory, null));
+        register("bouncy", new Grenades.GrenadeType("Bouncy Grenade", false, false, 3f, 10, 6, 0.9f, 1.0f, "none", grenadeFactory, null));
+        register("shape", new Grenades.GrenadeType("Shape Grenade", false, false, 1f, 1, 10, 0.6f, 2.5f, "none", grenadeFactory, "Deals large direct damage"));
     }
 
     public static void register(String id, Grenades.GrenadeType grenadeType) {
@@ -70,7 +70,8 @@ public class Grenades {
             float bounciness,
             float impactDamageMultiplier,
             String ejectItemId,
-            ProjectileFactory projectileFactory
+            ProjectileFactory projectileFactory,
+            String info
     ) {
         // get the projectile factory for this grenade type
         public ProjectileFactory getProjectileFactory() {

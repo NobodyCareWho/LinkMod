@@ -24,8 +24,8 @@ public class PillGrenadeEntityRenderer extends EntityRenderer<PillGrenadeEntity,
         GRENADE_TEXTURES.put("standard", Identifier.of("lmod", "textures/entity/pillgrenade.png"));
         GRENADE_TEXTURES.put("demo", Identifier.of("lmod", "textures/entity/demopillgrenade.png"));
         GRENADE_TEXTURES.put("he", Identifier.of("lmod", "textures/entity/hepillgrenade.png"));
-        GRENADE_TEXTURES.put("incendiary", Identifier.of("lmod", "textures/entity/incendiary_grenade.png"));
-        GRENADE_TEXTURES.put("bouncy", Identifier.of("lmod", "textures/entity/bouncy_grenade.png"));
+        GRENADE_TEXTURES.put("incendiary", Identifier.of("lmod", "textures/entity/incendiarypillgrenade.png"));
+        GRENADE_TEXTURES.put("bouncy", Identifier.of("lmod", "textures/entity/bouncypillgrenade.png"));
         GRENADE_TEXTURES.put("shape", Identifier.of("lmod", "textures/entity/shapepillgrenade.png"));
     }
     
