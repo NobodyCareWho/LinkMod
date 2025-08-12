@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancement.*;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.registry.RegistryKey;
@@ -96,6 +97,40 @@ public class LinkmodDataGenerator implements DataGeneratorEntrypoint {
                     )
                     .criterion("has_lathe", InventoryChangedCriterion.Conditions.items(LmodBlockRegistry.LATHE))
                     .build(consumer, "lmod/get_lathe");
+
+            AdvancementEntry enderchestAdvancement = Advancement.Builder.create().parent(rootAdvancement)
+                    .criterion("has_echest", InventoryChangedCriterion.Conditions.items(Blocks.ENDER_CHEST))
+                    .rewards(AdvancementRewards.Builder.recipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "exp_chest"))))
+                    .build(consumer, "lmod/get_ender_chest");
+
+            AdvancementEntry grenadeshellAdvancement = Advancement.Builder.create().parent(rootAdvancement)
+                    .criterion("has_grenadeshell", InventoryChangedCriterion.Conditions.items(LmodItemRegistry.GRENADESHELL))
+                    .rewards(AdvancementRewards.Builder.experience(0)
+                    .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "pillgrenade")))
+                    .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "he_grenade")))
+                    .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "bouncy_grenade")))
+                    .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "shape_grenade")))
+                    .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "incendiary_grenade")))
+                    .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "demo_grenade")))
+                    .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "thumpershell")))
+                    .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "large_barrel")))
+                    .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "grenadelauncher"))))
+                    .build(consumer, "lmod/get_grenadeshell");
+
+
+            AdvancementEntry expchestAdvancement = Advancement.Builder.create().parent(rootAdvancement)
+                    .display(
+                            LmodBlockRegistry.EXP_CHEST,
+                            Text.translatable("advancement.lmod.get_exp_chest.title"),
+                            Text.translatable("advancement.lmod.get_exp_chest.description"),
+                            null,
+                            AdvancementFrame.TASK,
+                            true,
+                            true,
+                            false
+                    )
+                    .criterion("has_exp_chest", InventoryChangedCriterion.Conditions.items(LmodBlockRegistry.EXP_CHEST))
+                    .build(consumer, "lmod/get_exp_chest");
 
             AdvancementEntry croissantAdvancement = Advancement.Builder.create().parent(latheAdvancement)
                     .display(
