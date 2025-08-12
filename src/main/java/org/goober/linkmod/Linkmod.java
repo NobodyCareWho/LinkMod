@@ -51,6 +51,7 @@ public class Linkmod implements ModInitializer {
         LmodItemRegistry.initialize();
         LmodItemGroups.initialize();
         LmodEntityRegistry.initialize();
+        LmodParticleRegistry.initialize();
         LmodBlockRegistry.initialize();
         LmodBlockEntityTypes.initialize();
         LmodScreenHandlerType.initialize();

@@ -449,8 +449,7 @@ public class GunItem extends Item {
             // skip empty shell casings
             String itemId = Registries.ITEM.getId(itemStack.getItem()).getPath();
             if (isEmptyShell(itemId)) {
-                    continue; // skip shell casings
-
+                continue; // skip shell casings
             }
             
             if (itemStack.getItem() instanceof BulletItem bulletItem) {
