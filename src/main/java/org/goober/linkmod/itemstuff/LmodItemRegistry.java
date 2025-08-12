@@ -276,21 +276,21 @@ public class LmodItemRegistry {
 
     public static final Item SHOTGUNSHELLEMPTY = register(
             "shotgunshellempty",
-            settings -> new BulletItem(settings, "shotgunshellempty"),
+            Item::new,
             new Item.Settings()
                     .maxCount(64)
     );
 
     public static final Item BULLETCASING = register(
             "bulletcasing",
-            settings -> new BulletItem(settings, "bulletcasing"),
+            Item::new,
             new Item.Settings()
                     .maxCount(64)
     );
 
     public static final Item GRENADESHELL = register(
             "grenadeshellempty",
-            settings -> new BulletItem(settings, "grenadeshellempty"),
+            Item::new,
             new Item.Settings()
                     .maxCount(32)
     );
