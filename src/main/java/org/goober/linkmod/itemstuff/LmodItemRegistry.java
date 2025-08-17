@@ -4,13 +4,16 @@ import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.EquippableComponent;
 import net.minecraft.component.type.FoodComponent;
+import net.minecraft.component.type.WeaponComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Item;
+import net.minecraft.item.TridentItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
 import org.goober.linkmod.Linkmod;
 import org.goober.linkmod.gunstuff.items.BulletItem;
 import org.goober.linkmod.gunstuff.items.GunItem;
@@ -51,6 +54,17 @@ public class LmodItemRegistry {
             new Item.Settings()
                     .maxCount(1)
                     .component(LmodDataComponentTypes.SEEDBAG_CONTENTS, SeedBagContentsComponent.EMPTY)
+    );
+
+    public static final Item KUNAI = register(
+            "kunai",
+            KunaiItem::new,
+            new Item.Settings()
+                    .maxCount(16)
+                    .rarity(Rarity.RARE)
+                    .attributeModifiers(KunaiItem.createAttributeModifiers())
+                    .component(DataComponentTypes.TOOL, KunaiItem.createToolComponent())
+                    .component(DataComponentTypes.WEAPON, new WeaponComponent(1))
     );
 
     // guns
@@ -125,6 +139,9 @@ public class LmodItemRegistry {
                     .maxCount(1)
                     .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
     );
+
+
+
 
     // bullets
     public static final Item BULLET = register(
