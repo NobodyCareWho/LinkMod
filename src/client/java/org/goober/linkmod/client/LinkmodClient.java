@@ -17,6 +17,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.option.AttackIndicator;
 import net.minecraft.client.render.RenderLayer;
+import org.goober.linkmod.client.renderer.KunaiEntityRenderer;
 import org.goober.linkmod.gunstuff.items.GunItem;
 import org.goober.linkmod.gunstuff.items.Guns;
 import org.goober.linkmod.gunstuff.GunBloomComponent;
@@ -69,6 +70,7 @@ public class LinkmodClient implements ClientModInitializer {
         EntityRendererRegistry.register(LmodEntityRegistry.BOUNCYBULLET, EmptyEntityRenderer::new);
         // register renderer for pill grenade entity
         EntityRendererRegistry.register(LmodEntityRegistry.PILLGRENADE, PillGrenadeEntityRenderer::new);
+        EntityRendererRegistry.register(LmodEntityRegistry.KUNAI, KunaiEntityRenderer::new);
         // Register tooltip components
         TooltipComponentCallback.EVENT.register(data -> {
             if (data instanceof SeedBagTooltipData seedBagData) {
