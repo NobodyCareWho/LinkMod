@@ -43,13 +43,13 @@ public class KunaiEntity extends PersistentProjectileEntity {
     }
 
     public KunaiEntity(World world, LivingEntity owner, ItemStack stack) {
-        super(EntityType.TRIDENT, owner, world, stack, (ItemStack)null);
+        super(org.goober.linkmod.entitystuff.LmodEntityRegistry.KUNAI, owner, world, stack, (ItemStack)null);
         this.dataTracker.set(LOYALTY, this.getLoyalty(stack));
         this.dataTracker.set(ENCHANTED, stack.hasGlint());
     }
 
     public KunaiEntity(World world, double x, double y, double z, ItemStack stack) {
-        super(EntityType.TRIDENT, x, y, z, world, stack, stack);
+        super(org.goober.linkmod.entitystuff.LmodEntityRegistry.KUNAI, x, y, z, world, stack, stack);
         this.dataTracker.set(LOYALTY, this.getLoyalty(stack));
         this.dataTracker.set(ENCHANTED, stack.hasGlint());
     }
@@ -221,7 +221,7 @@ public class KunaiEntity extends PersistentProjectileEntity {
     }
 
     static {
-        LOYALTY = DataTracker.registerData(net.minecraft.entity.projectile.TridentEntity.class, TrackedDataHandlerRegistry.BYTE);
-        ENCHANTED = DataTracker.registerData(net.minecraft.entity.projectile.TridentEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        LOYALTY = DataTracker.registerData(KunaiEntity.class, TrackedDataHandlerRegistry.BYTE);
+        ENCHANTED = DataTracker.registerData(KunaiEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     }
 }

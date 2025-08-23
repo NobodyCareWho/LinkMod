@@ -18,9 +18,10 @@ import net.minecraft.util.math.RotationAxis;
 import org.goober.linkmod.client.model.KunaiEntityModel;
 import org.goober.linkmod.projectilestuff.KunaiEntity;
 
-import static org.goober.linkmod.client.renderer.PillGrenadeEntityRenderer.MODEL_LAYER;
+import net.minecraft.client.render.entity.model.EntityModelLayer;
 
 public class KunaiEntityRenderer extends EntityRenderer<KunaiEntity, KunaiEntityRenderer.KunaiEntityRenderState> {
+    public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Identifier.of("lmod", "kunai"), "main");
     public static final Identifier TEXTURE = Identifier.of("lmod", "textures/entity/kunai.png");
     private final KunaiEntityModel model;
 

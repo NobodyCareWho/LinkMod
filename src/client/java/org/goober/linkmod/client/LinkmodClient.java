@@ -18,6 +18,7 @@ import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.option.AttackIndicator;
 import net.minecraft.client.render.RenderLayer;
 import org.goober.linkmod.client.renderer.KunaiEntityRenderer;
+import org.goober.linkmod.client.model.KunaiEntityModel;
 import org.goober.linkmod.gunstuff.items.GunItem;
 import org.goober.linkmod.gunstuff.items.Guns;
 import org.goober.linkmod.gunstuff.GunBloomComponent;
@@ -54,6 +55,7 @@ public class LinkmodClient implements ClientModInitializer {
         
         // Register model layers
         EntityModelLayerRegistry.registerModelLayer(PillGrenadeEntityRenderer.MODEL_LAYER, PillGrenadeEntityModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(KunaiEntityRenderer.MODEL_LAYER, KunaiEntityModel::getTexturedModelData);
 
         // Register block entity renderers
         BlockEntityRendererRegistry.register(LmodBlockEntityTypes.EXP_CHEST, ExpChestBlockEntityRenderer::new);
