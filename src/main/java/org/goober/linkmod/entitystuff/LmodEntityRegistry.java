@@ -108,7 +108,7 @@ public class LmodEntityRegistry {
     public static final EntityType<KunaiEntity> KUNAI = Registry.register(
             Registries.ENTITY_TYPE,
             Identifier.of(Linkmod.MOD_ID, "kunai"),
-            EntityType.Builder.<PillGrenadeEntity>create(KunaiEntity::new, SpawnGroup.MISC)
+            EntityType.Builder.<KunaiEntity>create(KunaiEntity::new, SpawnGroup.MISC)
                     .dimensions(0.5F, 0.5F)
                     .maxTrackingRange(80)
                     .trackingTickInterval(1)

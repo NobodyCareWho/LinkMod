@@ -33,6 +33,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Position;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.goober.linkmod.projectilestuff.KunaiEntity;
 
 public class KunaiItem extends Item implements ProjectileItem {
     public static final int MIN_DRAW_DURATION = 10;
@@ -78,12 +79,12 @@ public class KunaiItem extends Item implements ProjectileItem {
                         stack.damage(-1, playerEntity);
                         if (f == 0.0F) {
                             ItemStack itemStack = stack.splitUnlessCreative(1, playerEntity);
-                            TridentEntity tridentEntity = (TridentEntity)ProjectileEntity.spawnWithVelocity(TridentEntity::new, serverWorld, itemStack, playerEntity, 0.0F, 2.5F, 1.0F);
+                            KunaiEntity kunaiEntity = (KunaiEntity)ProjectileEntity.spawnWithVelocity(KunaiEntity::new, serverWorld, itemStack, playerEntity, 0.0F, 2.5F, 1.0F);
                             if (playerEntity.isInCreativeMode()) {
-                                tridentEntity.pickupType = PickupPermission.CREATIVE_ONLY;
+                                kunaiEntity.pickupType = PickupPermission.CREATIVE_ONLY;
                             }
 
-                            world.playSoundFromEntity((Entity)null, tridentEntity, (SoundEvent)registryEntry.value(), SoundCategory.PLAYERS, 1.0F, 1.0F);
+                            world.playSoundFromEntity((Entity)null, kunaiEntity, (SoundEvent)registryEntry.value(), SoundCategory.PLAYERS, 1.0F, 1.0F);
                             return true;
                         }
                     }
@@ -130,8 +131,8 @@ public class KunaiItem extends Item implements ProjectileItem {
     }
 
     public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction) {
-        TridentEntity tridentEntity = new TridentEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack.copyWithCount(1));
-        tridentEntity.pickupType = PickupPermission.ALLOWED;
-        return tridentEntity;
+        KunaiEntity kunaiEntity = new KunaiEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack.copyWithCount(1));
+        kunaiEntity.pickupType = PickupPermission.ALLOWED;
+        return kunaiEntity;
     }
 }

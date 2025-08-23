@@ -8,6 +8,7 @@ import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.client.render.entity.model.TridentEntityModel;
+import net.minecraft.client.render.entity.state.EntityRenderState;
 import net.minecraft.client.render.entity.state.TridentEntityRenderState;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -19,7 +20,7 @@ import org.goober.linkmod.projectilestuff.KunaiEntity;
 
 import static org.goober.linkmod.client.renderer.PillGrenadeEntityRenderer.MODEL_LAYER;
 
-public class KunaiEntityRenderer extends EntityRenderer<KunaiEntity, KunaiEntityRenderState> {
+public class KunaiEntityRenderer extends EntityRenderer<KunaiEntity, KunaiEntityRenderer.KunaiEntityRenderState> {
     public static final Identifier TEXTURE = Identifier.of("lmod", "textures/entity/kunai.png");
     private final KunaiEntityModel model;
 
@@ -49,4 +50,11 @@ public class KunaiEntityRenderer extends EntityRenderer<KunaiEntity, KunaiEntity
         kunaiEntityRenderState.pitch = kunaiEntity.getLerpedPitch(f);
         kunaiEntityRenderState.enchanted = kunaiEntity.isEnchanted();
     }
+
+    public static class KunaiEntityRenderState extends EntityRenderState {
+        public float yaw;
+        public float pitch;
+        public boolean enchanted;
+    }
+
 }
