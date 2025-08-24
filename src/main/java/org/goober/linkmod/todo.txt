@@ -1,8 +1,8 @@
-O Finish implementing Kunai
-    O Implement entity model + renderer
-    O Create entity class
+X Finish implementing Kunai
+    X Implement entity model + renderer
+    X Create entity class
     O Add Recipe
-    O Add Lang
+    X Add Lang
 
 O Implement Dynamite
     O Implement Item

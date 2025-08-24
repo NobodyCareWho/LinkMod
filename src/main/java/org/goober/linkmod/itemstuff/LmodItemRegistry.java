@@ -67,6 +67,17 @@ public class LmodItemRegistry {
                     .component(DataComponentTypes.WEAPON, new WeaponComponent(1))
     );
 
+    public static final Item DYNAMITE = register(
+            "dynamite",
+            DynamiteItem::new,
+            new Item.Settings()
+                    .maxCount(16)
+                    .rarity(Rarity.RARE)
+                    .attributeModifiers(KunaiItem.createAttributeModifiers())
+                    .component(DataComponentTypes.TOOL, KunaiItem.createToolComponent())
+                    .component(DataComponentTypes.WEAPON, new WeaponComponent(1))
+    );
+
     // guns
     public static final Item RIFLE = register(
             "rifle",

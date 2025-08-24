@@ -9,10 +9,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import org.goober.linkmod.Linkmod;
-import org.goober.linkmod.projectilestuff.KunaiEntity;
-import org.goober.linkmod.projectilestuff.SeedbagEntity;
-import org.goober.linkmod.projectilestuff.BulletEntity;
-import org.goober.linkmod.projectilestuff.PillGrenadeEntity;
+import org.goober.linkmod.projectilestuff.*;
 
 public class LmodEntityRegistry {
     public static final EntityType<SeedbagEntity> SEEDBAG_ENTITY = Registry.register(
@@ -113,6 +110,16 @@ public class LmodEntityRegistry {
                     .maxTrackingRange(80)
                     .trackingTickInterval(1)
                     .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Linkmod.MOD_ID, "kunai")))
+    );
+
+    public static final EntityType<DynamiteEntity> DYNAMITE = Registry.register(
+            Registries.ENTITY_TYPE,
+            Identifier.of(Linkmod.MOD_ID, "dynamite"),
+            EntityType.Builder.<DynamiteEntity>create(DynamiteEntity::new, SpawnGroup.MISC)
+                    .dimensions(0.5F, 0.5F)
+                    .maxTrackingRange(80)
+                    .trackingTickInterval(1)
+                    .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Linkmod.MOD_ID, "dynamite")))
     );
 
     public static void initialize() {
