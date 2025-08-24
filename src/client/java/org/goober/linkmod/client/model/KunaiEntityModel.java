@@ -19,7 +19,7 @@ public class KunaiEntityModel extends EntityModel<EntityRenderState> {
         public static TexturedModelData getTexturedModelData() {
             ModelData modelData = new ModelData();
             ModelPartData modelPartData = modelData.getRoot();
-            ModelPartData lmod_main = modelPartData.addChild("lmod_main", ModelPartBuilder.create(), ModelTransform.rotation(0.0F, 24.0F, 0.0F));
+            ModelPartData lmod_main = modelPartData.addChild("lmod_main", ModelPartBuilder.create(), ModelTransform.rotation(4.641F, 0.0F, 0.0F));
 
             ModelPartData cube_r1 = lmod_main.addChild("cube_r1", ModelPartBuilder.create().uv(0, 17).cuboid(0.0F, -2.0F, -6.0F, 0.0F, 3.0F, 14.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.5F, 0.0F, 0.0F, 3.1416F, 0.0F));
 

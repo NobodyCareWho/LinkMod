@@ -26,6 +26,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.itemstuff.LmodItemRegistry;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +34,6 @@ import org.jetbrains.annotations.Nullable;
 public class KunaiEntity extends PersistentProjectileEntity {
     private static final TrackedData<Byte> LOYALTY;
     private static final TrackedData<Boolean> ENCHANTED;
-    private static final float DRAG_IN_WATER = 0.99F;
     private static final boolean DEFAULT_DEALT_DAMAGE = false;
     private boolean dealtDamage = false;
     public int returnTimer;

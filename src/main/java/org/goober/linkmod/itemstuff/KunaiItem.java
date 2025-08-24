@@ -36,16 +36,16 @@ import net.minecraft.world.World;
 import org.goober.linkmod.projectilestuff.KunaiEntity;
 
 public class KunaiItem extends Item implements ProjectileItem {
-    public static final int MIN_DRAW_DURATION = 10;
-    public static final float ATTACK_DAMAGE = 8.0F;
-    public static final float THROW_SPEED = 2.5F;
+    public static final int MIN_DRAW_DURATION = 5;
+    public static final float ATTACK_DAMAGE = 5.0F;
+    public static final float THROW_SPEED = 2.7F;
 
     public KunaiItem(Item.Settings settings) {
         super(settings);
     }
 
     public static AttributeModifiersComponent createAttributeModifiers() {
-        return AttributeModifiersComponent.builder().add(EntityAttributes.ATTACK_DAMAGE, new EntityAttributeModifier(BASE_ATTACK_DAMAGE_MODIFIER_ID, 8.0, Operation.ADD_VALUE), AttributeModifierSlot.MAINHAND).add(EntityAttributes.ATTACK_SPEED, new EntityAttributeModifier(BASE_ATTACK_SPEED_MODIFIER_ID, -2.9000000953674316, Operation.ADD_VALUE), AttributeModifierSlot.MAINHAND).build();
+        return AttributeModifiersComponent.builder().add(EntityAttributes.ATTACK_DAMAGE, new EntityAttributeModifier(BASE_ATTACK_DAMAGE_MODIFIER_ID, 4.0, Operation.ADD_VALUE), AttributeModifierSlot.MAINHAND).build();
     }
 
     public static ToolComponent createToolComponent() {
