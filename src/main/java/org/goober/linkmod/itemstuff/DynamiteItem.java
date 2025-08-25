@@ -45,6 +45,14 @@ public class DynamiteItem extends Item implements ProjectileItem {
         super(settings);
     }
 
+    public static AttributeModifiersComponent createAttributeModifiers() {
+        return AttributeModifiersComponent.builder().add(EntityAttributes.ATTACK_DAMAGE, new EntityAttributeModifier(BASE_ATTACK_DAMAGE_MODIFIER_ID, 4.0, Operation.ADD_VALUE), AttributeModifierSlot.MAINHAND).build();
+    }
+
+    public static ToolComponent createToolComponent() {
+        return new ToolComponent(List.of(), 1.0F, 2, false);
+    }
+
     public UseAction getUseAction(ItemStack stack) {
         return UseAction.SPEAR;
     }
@@ -55,33 +63,41 @@ public class DynamiteItem extends Item implements ProjectileItem {
 
     public boolean onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         if (user instanceof PlayerEntity playerEntity) {
-            int var6 = this.getMaxUseTime(stack, user) - remainingUseTicks;
-            if (var6 < 10) {
+            int useTicks = this.getMaxUseTime(stack, user) - remainingUseTicks;
+            if (useTicks < 10) {
                 return false;
-            } else {
-                    playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
-                    if (world instanceof ServerWorld) {
-                        ServerWorld serverWorld = (ServerWorld)world;
-
-
-                            ItemStack itemStack = stack.splitUnlessCreative(1, playerEntity);
-                            DynamiteEntity dynamiteEntity = new DynamiteEntity(serverWorld, playerEntity);
-                            dynamiteEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 2.5F, 1.0F);
-                            if (playerEntity.isInCreativeMode()) {
-                                dynamiteEntity.pickupType = PickupPermission.CREATIVE_ONLY;
-                            }
-                            serverWorld.spawnEntity(dynamiteEntity);
-
-                            world.playSoundFromEntity((Entity)null, dynamiteEntity, SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.PLAYERS, 1.0F, 1.0F);
-                            return true;
-
-                    }
-
             }
-        } else {
+            
+            playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
+            
+            if (world instanceof ServerWorld serverWorld) {
+                // consume one item from stack unless in creative mode
+                if (!playerEntity.isInCreativeMode()) {
+                    stack.decrement(1);
+                }
+                
+                // create and spawn the dynamite entity
+                DynamiteEntity dynamiteEntity = new DynamiteEntity(serverWorld, playerEntity);
+                dynamiteEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 2.5F, 1.0F);
+                
+                if (playerEntity.isInCreativeMode()) {
+                    dynamiteEntity.pickupType = PickupPermission.CREATIVE_ONLY;
+                }
+                
+                serverWorld.spawnEntity(dynamiteEntity);
+
+                return true;
+            }
+            
             return false;
         }
-        return true;
+        return false;
+    }
+
+    public ActionResult use(World world, PlayerEntity user, Hand hand) {
+        ItemStack itemStack = user.getStackInHand(hand);
+        user.setCurrentHand(hand);
+        return ActionResult.CONSUME;
     }
 
     public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction) {
