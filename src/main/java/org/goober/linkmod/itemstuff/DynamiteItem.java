@@ -80,10 +80,12 @@ public class DynamiteItem extends Item implements ProjectileItem {
                         stack.damage(-1, playerEntity);
                         if (f == 0.0F) {
                             ItemStack itemStack = stack.splitUnlessCreative(1, playerEntity);
-                            DynamiteEntity dynamiteEntity = (DynamiteEntity)ProjectileEntity.spawnWithVelocity(DynamiteEntity::new, serverWorld, itemStack, playerEntity, 0.0F, 2.5F, 1.0F);
+                            DynamiteEntity dynamiteEntity = new DynamiteEntity(serverWorld, playerEntity);
+                            dynamiteEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 2.5F, 1.0F);
                             if (playerEntity.isInCreativeMode()) {
                                 dynamiteEntity.pickupType = PickupPermission.CREATIVE_ONLY;
                             }
+                            serverWorld.spawnEntity(dynamiteEntity);
 
                             world.playSoundFromEntity((Entity)null, dynamiteEntity, (SoundEvent)registryEntry.value(), SoundCategory.PLAYERS, 1.0F, 1.0F);
                             return true;
@@ -132,7 +134,8 @@ public class DynamiteItem extends Item implements ProjectileItem {
     }
 
     public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction) {
-        DynamiteEntity dynamiteEntity = new DynamiteEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack.copyWithCount(1));
+        DynamiteEntity dynamiteEntity = new DynamiteEntity(world, null);
+        dynamiteEntity.setPosition(pos.getX(), pos.getY(), pos.getZ());
         dynamiteEntity.pickupType = PickupPermission.DISALLOWED;
         return dynamiteEntity;
     }
