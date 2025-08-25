@@ -48,6 +48,7 @@ public class DynamiteEntity extends PersistentProjectileEntity implements Damage
     @Override
     protected void initDataTracker(DataTracker.Builder builder) {
         super.initDataTracker(builder);
+        builder.add(REMAINING_BOUNCES, 3);
     }
 
     public DynamiteEntity(World world, LivingEntity owner) {
