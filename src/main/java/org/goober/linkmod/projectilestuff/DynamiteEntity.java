@@ -25,34 +25,40 @@ import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
 import org.goober.linkmod.entitystuff.LmodEntityRegistry;
-import org.goober.linkmod.gunstuff.items.BulletItem;
-import org.goober.linkmod.gunstuff.items.Grenades;
+import org.goober.linkmod.itemstuff.DynamiteItem;
 import org.goober.linkmod.itemstuff.LmodItemRegistry;
 
 import java.util.Optional;
 
 public class DynamiteEntity extends PersistentProjectileEntity implements DamageableProjectile {
-    private static final TrackedData<Integer> REMAINING_BOUNCES = DataTracker.registerData(DynamiteEntity.class, TrackedDataHandlerRegistry.INTEGER);
-
+    private static final TrackedData<Integer> FUSETIME = DataTracker.registerData(DynamiteEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private int fuseTicks = 80; // default fuse, for example 4 seconds
+    int useTime = 10;
     private float damage = 15.0F;
     private ItemStack bulletStack;
 
-    public DynamiteEntity(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
+    public DynamiteEntity(EntityType<? extends PersistentProjectileEntity> entityType, World world, DynamiteItem dynamiteItem) {
         super(entityType, world);
         this.bulletStack = ItemStack.EMPTY;
         this.setNoGravity(false);
         this.pickupType = PickupPermission.DISALLOWED; // can't be picked up
+
+        this.fuseTicks -= useTime;
+        if (this.fuseTicks < 0) {
+            this.fuseTicks = 0; // prevent negative fuse
+        }
+
     }
 
 
     @Override
     protected void initDataTracker(DataTracker.Builder builder) {
         super.initDataTracker(builder);
-        builder.add(REMAINING_BOUNCES, 3);
+        builder.add(FUSETIME, 4*20);
     }
 
-    public DynamiteEntity(World world, LivingEntity owner) {
-        this(LmodEntityRegistry.DYNAMITE, world);
+    public DynamiteEntity(World world, LivingEntity owner, int useTime) {
+        this(LmodEntityRegistry.DYNAMITE, world, useTime);
         this.setOwner(owner);
         this.setPosition(owner.getX(), owner.getEyeY() - 0.1, owner.getZ());
         this.setNoGravity(false); // enable gravity for bouncing
@@ -92,7 +98,7 @@ public class DynamiteEntity extends PersistentProjectileEntity implements Damage
         super.tick();
 
         // remove grenade after lifetime expires
-        if (this.age > (4 * 20)) { // convert seconds to ticks
+        if (--fuseTicks <= 0 && !this.getWorld().isClient) { // convert seconds to ticks
             if (this.getWorld() instanceof World world) {
                 // use grenade type settings for explosion
                     world.createExplosion(this, getX(), getY(), getZ(), 5, false, World.ExplosionSourceType.MOB);
@@ -159,7 +165,7 @@ public class DynamiteEntity extends PersistentProjectileEntity implements Damage
     protected void onBlockHit(BlockHitResult blockHitResult) {
         Vec3d velocityspeed = this.getVelocity();
         double speed = velocityspeed.length();
-            if (speed > 0.2) {
+            if (speed > 0.15) {
                 // calculate bounce velocity
                 Vec3d velocity = this.getVelocity();
                 Vec3d normal = Vec3d.of(blockHitResult.getSide().getVector());
@@ -168,7 +174,7 @@ public class DynamiteEntity extends PersistentProjectileEntity implements Damage
                 Vec3d newVelocity = velocity.subtract(normal.multiply(2 * velocity.dotProduct(normal)));
 
                 // reduce velocity on bounce based on grenade bounciness
-                newVelocity = newVelocity.multiply(0.8);
+                newVelocity = newVelocity.multiply(0.3);
 
                 // add a small upward component to prevent sliding
                 if (Math.abs(newVelocity.y) < 0.1 && blockHitResult.getSide().getAxis().isHorizontal()) {
@@ -183,7 +189,7 @@ public class DynamiteEntity extends PersistentProjectileEntity implements Damage
                 Vec3d currentPos = this.getPos();
 
                 // calculate a safe position away from the collision point
-                Vec3d safePos = hitPos.add(normal.multiply(0.3));
+                Vec3d safePos = hitPos.add(normal.multiply(0.05));
                 this.setPosition(safePos.x, safePos.y, safePos.z);
             }
         }
