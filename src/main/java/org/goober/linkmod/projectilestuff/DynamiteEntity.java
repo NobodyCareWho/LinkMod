@@ -101,7 +101,13 @@ public class DynamiteEntity extends PersistentProjectileEntity implements Damage
     @Override
     public void tick() {
         super.tick();
-
+        int rando = random.nextBetween(1,5);
+        if (rando == 3) {
+            getWorld().addParticleClient(ParticleTypes.SMALL_FLAME,getX(),getY(),getZ(),0,0.1,0);
+        }
+        if (rando == 4) {
+            getWorld().addParticleClient(ParticleTypes.SMOKE,getX(),getY(),getZ(),0,0.1,0);
+        }
         // remove grenade after lifetime expires
         if (--fuseTicks <= 0 && !this.getWorld().isClient) { // convert seconds to ticks
             if (this.getWorld() instanceof World world) {

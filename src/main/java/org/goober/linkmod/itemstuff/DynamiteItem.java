@@ -16,6 +16,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ProjectileItem;
 import net.minecraft.item.consume.UseAction;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -94,20 +97,27 @@ public class DynamiteItem extends Item implements ProjectileItem {
         return ActionResult.CONSUME;
     }
 
+    @Override
+    public void usageTick(World world, LivingEntity user, ItemStack stack, int useTicks) {
+        super.usageTick(world, user, stack, useTicks);
 
-    public void tick(LivingEntity user, ItemStack stack, ServerWorld world, int useTicks) {
-        super.inventoryTick(stack, world, user, EquipmentSlot.MAINHAND);
-
-        if (useTicks > 4*20 && user instanceof PlayerEntity) {
+        if (useTicks < (getMaxUseTime(stack, user) - 4*20) && user instanceof PlayerEntity) {
             double x = user.lastX;
             double y = user.lastY;
             double z = user.lastZ;
             world.createExplosion(user, x, y, z, 5, false, World.ExplosionSourceType.MOB);
-            System.out.println("EXPLODE!!!");
+            System.out.println("EXPLODE!!!" + useTicks);
             if (!user.isInCreativeMode()) {
                 stack.decrement(1);
 
             }
+
+            user.stopUsingItem();
+        } else if (getMaxUseTime(stack, user) - useTicks <=0) {
+            double x = user.lastX;
+            double y = user.lastY;
+            double z = user.lastZ;
+            world.playSound(null, x, y, z, SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.PLAYERS, 1, 1);
         }
     }
 
