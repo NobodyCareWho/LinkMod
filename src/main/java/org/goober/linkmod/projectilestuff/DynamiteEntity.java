@@ -32,22 +32,16 @@ import java.util.Optional;
 
 public class DynamiteEntity extends PersistentProjectileEntity implements DamageableProjectile {
     private static final TrackedData<Integer> FUSETIME = DataTracker.registerData(DynamiteEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private int fuseTicks = 80; // default fuse, for example 4 seconds
-    int useTime = 10;
+    private static final int MAX_FUSE_TICKS = 80; // 4 seconds max fuse
+    private int fuseTicks = MAX_FUSE_TICKS; // current fuse time
     private float damage = 15.0F;
     private ItemStack bulletStack;
 
-    public DynamiteEntity(EntityType<? extends PersistentProjectileEntity> entityType, World world, DynamiteItem dynamiteItem) {
+    public DynamiteEntity(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
         super(entityType, world);
         this.bulletStack = ItemStack.EMPTY;
         this.setNoGravity(false);
         this.pickupType = PickupPermission.DISALLOWED; // can't be picked up
-
-        this.fuseTicks -= useTime;
-        if (this.fuseTicks < 0) {
-            this.fuseTicks = 0; // prevent negative fuse
-        }
-
     }
 
 
@@ -57,14 +51,25 @@ public class DynamiteEntity extends PersistentProjectileEntity implements Damage
         builder.add(FUSETIME, 4*20);
     }
 
-    public DynamiteEntity(World world, LivingEntity owner, int useTime) {
-        this(LmodEntityRegistry.DYNAMITE, world, useTime);
+    public DynamiteEntity(World world, LivingEntity owner, int holdTicks) {
+        this(LmodEntityRegistry.DYNAMITE, world);
         this.setOwner(owner);
         this.setPosition(owner.getX(), owner.getEyeY() - 0.1, owner.getZ());
         this.setNoGravity(false); // enable gravity for bouncing
         this.setCritical(false);
         this.pickupType = PickupPermission.DISALLOWED; // can't be picked up
         this.setNoClip(false); // ensure collision is enabled
+        
+        // the longer you hold, the shorter the fuse when thrown
+        // holdTicks is how long the player held the item
+        this.fuseTicks = MAX_FUSE_TICKS - holdTicks;
+        if (this.fuseTicks <= 0) {
+            this.fuseTicks = 0; // prevent negative fuse
+        }
+    }
+    
+    public DynamiteEntity(World world, LivingEntity owner) {
+        this(world, owner, 0);
     }
     
     public void setDamage(float damage) {
