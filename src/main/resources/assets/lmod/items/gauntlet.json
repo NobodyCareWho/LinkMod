@@ -1,0 +1,42 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "cases": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "lmod:item/gauntlet_2d"
+        },
+        "when": [
+          "gui",
+          "ground"
+        ]
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "lmod:item/gauntlet_righthand_3d"
+        },
+        "when": [
+          "firstperson_righthand",
+          "thirdperson_righthand"
+        ]
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "lmod:item/gauntlet_lefthand_3d"
+        },
+        "when": [
+          "firstperson_lefthand",
+          "thirdperson_lefthand"
+        ]
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "lmod:item/gauntlet"
+    },
+    "property": "minecraft:display_context"
+  }
+}

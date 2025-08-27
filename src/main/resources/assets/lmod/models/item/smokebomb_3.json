@@ -1,0 +1,41 @@
+{
+	"format_version": "1.21.6",
+	"credit": "Made By NobodyCareWho",
+	"textures": {
+		"0": "lmod:item/smokebomb3_3d",
+		"particle": "lmod:item/smokebomb3_3d"
+	},
+	"elements": [
+		{
+			"from": [6, 0, 6],
+			"to": [10, 4, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [6, 0, 7]},
+			"faces": {
+				"north": {"uv": [0, 0, 4, 4], "texture": "#0"},
+				"east": {"uv": [0, 4, 4, 8], "texture": "#0"},
+				"south": {"uv": [4, 0, 8, 4], "texture": "#0"},
+				"west": {"uv": [4, 4, 8, 8], "texture": "#0"},
+				"up": {"uv": [4, 12, 0, 8], "texture": "#0"},
+				"down": {"uv": [12, 0, 8, 4], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [39.86, 22.16, -14.87],
+			"translation": [0, 5, 4.5]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [39.86, 22.16, -14.87],
+			"translation": [0, 5, 4.5]
+		},
+		"firstperson_righthand": {
+			"rotation": [5.8, 25.05, 0.97],
+			"translation": [1, 6.5, 0]
+		},
+		"firstperson_lefthand": {
+			"rotation": [5.8, 25.05, 0.97],
+			"translation": [1, 6.5, 0]
+		}
+	}
+}

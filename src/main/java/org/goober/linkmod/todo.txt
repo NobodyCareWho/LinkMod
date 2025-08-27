@@ -4,12 +4,12 @@ X Finish implementing Kunai
     O Add Recipe
     X Add Lang
 
-O Implement Dynamite
+X Implement Dynamite
     X Implement Item
-    O Create and implement entity model and renderer
-    O Create entity class
+    X Create and implement entity model and renderer
+    X Create entity class
     O Add Recipe
-    O Add Lang
+    X Add Lang
 
 O Implement Smoke Bomb
     O Implement Item
@@ -19,8 +19,8 @@ O Implement Smoke Bomb
     O Add Lang
 
 O Implement Gauntlets
-    O Implement Item
-    O Add Lang
+    X Implement Item
+    X Add Lang
     O Implement enchantments and enchantment functions
         O Implement Meter Renderer for enchantment effects
     O Add way of obtaining

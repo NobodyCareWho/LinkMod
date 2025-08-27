@@ -75,6 +75,17 @@ public class LmodItemRegistry {
                     .rarity(Rarity.RARE)
     );
 
+    public static final Item GAUNTLET = register(
+            "gauntlet",
+            GauntletItem::new,
+            new Item.Settings()
+                    .maxCount(1)
+                    .rarity(Rarity.RARE)
+                    .maxDamage(900)
+                    .component(DataComponentTypes.WEAPON, new WeaponComponent(1))
+                    .attributeModifiers(GauntletItem.createAttributeModifiers())
+    );
+
     // guns
     public static final Item RIFLE = register(
             "rifle",
