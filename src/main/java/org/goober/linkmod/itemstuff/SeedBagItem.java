@@ -291,11 +291,11 @@ public class SeedBagItem extends Item {
         }
     }
 
-    public static List<SeedBagItem> getBundles() {
-        return Stream.of(LmodItemRegistry.SEEDBAG).map((item) -> {
-            return (SeedBagItem)item;
-        }).toList();
-    }
+    //public static List<SeedBagItem> getBundles() {
+    //    return Stream.of(LmodItemRegistry.SEEDBAG).map((item) -> {
+    //        return (SeedBagItem)item;
+    //    }).toList();
+    //}
 
     private static void playRemoveOneSound(Entity entity) {
         entity.playSound(SoundEvents.ITEM_BUNDLE_REMOVE_ONE, 0.8F, 0.8F + entity.getWorld().getRandom().nextFloat() * 0.4F);

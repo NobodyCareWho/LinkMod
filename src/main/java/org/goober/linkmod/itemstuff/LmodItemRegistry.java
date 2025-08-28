@@ -40,13 +40,13 @@ public class LmodItemRegistry {
     }
 
     // Define items here:
-    public static final Item SEEDBAG = register(
-            "seed_bag",
-            SeedBagItem::new,
-            new Item.Settings()
-                    .maxCount(1)
-                    .component(net.minecraft.component.DataComponentTypes.BUNDLE_CONTENTS, net.minecraft.component.type.BundleContentsComponent.DEFAULT)
-    );
+    //public static final Item SEEDBAG = register(
+    //        "seed_bag",
+    //        SeedBagItem::new,
+    //        new Item.Settings()
+    //                .maxCount(1)
+    //                .component(net.minecraft.component.DataComponentTypes.BUNDLE_CONTENTS, net.minecraft.component.type.BundleContentsComponent.DEFAULT)
+    //);
     
     public static final Item SEEDBAG_CUSTOM = register(
             "seed_bag_custom",
@@ -82,30 +82,27 @@ public class LmodItemRegistry {
                     .maxCount(1)
                     .rarity(Rarity.RARE)
                     .maxDamage(900)
+                    .enchantable(1)
                     .component(DataComponentTypes.WEAPON, new WeaponComponent(1))
                     .attributeModifiers(GauntletItem.createAttributeModifiers())
     );
 
-    // guns
-    public static final Item RIFLE = register(
-            "rifle",
-            settings -> new GunItem(settings, "rifle"),
+    //armor
+
+    public static final Item MASK = register(
+            "mask_of_obscurity",
+            settings -> new MaskItem(settings),
             new Item.Settings()
                     .maxCount(1)
-                    .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
     );
 
-    public static final Item BULLSEYE = register(
-            "bullseye_tome",
-            settings -> new GunItem(settings, "bullseye_tome"),
-            new Item.Settings()
-                    .maxCount(1)
-                    .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
-    );
-    
-    public static final Item SHOTGUN = register(
-            "shotgun",
-            settings -> new GunItem(settings, "shotgun"),
+    // guns
+
+
+
+    public static final Item BOILERPISTOL = register(
+            "boilerpistol",
+            settings -> new GunItem(settings, "boilerpistol"),
             new Item.Settings()
                     .maxCount(1)
                     .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
@@ -127,9 +124,32 @@ public class LmodItemRegistry {
                     .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
     );
 
-    public static final Item BOILERPISTOL = register(
-            "boilerpistol",
-            settings -> new GunItem(settings, "boilerpistol"),
+
+
+    public static final Item RIFLE = register(
+            "rifle",
+            settings -> new GunItem(settings, "rifle"),
+            new Item.Settings()
+                    .maxCount(1)
+                    .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
+    );
+
+
+
+
+
+
+    public static final Item AUTORIFLE = register(
+            "autorifle",
+            settings -> new GunItem(settings, "autorifle"),
+            new Item.Settings()
+                    .maxCount(1)
+                    .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
+    );
+
+    public static final Item SHOTGUN = register(
+            "shotgun",
+            settings -> new GunItem(settings, "shotgun"),
             new Item.Settings()
                     .maxCount(1)
                     .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
@@ -151,9 +171,9 @@ public class LmodItemRegistry {
                     .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
     );
 
-    public static final Item AUTORIFLE = register(
-            "autorifle",
-            settings -> new GunItem(settings, "autorifle"),
+    public static final Item BULLSEYE = register(
+            "bullseye_tome",
+            settings -> new GunItem(settings, "bullseye_tome"),
             new Item.Settings()
                     .maxCount(1)
                     .component(LmodDataComponentTypes.GUN_CONTENTS, GunContentsComponent.EMPTY)
@@ -310,6 +330,20 @@ public class LmodItemRegistry {
                     .maxCount(8)
     );
 
+    public static final Item BULLETCASING = register(
+            "bulletcasing",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item COPPERCAP = register(
+            "copper_cap",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
     public static final Item SHOTGUNSHELLEMPTY = register(
             "shotgunshellempty",
             Item::new,
@@ -317,12 +351,7 @@ public class LmodItemRegistry {
                     .maxCount(64)
     );
 
-    public static final Item BULLETCASING = register(
-            "bulletcasing",
-            Item::new,
-            new Item.Settings()
-                    .maxCount(64)
-    );
+
 
     public static final Item GRENADESHELL = register(
             "grenadeshellempty",
@@ -331,14 +360,16 @@ public class LmodItemRegistry {
                     .maxCount(32)
     );
 
-    // INGREDIENTS
-
-    public static final Item GUNCOMPONENTS = register(
-            "gun_components",
+    public static final Item EMPTYGYROJET = register(
+            "empty_gyrojet",
             Item::new,
             new Item.Settings()
                     .maxCount(64)
     );
+
+    // INGREDIENTS
+
+
 
     public static final Item COPPERBARREL = register(
             "copper_barrel",
@@ -361,6 +392,15 @@ public class LmodItemRegistry {
                     .maxCount(64)
     );
 
+
+
+    public static final Item IRONTIP = register(
+            "iron_tip",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
     public static final Item COPPERTIP = register(
             "copper_tip",
             Item::new,
@@ -368,8 +408,35 @@ public class LmodItemRegistry {
                     .maxCount(64)
     );
 
-    public static final Item IRONTIP = register(
-            "iron_tip",
+    public static final Item HOLLOWPOINTTIP = register(
+            "hollowpoint_tip",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item DIAMONDSPINE = register(
+            "diamond_spine",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+
+
+
+
+
+
+    public static final Item SHOTPELLETS = register(
+            "shot_pellets",
+            Item::new,
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item SLUG = register(
+            "slug",
             Item::new,
             new Item.Settings()
                     .maxCount(64)
@@ -389,50 +456,21 @@ public class LmodItemRegistry {
                     .maxCount(64)
     );
 
-    public static final Item DIAMONDSPINE = register(
-            "diamond_spine",
-            Item::new,
-            new Item.Settings()
-                    .maxCount(64)
-    );
+    //public static final Item SLIMYSLUG = register(
+    //        "slimy_slug",
+    //        Item::new,
+    //        new Item.Settings()
+    //                .maxCount(64)
+    //);
 
-    public static final Item COPPERCAP = register(
-            "copper_cap",
-            Item::new,
-            new Item.Settings()
-                    .maxCount(64)
-    );
 
-    public static final Item SLUG = register(
-            "slug",
-            Item::new,
-            new Item.Settings()
-                    .maxCount(64)
-    );
 
-    public static final Item SLIMYSLUG = register(
-            "slimy_slug",
-            Item::new,
-            new Item.Settings()
-                    .maxCount(64)
-    );
 
-    public static final Item SHOTPELLETS = register(
-            "shot_pellets",
-            Item::new,
-            new Item.Settings()
-                    .maxCount(64)
-    );
 
-    public static final Item HOLLOWPOINTTIP = register(
-            "hollowpoint_tip",
-            Item::new,
-            new Item.Settings()
-                    .maxCount(64)
-    );
 
-    public static final Item EMPTYGYROJET = register(
-            "empty_gyrojet",
+
+    public static final Item GUNCOMPONENTS = register(
+            "gun_components",
             Item::new,
             new Item.Settings()
                     .maxCount(64)
@@ -445,14 +483,7 @@ public class LmodItemRegistry {
                     .maxCount(64)
     );
 
-    //armor
 
-    public static final Item MASK = register(
-            "mask_of_obscurity",
-            settings -> new MaskItem(settings),
-            new Item.Settings()
-                    .maxCount(1)
-    );
 
     //food
 

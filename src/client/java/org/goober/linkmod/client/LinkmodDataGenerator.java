@@ -43,7 +43,7 @@ public class LinkmodDataGenerator implements DataGeneratorEntrypoint {
 
             AdvancementEntry rootAdvancement = Advancement.Builder.create()
                     .display(
-                            LmodItemRegistry.SEEDBAG,
+                            Items.WHEAT_SEEDS,
                             Text.translatable("advancement.lmod.root.title"),
                             Text.translatable("advancement.lmod.root.description"),
                             Identifier.of("lmod", "gui/advancements/backgrounds/lmod"),
@@ -57,7 +57,7 @@ public class LinkmodDataGenerator implements DataGeneratorEntrypoint {
 
             AdvancementEntry seedBagAdvancement = Advancement.Builder.create().parent(rootAdvancement)
                     .display(
-                            LmodItemRegistry.SEEDBAG,
+                            LmodItemRegistry.SEEDBAG_CUSTOM,
                             Text.translatable("advancement.lmod.get_seed_bag.title"),
                             Text.translatable("advancement.lmod.get_seed_bag.description"),
                             null,

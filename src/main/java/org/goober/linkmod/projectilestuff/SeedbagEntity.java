@@ -40,7 +40,7 @@ public class SeedbagEntity extends ThrownItemEntity {
     }
 
     public SeedbagEntity(World world, LivingEntity owner) {
-        super(LmodEntityRegistry.SEEDBAG_ENTITY, owner, world, new ItemStack(LmodItemRegistry.SEEDBAG));
+        super(LmodEntityRegistry.SEEDBAG_ENTITY, owner, world, new ItemStack(LmodItemRegistry.SEEDBAG_CUSTOM));
     }
     
     public SeedbagEntity(World world, LivingEntity owner, ItemStack seedStack) {
@@ -48,7 +48,7 @@ public class SeedbagEntity extends ThrownItemEntity {
     }
 
     public SeedbagEntity(World world, double x, double y, double z) {
-        super(LmodEntityRegistry.SEEDBAG_ENTITY, x, y, z, world, new ItemStack(LmodItemRegistry.SEEDBAG));
+        super(LmodEntityRegistry.SEEDBAG_ENTITY, x, y, z, world, new ItemStack(LmodItemRegistry.SEEDBAG_CUSTOM));
     }
 
     protected Item getDefaultItem() {

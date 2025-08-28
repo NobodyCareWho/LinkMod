@@ -22,7 +22,7 @@ public class LmodItemGroups {
 
     // create the actual item group
     public static final ItemGroup LINKMOD_GROUP = FabricItemGroup.builder()
-            .icon(() -> new ItemStack(LmodItemRegistry.SEEDBAG))
+            .icon(() -> new ItemStack(LmodItemRegistry.SEEDBAG_CUSTOM))
             .displayName(Text.translatable("itemGroup.lmod.main"))
             .build();
 
