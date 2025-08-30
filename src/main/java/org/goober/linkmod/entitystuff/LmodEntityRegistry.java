@@ -10,6 +10,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import org.goober.linkmod.Linkmod;
 import org.goober.linkmod.projectilestuff.*;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 
 public class LmodEntityRegistry {
     public static final EntityType<SeedbagEntity> SEEDBAG_ENTITY = Registry.register(
@@ -143,6 +144,6 @@ public class LmodEntityRegistry {
     );
 
     public static void initialize() {
-        // Force class loading
+        FabricDefaultAttributeRegistry.register(AGENTPILLAGER, AgentPillagerEntity.createHostileAttributes());
     }
 }
