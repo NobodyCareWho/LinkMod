@@ -12,16 +12,14 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import org.goober.linkmod.client.model.DynamiteEntityModel;
-import org.goober.linkmod.client.model.KunaiEntityModel;
 import org.goober.linkmod.projectilestuff.DynamiteEntity;
-import org.goober.linkmod.projectilestuff.KunaiEntity;
 
-public class DynamitEntityRenderer extends EntityRenderer<DynamiteEntity, DynamitEntityRenderer.DynamiteEntityRenderState> {
+public class DynamiteEntityRenderer extends EntityRenderer<DynamiteEntity, DynamiteEntityRenderer.DynamiteEntityRenderState> {
     public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Identifier.of("lmod", "dynamite"), "main");
     public static final Identifier TEXTURE = Identifier.of("lmod", "textures/entity/dynamite.png");
     private final DynamiteEntityModel model;
 
-    public DynamitEntityRenderer(EntityRendererFactory.Context context) {
+    public DynamiteEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
         this.model = new DynamiteEntityModel(context.getPart(MODEL_LAYER));
     }
@@ -37,8 +35,8 @@ public class DynamitEntityRenderer extends EntityRenderer<DynamiteEntity, Dynami
     }
 
     @Override
-    public DynamitEntityRenderer.DynamiteEntityRenderState createRenderState() {
-        return new DynamitEntityRenderer.DynamiteEntityRenderState();
+    public DynamiteEntityRenderer.DynamiteEntityRenderState createRenderState() {
+        return new DynamiteEntityRenderer.DynamiteEntityRenderState();
     }
 
     public void updateRenderState(DynamiteEntity dynamiteEntity, DynamiteEntityRenderState dynamiteEntityRenderState, float f) {

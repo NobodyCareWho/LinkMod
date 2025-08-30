@@ -25,19 +25,18 @@ import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
 import org.goober.linkmod.entitystuff.LmodEntityRegistry;
-import org.goober.linkmod.itemstuff.DynamiteItem;
 import org.goober.linkmod.itemstuff.LmodItemRegistry;
 
 import java.util.Optional;
 
-public class DynamiteEntity extends PersistentProjectileEntity implements DamageableProjectile {
-    private static final TrackedData<Integer> FUSETIME = DataTracker.registerData(DynamiteEntity.class, TrackedDataHandlerRegistry.INTEGER);
+public class PillagerDynamiteEntity extends PersistentProjectileEntity implements DamageableProjectile {
+    private static final TrackedData<Integer> FUSETIME = DataTracker.registerData(PillagerDynamiteEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final int MAX_FUSE_TICKS = 80; // 4 seconds max fuse
     private int fuseTicks = MAX_FUSE_TICKS; // current fuse time
     private float damage = 15.0F;
     private ItemStack bulletStack;
 
-    public DynamiteEntity(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
+    public PillagerDynamiteEntity(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
         super(entityType, world);
         this.bulletStack = ItemStack.EMPTY;
         this.setNoGravity(false);
@@ -51,7 +50,7 @@ public class DynamiteEntity extends PersistentProjectileEntity implements Damage
         builder.add(FUSETIME, 4*20);
     }
 
-    public DynamiteEntity(World world, LivingEntity owner, int holdTicks) {
+    public PillagerDynamiteEntity(World world, LivingEntity owner, int holdTicks) {
         this(LmodEntityRegistry.DYNAMITE, world);
         this.setOwner(owner);
         this.setPosition(owner.getX(), owner.getEyeY() - 0.1, owner.getZ());
@@ -59,7 +58,7 @@ public class DynamiteEntity extends PersistentProjectileEntity implements Damage
         this.setCritical(false);
         this.pickupType = PickupPermission.DISALLOWED; // can't be picked up
         this.setNoClip(false); // ensure collision is enabled
-        
+
         // the longer you hold, the shorter the fuse when thrown
         // holdTicks is how long the player held the item
         this.fuseTicks = MAX_FUSE_TICKS - holdTicks;
@@ -67,8 +66,8 @@ public class DynamiteEntity extends PersistentProjectileEntity implements Damage
             this.fuseTicks = 0; // prevent negative fuse
         }
     }
-    
-    public DynamiteEntity(World world, LivingEntity owner) {
+
+    public PillagerDynamiteEntity(World world, LivingEntity owner) {
         this(world, owner, 0);
     }
     
@@ -112,9 +111,12 @@ public class DynamiteEntity extends PersistentProjectileEntity implements Damage
         if (--fuseTicks <= 0 && !this.getWorld().isClient) { // convert seconds to ticks
             if (this.getWorld() instanceof World world) {
                 // use grenade type settings for explosion
-                    world.createExplosion(this, getX(), getY()+0.1, getZ(), 5, false, World.ExplosionSourceType.MOB);
+                    world.createExplosion(this, getX(), getY()+0.1, getZ(), 5, false, World.ExplosionSourceType.NONE);
+
             }
             this.discard();
+        } else if (--fuseTicks <= 0 && this.getWorld().isClient){
+            getWorld().addParticleClient(ParticleTypes.EXPLOSION_EMITTER,getX(),getY(),getZ(),0,0,0);
         }
     }
     
@@ -149,7 +151,7 @@ public class DynamiteEntity extends PersistentProjectileEntity implements Damage
                 livingEntity.timeUntilRegen = 0;
             }
             // use grenade type settings for explosion
-                serverWorld.createExplosion(this, getX(), getY(), getZ(), 5, false, World.ExplosionSourceType.MOB);
+                serverWorld.createExplosion(this, getX(), getY(), getZ(), 5, false, World.ExplosionSourceType.NONE);
 
         }
         
@@ -157,11 +159,18 @@ public class DynamiteEntity extends PersistentProjectileEntity implements Damage
         if (this.getWorld() instanceof ServerWorld serverWorld) {
             Vec3d hitPos = entityHitResult.getPos();
             serverWorld.spawnParticles(
-                ParticleTypes.DAMAGE_INDICATOR,
+                ParticleTypes.EXPLOSION_EMITTER,
                 hitPos.x, hitPos.y, hitPos.z,
                 5,
                 0.2, 0.2, 0.2,
                 0.1
+            );
+            serverWorld.spawnParticles(
+                    ParticleTypes.DAMAGE_INDICATOR,
+                    hitPos.x, hitPos.y, hitPos.z,
+                    5,
+                    0.2, 0.2, 0.2,
+                    0.1
             );
         }
         
