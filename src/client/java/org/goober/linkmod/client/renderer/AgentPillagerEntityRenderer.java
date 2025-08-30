@@ -27,4 +27,3 @@ public class AgentPillagerEntityRenderer extends IllagerEntityRenderer<AgentPill
         return new IllagerEntityRenderState();
     }
 }
-}
