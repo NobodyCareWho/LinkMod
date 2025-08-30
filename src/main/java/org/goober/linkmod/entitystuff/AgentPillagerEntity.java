@@ -39,7 +39,7 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
     private static final int field_30476 = 300;
     private final SimpleInventory inventory = new SimpleInventory(5);
 
-    public AgentPillagerEntity(EntityType<? extends PillagerEntity> entityType, World world) {
+    public AgentPillagerEntity(EntityType<? extends AgentPillagerEntity> entityType, World world) {
         super(entityType, world);
     }
 

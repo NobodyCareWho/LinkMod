@@ -132,6 +132,16 @@ public class LmodEntityRegistry {
                     .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Linkmod.MOD_ID, "pillager_dynamite")))
     );
 
+    public static final EntityType<AgentPillagerEntity> AGENTPILLAGER = Registry.register(
+            Registries.ENTITY_TYPE,
+            Identifier.of(Linkmod.MOD_ID, "agent_pillager"),
+            EntityType.Builder.<AgentPillagerEntity>create(AgentPillagerEntity::new, SpawnGroup.MISC)
+                    .dimensions(0.5F, 0.5F)
+                    .maxTrackingRange(80)
+                    .trackingTickInterval(1)
+                    .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Linkmod.MOD_ID, "agent_pillager")))
+    );
+
     public static void initialize() {
         // Force class loading
     }

@@ -17,6 +17,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.option.AttackIndicator;
 import net.minecraft.client.render.RenderLayer;
+import org.goober.linkmod.client.model.AgentPillagerEntityModel;
 import org.goober.linkmod.client.renderer.*;
 import org.goober.linkmod.client.model.KunaiEntityModel;
 import org.goober.linkmod.gunstuff.items.GunItem;
@@ -56,6 +57,7 @@ public class LinkmodClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(PillGrenadeEntityRenderer.MODEL_LAYER, PillGrenadeEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(KunaiEntityRenderer.MODEL_LAYER, KunaiEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(DynamiteEntityRenderer.MODEL_LAYER, DynamiteEntityModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(AgentPillagerEntityRenderer.AGENT_PILLAGER_LAYER, AgentPillagerEntityModel::getTexturedModelData);
 
         // Register block entity renderers
         BlockEntityRendererRegistry.register(LmodBlockEntityTypes.EXP_CHEST, ExpChestBlockEntityRenderer::new);
@@ -70,11 +72,13 @@ public class LinkmodClient implements ClientModInitializer {
         EntityRendererRegistry.register(LmodEntityRegistry.GYROJETBULLET, EmptyEntityRenderer::new);
         EntityRendererRegistry.register(LmodEntityRegistry.ICEBULLET, EmptyEntityRenderer::new);
         EntityRendererRegistry.register(LmodEntityRegistry.BOUNCYBULLET, EmptyEntityRenderer::new);
-        // register renderer for pill grenade entity
-        EntityRendererRegistry.register(LmodEntityRegistry.PILLGRENADE, PillGrenadeEntityRenderer::new);
         EntityRendererRegistry.register(LmodEntityRegistry.KUNAI, KunaiEntityRenderer::new);
         EntityRendererRegistry.register(LmodEntityRegistry.DYNAMITE, DynamiteEntityRenderer::new);
         EntityRendererRegistry.register(LmodEntityRegistry.PILLAGERDYNAMITE, PillagerDynamiteEntityRenderer::new);
+        EntityRendererRegistry.register(LmodEntityRegistry.AGENTPILLAGER, AgentPillagerEntityRenderer::new);
+        // register renderer for pill grenade entity
+        EntityRendererRegistry.register(LmodEntityRegistry.PILLGRENADE, PillGrenadeEntityRenderer::new);
+
         // Register tooltip components
         TooltipComponentCallback.EVENT.register(data -> {
             if (data instanceof SeedBagTooltipData seedBagData) {
