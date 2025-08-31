@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "lmod:revolver",
+    "lmod:ejectorpistol",
+    "lmod:rifle",
+    "lmod:autorifle",
+    "lmod:shotgun",
+    "lmod:pumpshotgun",
+    "lmod:grenadelauncher"
+  ]
+}

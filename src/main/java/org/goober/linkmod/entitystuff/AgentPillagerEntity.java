@@ -22,22 +22,34 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.village.raid.Raid;
 import net.minecraft.world.*;
+import org.goober.linkmod.gunstuff.items.Bullets;
+import org.goober.linkmod.gunstuff.items.GunItem;
+import org.goober.linkmod.gunstuff.items.Guns;
 import org.goober.linkmod.itemstuff.LmodItemRegistry;
+import org.goober.linkmod.projectilestuff.BulletEntity;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, InventoryOwner {
-    private static final TrackedData<Boolean> CHARGING;
+    private static final TrackedData<Boolean> RELOADING;
     private static final int field_30478 = 5;
     private static final int field_30476 = 300;
     private final SimpleInventory inventory = new SimpleInventory(5);
+    private int rifleAttackCooldown = 0;
+    private int currentAmmo = -1; // -1 means not initialized
+    private boolean isReloading = false;
 
     public AgentPillagerEntity(EntityType<? extends AgentPillagerEntity> entityType, World world) {
         super(entityType, world);
@@ -64,19 +76,26 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
 
     protected void initDataTracker(DataTracker.Builder builder) {
         super.initDataTracker(builder);
-        builder.add(CHARGING, false);
+        builder.add(RELOADING, false);
     }
 
-    public boolean canUseRangedWeapon(RangedWeaponItem weapon) {
-        return weapon == Items.CROSSBOW;
+    private void canUseRangedWeapon(CallbackInfoReturnable<Boolean> cir) {
+        AgentPillagerEntity agentPillager = (AgentPillagerEntity)(Object)this;
+        ItemStack mainHand = agentPillager.getStackInHand(Hand.MAIN_HAND);
+        if (mainHand.getItem() instanceof GunItem) {
+            // Make pillager AI think it's holding a crossbow
+            cir.setReturnValue(true);
+        }
     }
+
+
 
     public boolean isCharging() {
-        return (Boolean)this.dataTracker.get(CHARGING);
+        return (Boolean)this.dataTracker.get(RELOADING);
     }
 
     public void setCharging(boolean charging) {
-        this.dataTracker.set(CHARGING, charging);
+        this.dataTracker.set(RELOADING, charging);
     }
 
     public void postShoot() {
@@ -84,7 +103,7 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
     }
 
     public TagKey<Item> getPreferredWeapons() {
-        return ItemTags.PILLAGER_PREFERRED_WEAPONS;
+        return null;
     }
 
     protected void writeCustomData(WriteView view) {
@@ -125,8 +144,13 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
     }
 
     protected void initEquipment(Random random, LocalDifficulty localDifficulty) {
+        if (this.random.nextFloat() < 0.85f) {
         this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(LmodItemRegistry.EJECTORPISTOL));
+        } else {
+            this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(LmodItemRegistry.PUMPSG));
+        }
     }
+
 
     protected SoundEvent getAmbientSound() {
         return SoundEvents.ENTITY_PILLAGER_AMBIENT;
@@ -143,6 +167,104 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
     public void shootAt(LivingEntity target, float pullProgress) {
         this.shoot(this, 1.6F);
     }
+
+    protected void mobTick(ServerWorld world) {
+        super.mobTick(world);
+        if (!this.getWorld().isClient && this.isAlive()) {
+            if (rifleAttackCooldown > 0) {
+                rifleAttackCooldown--;
+                if (isReloading && rifleAttackCooldown == 0) {
+                    // Reload complete
+                    isReloading = false;
+                    ItemStack mainHand = this.getStackInHand(Hand.MAIN_HAND);
+                    if (mainHand.getItem() instanceof GunItem gunItem) {
+                        Guns.GunType gunType = Guns.get(gunItem.getGunTypeId());
+                        currentAmmo = gunType.maxAmmo();
+                    }
+                }
+            }
+
+            ItemStack mainHand = this.getStackInHand(Hand.MAIN_HAND);
+            if (mainHand.getItem() instanceof GunItem gunItem && rifleAttackCooldown == 0 && !isReloading) {
+                // Initialize ammo if needed
+                if (currentAmmo == -1) {
+                    Guns.GunType gunType = Guns.get(gunItem.getGunTypeId());
+                    currentAmmo = gunType.maxAmmo();
+                }
+
+                LivingEntity target = this.getTarget();
+                if (target != null && this.canSee(target) && currentAmmo > 0) {
+                    double distance = this.squaredDistanceTo(target);
+                    // Attack if within 20 blocks
+                    if (distance < 400.0) {
+                        this.lookAtEntity(target, 30.0F, 30.0F);
+                        this.shoot(target, 100);
+                        currentAmmo--;
+
+                        // Check if we need to reload
+                        if (currentAmmo <= 0) {
+                            isReloading = true;
+                            rifleAttackCooldown = 65; // 3.25 second reload for regular piglins
+                        } else {
+                            // Normal attack cooldown
+                            Guns.GunType gunType = Guns.get(gunItem.getGunTypeId());
+                            rifleAttackCooldown = gunType.cooldownTicks();
+                        }
+                    }
+                }
+            }
+        }
+        private void shootAtTarget(LivingEntity target) {
+            ItemStack rifle = this.getStackInHand(Hand.MAIN_HAND);
+            if (rifle.getItem() instanceof GunItem gunItem && this.getWorld() instanceof ServerWorld) {
+                // Get gun type info
+                Guns.GunType gunType = Guns.get(gunItem.getGunTypeId());
+
+                // Get bullet type info for copper bullets
+                Bullets.BulletType bulletType = Bullets.get("copper_bullet");
+
+                // Create a copper bullet stack for projectile creation
+                ItemStack bulletStack = new ItemStack(LmodItemRegistry.COPPER_BULLET);
+
+                // Create bullet projectile directly (like skeleton arrows)
+                BulletEntity projectile = new BulletEntity(this.getWorld(), this, bulletStack);
+
+                // Set reduced damage for piglin shots
+                projectile.setDamage(gunType.damage());
+
+                // Calculate velocity and spread
+                Vec3d targetPos = target.getEyePos();
+                Vec3d shooterPos = this.getEyePos();
+                Vec3d direction = targetPos.subtract(shooterPos).normalize();
+
+                // Add some inaccuracy
+                float spread = 1.0F;
+                direction = direction.add(
+                        (this.random.nextFloat() - 0.5) * spread * 0.1,
+                        (this.random.nextFloat() - 0.5) * spread * 0.1,
+                        (this.random.nextFloat() - 0.5) * spread * 0.1
+                ).normalize();
+
+                // Set projectile velocity
+                projectile.setVelocity(direction.x, direction.y, direction.z, gunType.velocity() * bulletType.vMultiplier(), spread);
+
+                // Spawn the projectile
+                this.getWorld().spawnEntity(projectile);
+
+                // Play gun sound
+                if (bulletType.soundprofile() != null && bulletType.soundprofile().firesound() != null) {
+                    this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(),
+                            bulletType.soundprofile().firesound(),
+                            SoundCategory.HOSTILE, 1.0F, 1.0F / (this.random.nextFloat() * 0.4F + 0.8F));
+                }
+
+                // Play attack animation
+                this.swingHand(Hand.MAIN_HAND);
+            }
+        }
+    }
+
+
 
     public SimpleInventory getInventory() {
         return this.inventory;
@@ -185,6 +307,6 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
     }
 
     static {
-        CHARGING = DataTracker.registerData(AgentPillagerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        RELOADING = DataTracker.registerData(AgentPillagerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     }
 }

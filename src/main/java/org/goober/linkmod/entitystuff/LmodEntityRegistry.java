@@ -137,7 +137,7 @@ public class LmodEntityRegistry {
             Registries.ENTITY_TYPE,
             Identifier.of(Linkmod.MOD_ID, "agent_pillager"),
             EntityType.Builder.<AgentPillagerEntity>create(AgentPillagerEntity::new, SpawnGroup.MISC)
-                    .dimensions(0.5F, 0.5F)
+                    .dimensions(0.6F, 1.95F)
                     .maxTrackingRange(80)
                     .trackingTickInterval(1)
                     .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Linkmod.MOD_ID, "agent_pillager")))

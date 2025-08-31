@@ -5,8 +5,10 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.EquippableComponent;
 import net.minecraft.component.type.FoodComponent;
 import net.minecraft.component.type.WeaponComponent;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Item;
+import net.minecraft.item.SpawnEggItem;
 import net.minecraft.item.TridentItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -15,6 +17,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import org.goober.linkmod.Linkmod;
+import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.gunstuff.items.BulletItem;
 import org.goober.linkmod.gunstuff.items.GunItem;
 import org.goober.linkmod.gunstuff.GunContentsComponent;
@@ -493,6 +496,13 @@ public class LmodItemRegistry {
             new Item.Settings()
                     .maxCount(64)
                     .food(LmodFoodComponents.CROISSANT)
+    );
+
+    public static final Item AGENT_PILLAGER_SPAWN_EGG = register(
+            "agent_pillager_spawn_egg",
+            settings -> new SpawnEggItem(LmodEntityRegistry.AGENTPILLAGER, settings),
+            new Item.Settings()
+                    .maxCount(64)
     );
 
     public static void initialize() {

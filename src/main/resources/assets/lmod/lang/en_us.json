@@ -64,6 +64,8 @@
   "block.lmod.lathe": "Lathe",
   "container.lmod.lathe": "Lathe",
 
+  "entity.lmod.agent_pillager": "Extortioner",
+
   "items.skibidi":  "craftingmaterials",
 
   "item.lmod.pinch_of_gunpowder": "Pinch of Gunpowder",
@@ -82,6 +84,8 @@
   "item.lmod.gun_components": "Gun Components",
   "item.lmod.empty_gyrojet": "Empty Gyrojet",
   "item.lmod.rotating_mechanism": "Rotating Mechanism",
+
+  "item.lmod.agent_pillager_spawn_egg": "Extortioner Spawn Egg",
 
   "foods.skibidi":  "food",
 
