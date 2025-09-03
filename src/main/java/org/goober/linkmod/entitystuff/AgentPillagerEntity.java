@@ -73,7 +73,7 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
     }
 
     public static DefaultAttributeContainer.Builder createPillagerAttributes() {
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.MOVEMENT_SPEED, 0.3499999940395355).add(EntityAttributes.MAX_HEALTH, 24.0).add(EntityAttributes.ATTACK_DAMAGE, 5.0).add(EntityAttributes.FOLLOW_RANGE, 32.0);
+        return HostileEntity.createHostileAttributes().add(EntityAttributes.MOVEMENT_SPEED, 0.3499999940395355).add(EntityAttributes.MAX_HEALTH, 24.0).add(EntityAttributes.ATTACK_DAMAGE, 5.0).add(EntityAttributes.FOLLOW_RANGE, 12.0);
     }
     
     public static DefaultAttributeContainer.Builder createHostileAttributes() {
@@ -120,11 +120,15 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
     public IllagerEntity.State getState() {
         if (this.isCharging()) {
             return State.CROSSBOW_CHARGE;
-        } else if (this.isHolding(LmodItemRegistry.EJECTORPISTOL) || this.isHolding(LmodItemRegistry.PUMPSG)) {
+        } else if (isHoldingGun()) {
             return State.CROSSBOW_HOLD;
         } else {
             return this.isAttacking() ? State.ATTACKING : State.NEUTRAL;
         }
+    }
+    private boolean isHoldingGun() {
+        return this.getMainHandStack().getItem() instanceof GunItem
+                || this.getOffHandStack().getItem() instanceof GunItem;
     }
 
     protected void readCustomData(ReadView view) {
@@ -150,7 +154,7 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
     }
 
     protected void initEquipment(Random random, LocalDifficulty localDifficulty) {
-        if (this.random.nextFloat() < 0.85f) {
+        if (this.random.nextFloat() < 0.75f) {
         this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(LmodItemRegistry.EJECTORPISTOL));
         } else {
             this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(LmodItemRegistry.PUMPSG));
@@ -214,7 +218,7 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
                         } else {
                             // Normal attack cooldown
                             Guns.GunType gunType = Guns.get(gunItem.getGunTypeId());
-                            rifleAttackCooldown = gunType.cooldownTicks();
+                            rifleAttackCooldown = gunType.cooldownTicks() + random.nextBetween(0,15);
                         }
                     }
                 }
@@ -227,47 +231,54 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
             if (rifle.getItem() instanceof GunItem gunItem && this.getWorld() instanceof ServerWorld) {
                 // Get gun type info
                 Guns.GunType gunType = Guns.get(gunItem.getGunTypeId());
+                Bullets.BulletType bulletType = null;
+                ItemStack bulletStack = ItemStack.EMPTY;
 
-                if (gunType.acceptedAmmoTags() == Set.of("rifle_ammo")) {
-                    // Get bullet type info for copper bullets
-                    Bullets.BulletType bulletType = Bullets.get("copper_bullet");
-                    ItemStack bulletStack = new ItemStack(LmodItemRegistry.COPPER_BULLET);
-                } else if (gunType.acceptedAmmoTags() == Set.of("shotgun_shells")) {
-                    // Get bullet type info for buckshot
-                    Bullets.BulletType bulletType = Bullets.get("buckshot");
-                    ItemStack bulletStack = new ItemStack(LmodItemRegistry.BUCKSHELL);
-                }   else if (gunType.acceptedAmmoTags() == Set.of("grenade_shells")) {
-                    // Get bullet type info for pill grenades
-                    Bullets.BulletType bulletType = Bullets.get("thumpershell");
-                    ItemStack bulletStack = new ItemStack(LmodItemRegistry.THUMPERSHELL);
+                if (gunType.acceptedAmmoTags().equals(Set.of("rifle_ammo"))) {
+                    // rifle ammo
+                    bulletType = Bullets.get("copper_bullet");
+                    bulletStack = new ItemStack(LmodItemRegistry.COPPER_BULLET);
+
+                } else if (gunType.acceptedAmmoTags().equals(Set.of("shotgun_shells"))) {
+                    // buckshot
+                    bulletType = Bullets.get("buckshot");
+                    bulletStack = new ItemStack(LmodItemRegistry.BUCKSHELL);
+
+                } else if (gunType.acceptedAmmoTags().equals(Set.of("grenade_shells"))) {
+                    // pill grenades
+                    bulletType = Bullets.get("thumpershell");
+                    bulletStack = new ItemStack(LmodItemRegistry.THUMPERSHELL);
                 }
                 // Create a copper bullet stack for projectile creation
 
+                float maxSpread = gunType.baseInaccuracy() + bulletType.baseSpreadIncrease();
 
-                // Create bullet projectile directly (like skeleton arrows)
-                BulletEntity projectile = new BulletEntity(this.getWorld(), this, bulletStack);
+                for (int i = 0; i < bulletType.pelletsPerShot(); i++) {
+                    // Create bullet projectile directly (like skeleton arrows)
+                    BulletEntity projectile = new BulletEntity(this.getWorld(), this, bulletStack);
 
-                // Set reduced damage for gun shots
-                projectile.setDamage(gunType.damage());
+                    // Set reduced damage for gun shots
+                    projectile.setDamage(gunType.damage() * 0.7);
 
-                // Calculate velocity and spread
-                Vec3d targetPos = target.getEyePos();
-                Vec3d shooterPos = this.getEyePos();
-                Vec3d direction = targetPos.subtract(shooterPos).normalize();
+                    // Calculate velocity and spread
+                    Vec3d targetPos = target.getEyePos();
+                    Vec3d shooterPos = this.getEyePos();
+                    Vec3d direction = targetPos.subtract(shooterPos).normalize();
 
-                // Add some inaccuracy
-                float spread = 1.0F;
-                direction = direction.add(
-                        (this.random.nextFloat() - 0.5) * spread * 0.1,
-                        (this.random.nextFloat() - 0.5) * spread * 0.1,
-                        (this.random.nextFloat() - 0.5) * spread * 0.1
-                ).normalize();
+                    // Add some inaccuracy
+                    float spread = this.random.nextFloat() * maxSpread;
+                    direction = direction.add(
+                            (this.random.nextFloat() - 0.5) * spread * 0.1,
+                            (this.random.nextFloat() - 0.5) * spread * 0.1,
+                            (this.random.nextFloat() - 0.5) * spread * 0.1
+                    ).normalize();
 
-                // Set projectile velocity
-                projectile.setVelocity(direction.x, direction.y, direction.z, gunType.velocity() * bulletType.vMultiplier(), spread);
+                    // Set projectile velocity
+                    projectile.setVelocity(direction.x, direction.y, direction.z, gunType.velocity() * bulletType.vMultiplier(), spread);
 
-                // Spawn the projectile
-                this.getWorld().spawnEntity(projectile);
+                    // Spawn the projectile
+                    this.getWorld().spawnEntity(projectile);
+                }
 
                 // Play gun sound
                 if (bulletType.soundprofile() != null && bulletType.soundprofile().firesound() != null) {
