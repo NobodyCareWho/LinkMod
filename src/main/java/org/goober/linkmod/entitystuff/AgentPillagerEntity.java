@@ -73,6 +73,10 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
     public static DefaultAttributeContainer.Builder createPillagerAttributes() {
         return HostileEntity.createHostileAttributes().add(EntityAttributes.MOVEMENT_SPEED, 0.3499999940395355).add(EntityAttributes.MAX_HEALTH, 24.0).add(EntityAttributes.ATTACK_DAMAGE, 5.0).add(EntityAttributes.FOLLOW_RANGE, 32.0);
     }
+    
+    public static DefaultAttributeContainer.Builder createHostileAttributes() {
+        return createPillagerAttributes();
+    }
 
     protected void initDataTracker(DataTracker.Builder builder) {
         super.initDataTracker(builder);
@@ -198,7 +202,7 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
                     // Attack if within 20 blocks
                     if (distance < 400.0) {
                         this.lookAtEntity(target, 30.0F, 30.0F);
-                        this.shoot(target, 100);
+                        this.shootAtTarget(target);
                         currentAmmo--;
 
                         // Check if we need to reload
@@ -214,7 +218,9 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
                 }
             }
         }
-        private void shootAtTarget(LivingEntity target) {
+    }
+    
+    private void shootAtTarget(LivingEntity target) {
             ItemStack rifle = this.getStackInHand(Hand.MAIN_HAND);
             if (rifle.getItem() instanceof GunItem gunItem && this.getWorld() instanceof ServerWorld) {
                 // Get gun type info
@@ -261,7 +267,6 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
                 // Play attack animation
                 this.swingHand(Hand.MAIN_HAND);
             }
-        }
     }
 
 
