@@ -42,8 +42,10 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Set;
+
 public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, InventoryOwner {
-    private static final TrackedData<Boolean> RELOADING;
+    private static final TrackedData<Boolean> CHARGING;
     private static final int field_30478 = 5;
     private static final int field_30476 = 300;
     private final SimpleInventory inventory = new SimpleInventory(5);
@@ -80,7 +82,7 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
 
     protected void initDataTracker(DataTracker.Builder builder) {
         super.initDataTracker(builder);
-        builder.add(RELOADING, false);
+        builder.add(CHARGING, false);
     }
 
     private void canUseRangedWeapon(CallbackInfoReturnable<Boolean> cir) {
@@ -95,11 +97,11 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
 
 
     public boolean isCharging() {
-        return (Boolean)this.dataTracker.get(RELOADING);
+        return (Boolean)this.dataTracker.get(CHARGING);
     }
 
     public void setCharging(boolean charging) {
-        this.dataTracker.set(RELOADING, charging);
+        this.dataTracker.set(CHARGING, charging);
     }
 
     public void postShoot() {
@@ -118,7 +120,7 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
     public IllagerEntity.State getState() {
         if (this.isCharging()) {
             return State.CROSSBOW_CHARGE;
-        } else if (this.isHolding(Items.CROSSBOW)) {
+        } else if (this.isHolding(LmodItemRegistry.EJECTORPISTOL) || this.isHolding(LmodItemRegistry.PUMPSG)) {
             return State.CROSSBOW_HOLD;
         } else {
             return this.isAttacking() ? State.ATTACKING : State.NEUTRAL;
@@ -226,16 +228,26 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
                 // Get gun type info
                 Guns.GunType gunType = Guns.get(gunItem.getGunTypeId());
 
-                // Get bullet type info for copper bullets
-                Bullets.BulletType bulletType = Bullets.get("copper_bullet");
-
+                if (gunType.acceptedAmmoTags() == Set.of("rifle_ammo")) {
+                    // Get bullet type info for copper bullets
+                    Bullets.BulletType bulletType = Bullets.get("copper_bullet");
+                    ItemStack bulletStack = new ItemStack(LmodItemRegistry.COPPER_BULLET);
+                } else if (gunType.acceptedAmmoTags() == Set.of("shotgun_shells")) {
+                    // Get bullet type info for buckshot
+                    Bullets.BulletType bulletType = Bullets.get("buckshot");
+                    ItemStack bulletStack = new ItemStack(LmodItemRegistry.BUCKSHELL);
+                }   else if (gunType.acceptedAmmoTags() == Set.of("grenade_shells")) {
+                    // Get bullet type info for pill grenades
+                    Bullets.BulletType bulletType = Bullets.get("thumpershell");
+                    ItemStack bulletStack = new ItemStack(LmodItemRegistry.THUMPERSHELL);
+                }
                 // Create a copper bullet stack for projectile creation
-                ItemStack bulletStack = new ItemStack(LmodItemRegistry.COPPER_BULLET);
+
 
                 // Create bullet projectile directly (like skeleton arrows)
                 BulletEntity projectile = new BulletEntity(this.getWorld(), this, bulletStack);
 
-                // Set reduced damage for piglin shots
+                // Set reduced damage for gun shots
                 projectile.setDamage(gunType.damage());
 
                 // Calculate velocity and spread
@@ -312,6 +324,6 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
     }
 
     static {
-        RELOADING = DataTracker.registerData(AgentPillagerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        CHARGING = DataTracker.registerData(AgentPillagerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     }
 }
