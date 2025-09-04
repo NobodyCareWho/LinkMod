@@ -37,6 +37,7 @@ import org.goober.linkmod.gunstuff.items.Bullets;
 import org.goober.linkmod.gunstuff.items.GunItem;
 import org.goober.linkmod.gunstuff.items.Guns;
 import org.goober.linkmod.itemstuff.LmodItemRegistry;
+import org.goober.linkmod.particlestuff.LmodParticleRegistry;
 import org.goober.linkmod.projectilestuff.BulletEntity;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -62,10 +63,10 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new FleeEntityGoal(this, CreakingEntity.class, 8.0F, 1.0, 1.2));
         this.goalSelector.add(2, new RaiderEntity.PatrolApproachGoal(this, 10.0F));
-        this.goalSelector.add(3, new CrossbowAttackGoal(this, 1.0, 8.0F));
+        this.goalSelector.add(3, new GunAttackGoal(this, 1.0, 8.0F));
         this.goalSelector.add(8, new WanderAroundGoal(this, 0.6));
-        this.goalSelector.add(9, new LookAtEntityGoal(this, PlayerEntity.class, 15.0F, 1.0F));
-        this.goalSelector.add(10, new LookAtEntityGoal(this, MobEntity.class, 15.0F));
+        this.goalSelector.add(9, new LookAtEntityGoal(this, PlayerEntity.class, 30.0F, 1.0F));
+        this.goalSelector.add(10, new LookAtEntityGoal(this, MobEntity.class, 30.0F));
         this.targetSelector.add(1, (new RevengeGoal(this, new Class[]{RaiderEntity.class})).setGroupRevenge(new Class[0]));
         this.targetSelector.add(2, new ActiveTargetGoal(this, PlayerEntity.class, true));
         this.targetSelector.add(3, new ActiveTargetGoal(this, MerchantEntity.class, false));
@@ -73,7 +74,7 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
     }
 
     public static DefaultAttributeContainer.Builder createPillagerAttributes() {
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.MOVEMENT_SPEED, 0.3499999940395355).add(EntityAttributes.MAX_HEALTH, 24.0).add(EntityAttributes.ATTACK_DAMAGE, 5.0).add(EntityAttributes.FOLLOW_RANGE, 12.0);
+        return HostileEntity.createHostileAttributes().add(EntityAttributes.MOVEMENT_SPEED, 0.3499999940395355).add(EntityAttributes.MAX_HEALTH, 24.0).add(EntityAttributes.ATTACK_DAMAGE, 5.0).add(EntityAttributes.FOLLOW_RANGE, 32.0);
     }
     
     public static DefaultAttributeContainer.Builder createHostileAttributes() {
@@ -185,6 +186,7 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
                 rifleAttackCooldown--;
                 if (isReloading && rifleAttackCooldown == 0) {
                     // Reload complete
+                    ((CrossbowUser)this).setCharging(false);
                     isReloading = false;
                     ItemStack mainHand = this.getStackInHand(Hand.MAIN_HAND);
                     if (mainHand.getItem() instanceof GunItem gunItem) {
@@ -205,19 +207,21 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
                 LivingEntity target = this.getTarget();
                 if (target != null && this.canSee(target) && currentAmmo > 0) {
                     double distance = this.squaredDistanceTo(target);
+                    Guns.GunType gunType = Guns.get(gunItem.getGunTypeId());
                     // Attack if within 20 blocks
-                    if (distance < 400.0) {
+                    if (distance < 400.0 && gunType.acceptedAmmoTags().equals(Set.of("rifle_ammo")) || distance < 150.0) {
                         this.lookAtEntity(target, 30.0F, 30.0F);
                         this.shootAtTarget(target);
                         currentAmmo--;
 
                         // Check if we need to reload
                         if (currentAmmo <= 0) {
+                            ((CrossbowUser)this).setCharging(true);
                             isReloading = true;
-                            rifleAttackCooldown = 65; // 3.25 second reload for regular piglins
+                            rifleAttackCooldown = 65; // 3.25 second reload for pillager
                         } else {
                             // Normal attack cooldown
-                            Guns.GunType gunType = Guns.get(gunItem.getGunTypeId());
+
                             rifleAttackCooldown = gunType.cooldownTicks() + random.nextBetween(0,15);
                         }
                     }
@@ -278,8 +282,24 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
 
                     // Spawn the projectile
                     this.getWorld().spawnEntity(projectile);
+
                 }
 
+                if (bulletType.particleprofile() != null && bulletType.particleprofile().fireparticle() != null) {
+                    if (this.getWorld() instanceof ServerWorld serverWorld) {
+                        // get muzzle position (slightly in front of player)
+                        Vec3d lookDirection = this.getRotationVec(1.0F);
+                        Vec3d muzzlePos = this.getEyePos().add(lookDirection.multiply(0.5));
+
+                        serverWorld.spawnParticles(
+                                bulletType.particleprofile().fireparticle(),
+                                muzzlePos.x, muzzlePos.y - 0.1, muzzlePos.z,
+                                1, // particle count
+                                0.1, -0.3, 0.1, // offset
+                                0.1 // speed
+                        );
+                    }
+                }
                 // Play gun sound
                 if (bulletType.soundprofile() != null && bulletType.soundprofile().firesound() != null) {
                     this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(),
