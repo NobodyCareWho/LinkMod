@@ -1,11 +1,7 @@
 // Made with Blockbench 4.12.6
-// Exported for Minecraft version 1.17 or later with Mojang mappings
+// Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
-
-
-public class model<T extends CowboyPillagerEntity> extends EntityModel<T> {
-	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "model"), "main");
+public class model extends EntityModel<CowboyPillagerEntity> {
 	private final ModelPart head;
 	private final ModelPart hat;
 	private final ModelPart nose;
@@ -25,57 +21,51 @@ public class model<T extends CowboyPillagerEntity> extends EntityModel<T> {
 		this.left_leg = root.getChild("left_leg");
 		this.right_leg = root.getChild("right_leg");
 	}
+	public static TexturedModelData getTexturedModelData() {
+		ModelData modelData = new ModelData();
+		ModelPartData modelPartData = modelData.getRoot();
+		ModelPartData head = modelPartData.addChild("head", ModelPartBuilder.create().uv(0, 7).cuboid(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F, new Dilation(0.0F))
+		.uv(0, 29).cuboid(-4.0F, 0.0F, -4.0F, 8.0F, 3.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-	public static LayerDefinition createBodyLayer() {
-		MeshDefinition meshdefinition = new MeshDefinition();
-		PartDefinition partdefinition = meshdefinition.getRoot();
+		ModelPartData cube_r1 = head.addChild("cube_r1", ModelPartBuilder.create().uv(-2, -3).cuboid(0.0F, -1.5F, -2.0F, 0.0F, 3.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -2.5F, 6.0F, 0.0F, 0.0F, 0.4363F));
 
-		PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 7).addBox(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 29).addBox(-4.0F, 0.0F, -4.0F, 8.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+		ModelPartData hat = modelPartData.addChild("hat", ModelPartBuilder.create().uv(28, 0).cuboid(-4.5F, -4.0F, -4.5F, 9.0F, 4.0F, 9.0F, new Dilation(0.0F))
+		.uv(38, 26).mirrored().cuboid(-4.5F, -5.0F, -4.5F, 4.0F, 1.0F, 9.0F, new Dilation(0.0F)).mirrored(false)
+		.uv(38, 26).cuboid(0.5F, -5.0F, -4.5F, 4.0F, 1.0F, 9.0F, new Dilation(0.0F))
+		.uv(29, 13).cuboid(-5.5F, 0.0F, -6.5F, 11.0F, 0.0F, 13.0F, new Dilation(0.0F))
+		.uv(0, 0).cuboid(-4.5F, 0.0F, -6.75F, 9.0F, 0.0F, 0.0F, new Dilation(0.0F))
+		.uv(0, 25).cuboid(-2.5F, -4.0F, -4.75F, 5.0F, 4.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -6.0F, 0.0F));
 
-		PartDefinition cube_r1 = head.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(-2, -3).addBox(0.0F, -1.5F, -2.0F, 0.0F, 3.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -2.5F, 6.0F, 0.0F, 0.0F, 0.4363F));
+		ModelPartData cube_r2 = hat.addChild("cube_r2", ModelPartBuilder.create().uv(31, 51).mirrored().cuboid(0.0F, 0.0F, -2.0F, 2.0F, 0.0F, 13.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(5.5F, 0.0F, -4.5F, 0.0F, 0.0F, -0.3927F));
 
-		PartDefinition hat = partdefinition.addOrReplaceChild("hat", CubeListBuilder.create().texOffs(28, 0).addBox(-4.5F, -4.0F, -4.5F, 9.0F, 4.0F, 9.0F, new CubeDeformation(0.0F))
-		.texOffs(38, 26).mirror().addBox(-4.5F, -5.0F, -4.5F, 4.0F, 1.0F, 9.0F, new CubeDeformation(0.0F)).mirror(false)
-		.texOffs(38, 26).addBox(0.5F, -5.0F, -4.5F, 4.0F, 1.0F, 9.0F, new CubeDeformation(0.0F))
-		.texOffs(29, 13).addBox(-5.5F, 0.0F, -6.5F, 11.0F, 0.0F, 13.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 0).addBox(-4.5F, 0.0F, -6.75F, 9.0F, 0.0F, 0.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 25).addBox(-2.5F, -4.0F, -4.75F, 5.0F, 4.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -6.0F, 0.0F));
+		ModelPartData cube_r3 = hat.addChild("cube_r3", ModelPartBuilder.create().uv(31, 51).cuboid(-2.0F, 0.0F, -2.0F, 2.0F, 0.0F, 13.0F, new Dilation(0.0F)), ModelTransform.of(-5.5F, 0.0F, -4.5F, 0.0F, 0.0F, 0.3927F));
 
-		PartDefinition cube_r2 = hat.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(31, 51).mirror().addBox(0.0F, 0.0F, -2.0F, 2.0F, 0.0F, 13.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(5.5F, 0.0F, -4.5F, 0.0F, 0.0F, -0.3927F));
+		ModelPartData nose = modelPartData.addChild("nose", ModelPartBuilder.create().uv(24, 0).cuboid(-1.0F, -1.0F, -6.0F, 2.0F, 4.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -2.0F, 0.0F));
 
-		PartDefinition cube_r3 = hat.addOrReplaceChild("cube_r3", CubeListBuilder.create().texOffs(31, 51).addBox(-2.0F, 0.0F, -2.0F, 2.0F, 0.0F, 13.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.5F, 0.0F, -4.5F, 0.0F, 0.0F, 0.3927F));
+		ModelPartData body = modelPartData.addChild("body", ModelPartBuilder.create().uv(16, 30).cuboid(-4.0F, 0.0F, -3.0F, 8.0F, 12.0F, 6.0F, new Dilation(0.0F))
+		.uv(0, 49).cuboid(-4.0F, 9.0F, -3.0F, 8.0F, 9.0F, 6.0F, new Dilation(0.25F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-		PartDefinition nose = partdefinition.addOrReplaceChild("nose", CubeListBuilder.create().texOffs(24, 0).addBox(-1.0F, -1.0F, -6.0F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -2.0F, 0.0F));
+		ModelPartData left_arm = modelPartData.addChild("left_arm", ModelPartBuilder.create().uv(28, 48).mirrored().cuboid(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.pivot(5.0F, 2.0F, 0.0F));
 
-		PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(16, 30).addBox(-4.0F, 0.0F, -3.0F, 8.0F, 12.0F, 6.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 49).addBox(-4.0F, 9.0F, -3.0F, 8.0F, 9.0F, 6.0F, new CubeDeformation(0.25F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+		ModelPartData right_arm = modelPartData.addChild("right_arm", ModelPartBuilder.create().uv(28, 48).cuboid(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(-5.0F, 2.0F, 0.0F));
 
-		PartDefinition left_arm = partdefinition.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(28, 48).mirror().addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(5.0F, 2.0F, 0.0F));
+		ModelPartData left_leg = modelPartData.addChild("left_leg", ModelPartBuilder.create().uv(0, 33).mirrored().cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.pivot(2.0F, 12.0F, 0.0F));
 
-		PartDefinition right_arm = partdefinition.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(28, 48).addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-5.0F, 2.0F, 0.0F));
-
-		PartDefinition left_leg = partdefinition.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(0, 33).mirror().addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(2.0F, 12.0F, 0.0F));
-
-		PartDefinition right_leg = partdefinition.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(0, 33).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-2.0F, 12.0F, 0.0F));
-
-		return LayerDefinition.create(meshdefinition, 64, 64);
+		ModelPartData right_leg = modelPartData.addChild("right_leg", ModelPartBuilder.create().uv(0, 33).cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(-2.0F, 12.0F, 0.0F));
+		return TexturedModelData.of(modelData, 64, 64);
 	}
-
 	@Override
-	public void setupAnim(CowboyPillagerEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-
+	public void setAngles(CowboyPillagerEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 	}
-
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		head.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-		hat.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-		nose.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-		body.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-		left_arm.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-		right_arm.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-		left_leg.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-		right_leg.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+		head.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+		hat.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+		nose.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+		body.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+		left_arm.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+		right_arm.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+		left_leg.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+		right_leg.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 	}
 }

@@ -1,7 +1,7 @@
 // Made with Blockbench 4.12.6
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
-public class Model extends EntityModel<SniperPillagerEntity> {
+public class StalkerEntityModel extends EntityModel<StalkerEntity> {
 	private final ModelPart head;
 	private final ModelPart hat;
 	private final ModelPart nose;
@@ -10,7 +10,7 @@ public class Model extends EntityModel<SniperPillagerEntity> {
 	private final ModelPart right_arm;
 	private final ModelPart left_leg;
 	private final ModelPart right_leg;
-	public Model(ModelPart root) {
+	public StalkerEntityModel(ModelPart root) {
 		this.head = root.getChild("head");
 		this.hat = root.getChild("hat");
 		this.nose = root.getChild("nose");
@@ -46,7 +46,7 @@ public class Model extends EntityModel<SniperPillagerEntity> {
 		return TexturedModelData.of(modelData, 64, 64);
 	}
 	@Override
-	public void setAngles(SniperPillagerEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setAngles(StalkerEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 	}
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {

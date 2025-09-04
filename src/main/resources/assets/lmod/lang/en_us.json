@@ -65,6 +65,11 @@
   "container.lmod.lathe": "Lathe",
 
   "entity.lmod.agent_pillager": "Extortioner",
+  "entity.lmod.stalker": "Stalker",
+  "entity.lmod.desperado": "Desperado",
+  "item.lmod.agent_pillager_spawn_egg": "Extortioner Spawn Egg",
+  "item.lmod.stalker_spawn_egg": "Stalker Spawn Egg",
+  "item.lmod.desperado_spawn_egg": "Desperado Spawn Egg",
 
   "items.skibidi":  "craftingmaterials",
 
@@ -85,7 +90,7 @@
   "item.lmod.empty_gyrojet": "Empty Gyrojet",
   "item.lmod.rotating_mechanism": "Rotating Mechanism",
 
-  "item.lmod.agent_pillager_spawn_egg": "Extortioner Spawn Egg",
+
 
   "foods.skibidi":  "food",
 

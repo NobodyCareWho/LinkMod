@@ -143,7 +143,31 @@ public class LmodEntityRegistry {
                     .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Linkmod.MOD_ID, "agent_pillager")))
     );
 
+    public static final EntityType<DesperadoEntity> DESPERADO = Registry.register(
+            Registries.ENTITY_TYPE,
+            Identifier.of(Linkmod.MOD_ID, "desperado"),
+            EntityType.Builder.<DesperadoEntity>create(DesperadoEntity::new, SpawnGroup.MISC)
+                    .dimensions(0.6F, 1.95F)
+                    .maxTrackingRange(80)
+                    .trackingTickInterval(1)
+                    .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Linkmod.MOD_ID, "desperado")))
+    );
+    public static final EntityType<StalkerEntity> STALKER = Registry.register(
+            Registries.ENTITY_TYPE,
+            Identifier.of(Linkmod.MOD_ID, "stalker"),
+            EntityType.Builder.<StalkerEntity>create(StalkerEntity::new, SpawnGroup.MISC)
+                    .dimensions(0.6F, 1.95F)
+                    .maxTrackingRange(80)
+                    .trackingTickInterval(1)
+                    .build(RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(Linkmod.MOD_ID, "stalker")))
+    );
+
     public static void initialize() {
         FabricDefaultAttributeRegistry.register(AGENTPILLAGER, AgentPillagerEntity.createHostileAttributes());
+        FabricDefaultAttributeRegistry.register(STALKER, StalkerEntity.createHostileAttributes());
+        FabricDefaultAttributeRegistry.register(DESPERADO, DesperadoEntity.createHostileAttributes());
+
+
     }
+
 }

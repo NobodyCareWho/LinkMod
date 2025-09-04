@@ -17,9 +17,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.option.AttackIndicator;
 import net.minecraft.client.render.RenderLayer;
-import org.goober.linkmod.client.model.AgentPillagerEntityModel;
+import org.goober.linkmod.client.model.*;
 import org.goober.linkmod.client.renderer.*;
-import org.goober.linkmod.client.model.KunaiEntityModel;
 import org.goober.linkmod.gunstuff.items.GunItem;
 import org.goober.linkmod.gunstuff.items.Guns;
 import org.goober.linkmod.gunstuff.GunBloomComponent;
@@ -31,8 +30,6 @@ import org.goober.linkmod.entitystuff.LmodEntityRegistry;
 import org.goober.linkmod.itemstuff.SeedBagTooltipData;
 import org.goober.linkmod.gunstuff.GunTooltipData;
 import org.goober.linkmod.particlestuff.LmodParticleRegistry;
-import org.goober.linkmod.client.model.PillGrenadeEntityModel;
-import org.goober.linkmod.client.model.DynamiteEntityModel;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import org.goober.linkmod.blockstuff.LmodBlockEntityTypes;
 import java.util.List;
@@ -58,6 +55,8 @@ public class LinkmodClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(KunaiEntityRenderer.MODEL_LAYER, KunaiEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(DynamiteEntityRenderer.MODEL_LAYER, DynamiteEntityModel::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(AgentPillagerEntityRenderer.AGENT_PILLAGER_LAYER, AgentPillagerEntityModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(StalkerEntityRenderer.STALKER_LAYER, StalkerEntityModel::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(DesperadoEntityRenderer.DESPERADO_LAYER, DesperadoEntityModel::getTexturedModelData);
 
         // Register block entity renderers
         BlockEntityRendererRegistry.register(LmodBlockEntityTypes.EXP_CHEST, ExpChestBlockEntityRenderer::new);
