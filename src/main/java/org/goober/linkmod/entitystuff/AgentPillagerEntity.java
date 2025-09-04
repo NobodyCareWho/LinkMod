@@ -192,6 +192,10 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
                     if (mainHand.getItem() instanceof GunItem gunItem) {
                         Guns.GunType gunType = Guns.get(gunItem.getGunTypeId());
                         currentAmmo = gunType.maxAmmo();
+                        this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(),
+                                gunType.soundprofile().loadsound(),
+                                SoundCategory.HOSTILE, 1.0F, 1.0F / (this.random.nextFloat() * 0.4F + 0.8F));
+
                     }
                 }
             }
@@ -219,6 +223,9 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
                             ((CrossbowUser)this).setCharging(true);
                             isReloading = true;
                             rifleAttackCooldown = 65; // 3.25 second reload for pillager
+                            this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(),
+                                    gunType.soundprofile().unloadsound(),
+                                    SoundCategory.HOSTILE, 1.0F, 1.0F / (this.random.nextFloat() * 0.4F + 0.8F));
                         } else {
                             // Normal attack cooldown
 

@@ -104,7 +104,6 @@ public class GunAttackGoal <T extends HostileEntity & RangedAttackMob & Crossbow
                 if (!bl3) {
                     this.actor.setCurrentHand(ProjectileUtil.getHandPossiblyHolding(this.actor, Items.CROSSBOW));
                     this.stage = GunAttackGoal.Stage.CHARGING;
-                    ((CrossbowUser)this.actor).setCharging(false);
                 }
             } else if (this.stage == GunAttackGoal.Stage.CHARGING) {
                 if (!this.actor.isUsingItem()) {
