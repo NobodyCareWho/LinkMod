@@ -269,7 +269,7 @@ public class AgentPillagerEntity extends IllagerEntity implements CrossbowUser, 
                     BulletEntity projectile = new BulletEntity(this.getWorld(), this, bulletStack);
 
                     // Set reduced damage for gun shots
-                    projectile.setDamage(gunType.damage() * 0.7);
+                    projectile.setDamage(gunType.damage() * 0.6);
 
                     // Calculate velocity and spread
                     Vec3d targetPos = target.getEyePos();

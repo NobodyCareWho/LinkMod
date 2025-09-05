@@ -1,6 +1,7 @@
 package org.goober.linkmod.entitystuff;
 
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.brain.task.FleeTask;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -64,9 +65,10 @@ public class StalkerEntity extends IllagerEntity implements CrossbowUser, Invent
     protected void initGoals() {
         super.initGoals();
         this.goalSelector.add(0, new SwimGoal(this));
+        this.goalSelector.add(4, new FleeEntityGoal(this, PlayerEntity.class, 8.0F, 0.4, 0.8));
         this.goalSelector.add(1, new FleeEntityGoal(this, CreakingEntity.class, 8.0F, 1.0, 1.2));
         this.goalSelector.add(2, new PatrolApproachGoal(this, 10.0F));
-        this.goalSelector.add(3, new GunAttackGoal(this, 1.0, 8.0F));
+        this.goalSelector.add(3, new GunAttackGoal(this, 1.0, 40.0F));
         this.goalSelector.add(8, new WanderAroundGoal(this, 0.6));
         this.goalSelector.add(9, new LookAtEntityGoal(this, PlayerEntity.class, 30.0F, 1.0F));
         this.goalSelector.add(10, new LookAtEntityGoal(this, MobEntity.class, 30.0F));
@@ -158,11 +160,7 @@ public class StalkerEntity extends IllagerEntity implements CrossbowUser, Invent
     }
 
     protected void initEquipment(Random random, LocalDifficulty localDifficulty) {
-        if (this.random.nextFloat() < 0.75f) {
-        this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(LmodItemRegistry.EJECTORPISTOL));
-        } else {
-            this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(LmodItemRegistry.PUMPSG));
-        }
+            this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(LmodItemRegistry.RIFLE));
     }
 
 
@@ -207,6 +205,7 @@ public class StalkerEntity extends IllagerEntity implements CrossbowUser, Invent
             if (mainHand.getItem() instanceof GunItem gunItem && rifleAttackCooldown == 0 && !isReloading) {
                 // Initialize ammo if needed
                 if (currentAmmo == -1) {
+
                     Guns.GunType gunType = Guns.get(gunItem.getGunTypeId());
                     currentAmmo = gunType.maxAmmo();
                 }
@@ -216,7 +215,7 @@ public class StalkerEntity extends IllagerEntity implements CrossbowUser, Invent
                     double distance = this.squaredDistanceTo(target);
                     Guns.GunType gunType = Guns.get(gunItem.getGunTypeId());
                     // Attack if within 20 blocks
-                    if (distance < 400.0 && gunType.acceptedAmmoTags().equals(Set.of("rifle_ammo")) || distance < 150.0) {
+                    if (distance < 800.0 && gunType.acceptedAmmoTags().equals(Set.of("rifle_ammo")) || distance < 150.0) {
                         this.lookAtEntity(target, 30.0F, 30.0F);
                         this.shootAtTarget(target);
                         currentAmmo--;
@@ -225,7 +224,7 @@ public class StalkerEntity extends IllagerEntity implements CrossbowUser, Invent
                         if (currentAmmo <= 0) {
                             ((CrossbowUser)this).setCharging(true);
                             isReloading = true;
-                            rifleAttackCooldown = 65; // 3.25 second reload for pillager
+                            rifleAttackCooldown = 160; // 3.25 second reload for pillager
                             this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(),
                                     gunType.soundprofile().unloadsound(),
                                     SoundCategory.HOSTILE, 1.0F, 1.0F / (this.random.nextFloat() * 0.4F + 0.8F));
@@ -255,8 +254,8 @@ public class StalkerEntity extends IllagerEntity implements CrossbowUser, Invent
 
                 } else if (gunType.acceptedAmmoTags().equals(Set.of("shotgun_shells"))) {
                     // buckshot
-                    bulletType = Bullets.get("buckshot");
-                    bulletStack = new ItemStack(LmodItemRegistry.BUCKSHELL);
+                    bulletType = Bullets.get("slugshot");
+                    bulletStack = new ItemStack(LmodItemRegistry.SLUGSHELL);
 
                 } else if (gunType.acceptedAmmoTags().equals(Set.of("grenade_shells"))) {
                     // pill grenades
@@ -272,7 +271,7 @@ public class StalkerEntity extends IllagerEntity implements CrossbowUser, Invent
                     BulletEntity projectile = new BulletEntity(this.getWorld(), this, bulletStack);
 
                     // Set reduced damage for gun shots
-                    projectile.setDamage(gunType.damage() * 0.7);
+                    projectile.setDamage(gunType.damage() * 0.8);
 
                     // Calculate velocity and spread
                     Vec3d targetPos = target.getEyePos();

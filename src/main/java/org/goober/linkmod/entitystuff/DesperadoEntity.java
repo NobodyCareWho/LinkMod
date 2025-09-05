@@ -7,6 +7,7 @@ import net.minecraft.component.ComponentType;
 import net.minecraft.component.ComponentsAccess;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -15,11 +16,9 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.CreakingEntity;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.IllagerEntity;
-import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.*;
 import net.minecraft.entity.passive.*;
+import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.raid.RaiderEntity;
 import net.minecraft.inventory.SimpleInventory;
@@ -57,6 +56,8 @@ import org.goober.linkmod.gunstuff.items.Guns;
 import org.goober.linkmod.itemstuff.LmodDataComponentTypes;
 import org.goober.linkmod.itemstuff.LmodItemRegistry;
 import org.goober.linkmod.projectilestuff.BulletEntity;
+import org.goober.linkmod.projectilestuff.DynamiteEntity;
+import org.goober.linkmod.projectilestuff.PillagerDynamiteEntity;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -71,6 +72,7 @@ public class DesperadoEntity extends IllagerEntity implements CrossbowUser, Inve
     private static final int field_30476 = 300;
     private final SimpleInventory inventory = new SimpleInventory(5);
     private int rifleAttackCooldown = 0;
+    private int dynamiteleft = 3;
     private int currentAmmo = -1; // -1 means not initialized
     private boolean isReloading = false;
 
@@ -83,7 +85,8 @@ public class DesperadoEntity extends IllagerEntity implements CrossbowUser, Inve
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new FleeEntityGoal(this, CreakingEntity.class, 8.0F, 1.0, 1.2));
         this.goalSelector.add(2, new PatrolApproachGoal(this, 10.0F));
-        this.goalSelector.add(3, new GunAttackGoal(this, 1.0, 8.0F));
+        this.goalSelector.add(3,new TntAttackGoal(this, 1.0, 40, 10.0F));
+        this.goalSelector.add(4, new GunAttackGoal(this, 1.0, 8.0F));
         this.goalSelector.add(8, new WanderAroundGoal(this, 0.6));
         this.goalSelector.add(9, new LookAtEntityGoal(this, PlayerEntity.class, 30.0F, 1.0F));
         this.goalSelector.add(10, new LookAtEntityGoal(this, MobEntity.class, 30.0F));
@@ -94,7 +97,7 @@ public class DesperadoEntity extends IllagerEntity implements CrossbowUser, Inve
     }
 
     public static DefaultAttributeContainer.Builder createPillagerAttributes() {
-        return HostileEntity.createHostileAttributes().add(EntityAttributes.MOVEMENT_SPEED, 0.3499999940395355).add(EntityAttributes.MAX_HEALTH, 24.0).add(EntityAttributes.ATTACK_DAMAGE, 5.0).add(EntityAttributes.FOLLOW_RANGE, 32.0);
+        return HostileEntity.createHostileAttributes().add(EntityAttributes.MOVEMENT_SPEED, 0.3499999940395355).add(EntityAttributes.MAX_HEALTH, 24.0).add(EntityAttributes.ATTACK_DAMAGE, 5.0).add(EntityAttributes.FOLLOW_RANGE, 32.0).add(EntityAttributes.EXPLOSION_KNOCKBACK_RESISTANCE, 5);
     }
     
     public static DefaultAttributeContainer.Builder createHostileAttributes() {
@@ -104,7 +107,7 @@ public class DesperadoEntity extends IllagerEntity implements CrossbowUser, Inve
     protected void initDataTracker(DataTracker.Builder builder) {
         super.initDataTracker(builder);
         builder.add(CHARGING, false);
-        builder.add(VARIANT, DesperadoEntity.Variant.DEFAULT.index);
+        builder.add(VARIANT, Variant.DEFAULT.index);
     }
 
     private void canUseRangedWeapon(CallbackInfoReturnable<Boolean> cir) {
@@ -115,7 +118,6 @@ public class DesperadoEntity extends IllagerEntity implements CrossbowUser, Inve
             cir.setReturnValue(true);
         }
     }
-
 
 
     public boolean isCharging() {
@@ -136,7 +138,7 @@ public class DesperadoEntity extends IllagerEntity implements CrossbowUser, Inve
 
     protected void writeCustomData(WriteView view) {
         super.writeCustomData(view);
-        view.put("Desperado", DesperadoEntity.Variant.INDEX_CODEC, this.getVariant());
+        view.put("Desperado", Variant.INDEX_CODEC, this.getVariant());
         this.writeInventory(view);
     }
 
@@ -157,7 +159,7 @@ public class DesperadoEntity extends IllagerEntity implements CrossbowUser, Inve
     protected void readCustomData(ReadView view) {
         super.readCustomData(view);
         this.readInventory(view);
-        this.setVariant((DesperadoEntity.Variant)view.read("DesperadoType", DesperadoEntity.Variant.INDEX_CODEC).orElse(DesperadoEntity.Variant.DEFAULT));
+        this.setVariant((Variant)view.read("DesperadoType", Variant.INDEX_CODEC).orElse(Variant.DEFAULT));
         this.setCanPickUpLoot(true);
     }
 
@@ -169,11 +171,11 @@ public class DesperadoEntity extends IllagerEntity implements CrossbowUser, Inve
         return 1;
     }
 
-    public DesperadoEntity.Variant getVariant() {
-        return DesperadoEntity.Variant.byIndex((Integer)this.dataTracker.get(VARIANT));
+    public Variant getVariant() {
+        return Variant.byIndex((Integer)this.dataTracker.get(VARIANT));
     }
 
-    private void setVariant(DesperadoEntity.Variant variant) {
+    private void setVariant(Variant variant) {
         this.dataTracker.set(VARIANT, variant.index);
     }
 
@@ -186,7 +188,7 @@ public class DesperadoEntity extends IllagerEntity implements CrossbowUser, Inve
     }
     protected <T> boolean setApplicableComponent(ComponentType<T> type, T value) {
         if (type == LmodDataComponentTypes.DESPERADO_VARIANT) {
-            this.setVariant((DesperadoEntity.Variant)castComponentValue(LmodDataComponentTypes.DESPERADO_VARIANT, value));
+            this.setVariant((Variant)castComponentValue(LmodDataComponentTypes.DESPERADO_VARIANT, value));
             return true;
         } else {
             return super.setApplicableComponent(type, value);
@@ -198,31 +200,36 @@ public class DesperadoEntity extends IllagerEntity implements CrossbowUser, Inve
         Random random = world.getRandom();
         this.initEquipment(random, difficulty);
         this.updateEnchantments(world, random, difficulty);
-        DesperadoEntity.Variant variant = getVariantFromPos(world, this.getBlockPos());
-        if (entityData instanceof DesperadoEntity.DesperadoData) {
-            variant = ((DesperadoEntity.DesperadoData)entityData).variant;
+        Variant variant = getVariantFromPos(world, this.getBlockPos());
+        if (entityData instanceof DesperadoData) {
+            variant = ((DesperadoData)entityData).variant;
         } else {
-            entityData = new DesperadoEntity.DesperadoData(variant);
+            entityData = new DesperadoData(variant);
         }
 
         this.setVariant(variant);
         return super.initialize(world, difficulty, spawnReason, entityData);
     }
 
-    private static DesperadoEntity.Variant getVariantFromPos(WorldAccess world, BlockPos pos) {
+    private static Variant getVariantFromPos(WorldAccess world, BlockPos pos) {
         RegistryEntry<Biome> registryEntry = world.getBiome(pos);
         int i = world.getRandom().nextInt(100);
         if (registryEntry.isIn(BiomeTags.IS_BADLANDS)) {
-            return DesperadoEntity.Variant.RED;
+            return Variant.RED;
         } else {
-        return DesperadoEntity.Variant.BLUE; }
+        return Variant.BLUE; }
     }
 
     protected void initEquipment(Random random, LocalDifficulty localDifficulty) {
         if (this.random.nextFloat() < 0.75f) {
-        this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(LmodItemRegistry.EJECTORPISTOL));
+        this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(LmodItemRegistry.REVOLVER));
         } else {
-            this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(LmodItemRegistry.PUMPSG));
+            this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(LmodItemRegistry.SHOTGUN));
+        }
+        if (this.random.nextFloat() > 0.75f) {
+            this.equipStack(EquipmentSlot.OFFHAND, new ItemStack(LmodItemRegistry.DYNAMITE));
+        } else {
+
         }
     }
 
@@ -245,6 +252,11 @@ public class DesperadoEntity extends IllagerEntity implements CrossbowUser, Inve
 
     protected void mobTick(ServerWorld world) {
         super.mobTick(world);
+
+        if (this.dynamiteleft <=0) {
+            this.setStackInHand(Hand.OFF_HAND, ItemStack.EMPTY);
+        }
+
         if (!this.getWorld().isClient && this.isAlive()) {
             if (rifleAttackCooldown > 0) {
                 rifleAttackCooldown--;
@@ -333,7 +345,7 @@ public class DesperadoEntity extends IllagerEntity implements CrossbowUser, Inve
                     BulletEntity projectile = new BulletEntity(this.getWorld(), this, bulletStack);
 
                     // Set reduced damage for gun shots
-                    projectile.setDamage(gunType.damage() * 0.7);
+                    projectile.setDamage(gunType.damage() * 0.5);
 
                     // Calculate velocity and spread
                     Vec3d targetPos = target.getEyePos();
@@ -383,6 +395,44 @@ public class DesperadoEntity extends IllagerEntity implements CrossbowUser, Inve
             }
     }
 
+    static class TntAttackGoal extends ProjectileAttackGoal {
+        private final DesperadoEntity desperadoEntity;
+
+        public TntAttackGoal(RangedAttackMob rangedAttackMob, double d, int i, float f ) {
+            super(rangedAttackMob, d, i, f);
+            this.desperadoEntity = (DesperadoEntity)rangedAttackMob;
+        }
+
+        public boolean canStart() {
+            return super.canStart() && this.desperadoEntity.getOffHandStack().isOf(LmodItemRegistry.DYNAMITE);
+        }
+
+        public void start() {
+            super.start();
+            this.desperadoEntity.setAttacking(true);
+            this.desperadoEntity.setCurrentHand(Hand.OFF_HAND);
+
+        }
+
+
+
+        public void stop() {
+            super.stop();
+            this.desperadoEntity.clearActiveItem();
+            this.desperadoEntity.setAttacking(false);
+
+            if (desperadoEntity.getWorld() instanceof ServerWorld) {
+                PillagerDynamiteEntity pillagerDynamiteEntity = new PillagerDynamiteEntity(desperadoEntity.getWorld(), this.desperadoEntity, 0);
+                pillagerDynamiteEntity.setVelocity(this.desperadoEntity, this.desperadoEntity.lastPitch, this.desperadoEntity.headYaw, 0.0F, 1.5F, 1.0F);
+                desperadoEntity.getWorld().spawnEntity(pillagerDynamiteEntity);
+                desperadoEntity.dynamiteleft --;
+            }
+
+
+
+
+        }
+    }
 
 
     public SimpleInventory getInventory() {
@@ -429,13 +479,13 @@ public class DesperadoEntity extends IllagerEntity implements CrossbowUser, Inve
         RED(0, "red"),
         BLUE(1, "blue");
 
-        public static final DesperadoEntity.Variant DEFAULT = BLUE;
-        private static final IntFunction<DesperadoEntity.Variant> INDEX_MAPPER = ValueLists.createIndexToValueFunction(DesperadoEntity.Variant::getIndex, values(), DEFAULT);
-        public static final Codec<DesperadoEntity.Variant> CODEC = StringIdentifiable.createCodec(DesperadoEntity.Variant::values);
+        public static final Variant DEFAULT = BLUE;
+        private static final IntFunction<Variant> INDEX_MAPPER = ValueLists.createIndexToValueFunction(Variant::getIndex, values(), DEFAULT);
+        public static final Codec<Variant> CODEC = StringIdentifiable.createCodec(Variant::values);
         /** @deprecated */
         @Deprecated
-        public static final Codec<DesperadoEntity.Variant> INDEX_CODEC;
-        public static final PacketCodec<ByteBuf, DesperadoEntity.Variant> PACKET_CODEC;
+        public static final Codec<Variant> INDEX_CODEC;
+        public static final PacketCodec<ByteBuf, Variant> PACKET_CODEC;
         final int index;
         private final String id;
 
@@ -452,13 +502,13 @@ public class DesperadoEntity extends IllagerEntity implements CrossbowUser, Inve
             return this.index;
         }
 
-        public static DesperadoEntity.Variant byIndex(int index) {
-            return (DesperadoEntity.Variant)INDEX_MAPPER.apply(index);
+        public static Variant byIndex(int index) {
+            return (Variant)INDEX_MAPPER.apply(index);
         }
 
         static {
-            INDEX_CODEC = Codec.INT.xmap(INDEX_MAPPER::apply, DesperadoEntity.Variant::getIndex);
-            PACKET_CODEC = PacketCodecs.indexed(INDEX_MAPPER, DesperadoEntity.Variant::getIndex);
+            INDEX_CODEC = Codec.INT.xmap(INDEX_MAPPER::apply, Variant::getIndex);
+            PACKET_CODEC = PacketCodecs.indexed(INDEX_MAPPER, Variant::getIndex);
         }
     }
 
@@ -468,9 +518,9 @@ public class DesperadoEntity extends IllagerEntity implements CrossbowUser, Inve
     }
 
     public static class DesperadoData extends PassiveEntity.PassiveData {
-        public final DesperadoEntity.Variant variant;
+        public final Variant variant;
 
-        public DesperadoData(DesperadoEntity.Variant variant) {
+        public DesperadoData(Variant variant) {
             super(1.0F);
             this.variant = variant;
         }

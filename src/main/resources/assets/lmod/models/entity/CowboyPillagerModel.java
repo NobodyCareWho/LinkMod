@@ -10,7 +10,6 @@ public class model extends EntityModel<CowboyPillagerEntity> {
 	private final ModelPart right_arm;
 	private final ModelPart left_leg;
 	private final ModelPart right_leg;
-
 	public model(ModelPart root) {
 		this.head = root.getChild("head");
 		this.hat = root.getChild("hat");
@@ -27,7 +26,7 @@ public class model extends EntityModel<CowboyPillagerEntity> {
 		ModelPartData head = modelPartData.addChild("head", ModelPartBuilder.create().uv(0, 7).cuboid(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F, new Dilation(0.0F))
 		.uv(0, 29).cuboid(-4.0F, 0.0F, -4.0F, 8.0F, 3.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-		ModelPartData cube_r1 = head.addChild("cube_r1", ModelPartBuilder.create().uv(-2, -3).cuboid(0.0F, -1.5F, -2.0F, 0.0F, 3.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -2.5F, 6.0F, 0.0F, 0.0F, 0.4363F));
+		ModelPartData head_r1 = head.addChild("head_r1", ModelPartBuilder.create().uv(-2, -3).cuboid(0.0F, -1.5F, -2.0F, 0.0F, 3.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -2.5F, 6.0F, 0.0F, 0.0F, 0.4363F));
 
 		ModelPartData hat = modelPartData.addChild("hat", ModelPartBuilder.create().uv(28, 0).cuboid(-4.5F, -4.0F, -4.5F, 9.0F, 4.0F, 9.0F, new Dilation(0.0F))
 		.uv(38, 26).mirrored().cuboid(-4.5F, -5.0F, -4.5F, 4.0F, 1.0F, 9.0F, new Dilation(0.0F)).mirrored(false)
@@ -36,9 +35,9 @@ public class model extends EntityModel<CowboyPillagerEntity> {
 		.uv(0, 0).cuboid(-4.5F, 0.0F, -6.75F, 9.0F, 0.0F, 0.0F, new Dilation(0.0F))
 		.uv(0, 25).cuboid(-2.5F, -4.0F, -4.75F, 5.0F, 4.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -6.0F, 0.0F));
 
-		ModelPartData cube_r2 = hat.addChild("cube_r2", ModelPartBuilder.create().uv(31, 51).mirrored().cuboid(0.0F, 0.0F, -2.0F, 2.0F, 0.0F, 13.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(5.5F, 0.0F, -4.5F, 0.0F, 0.0F, -0.3927F));
+		ModelPartData hat_r1 = hat.addChild("hat_r1", ModelPartBuilder.create().uv(31, 51).mirrored().cuboid(0.0F, 0.0F, -2.0F, 2.0F, 0.0F, 13.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.of(5.5F, 0.0F, -4.5F, 0.0F, 0.0F, -0.3927F));
 
-		ModelPartData cube_r3 = hat.addChild("cube_r3", ModelPartBuilder.create().uv(31, 51).cuboid(-2.0F, 0.0F, -2.0F, 2.0F, 0.0F, 13.0F, new Dilation(0.0F)), ModelTransform.of(-5.5F, 0.0F, -4.5F, 0.0F, 0.0F, 0.3927F));
+		ModelPartData hat_r2 = hat.addChild("hat_r2", ModelPartBuilder.create().uv(31, 51).cuboid(-2.0F, 0.0F, -2.0F, 2.0F, 0.0F, 13.0F, new Dilation(0.0F)), ModelTransform.of(-5.5F, 0.0F, -4.5F, 0.0F, 0.0F, 0.3927F));
 
 		ModelPartData nose = modelPartData.addChild("nose", ModelPartBuilder.create().uv(24, 0).cuboid(-1.0F, -1.0F, -6.0F, 2.0F, 4.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -2.0F, 0.0F));
 

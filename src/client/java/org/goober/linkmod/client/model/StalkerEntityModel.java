@@ -16,6 +16,7 @@ public class StalkerEntityModel extends IllagerEntityModel<IllagerEntityRenderSt
 	private final ModelPart hat;
 	private final ModelPart nose;
 	private final ModelPart body;
+	private final ModelPart arms;
 	private final ModelPart leftArm;
 	private final ModelPart rightArm;
 	private final ModelPart leftLeg;
@@ -24,37 +25,54 @@ public class StalkerEntityModel extends IllagerEntityModel<IllagerEntityRenderSt
 	public StalkerEntityModel(ModelPart root) {
 		super(root);
 		this.head = root.getChild("head");
-		this.hat = root.getChild("hat");
-		this.nose = root.getChild("nose");
+		this.hat = head.getChild("hat");
+		this.nose = head.getChild("nose");
 		this.body = root.getChild("body");
+		this.arms = root.getChild("arms");
 		this.leftArm = root.getChild("left_arm");
 		this.rightArm = root.getChild("right_arm");
 		this.leftLeg = root.getChild("left_leg");
 		this.rightLeg = root.getChild("right_leg");
 	}
+
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
-		ModelPartData modelPartData = modelData.getRoot();
-		ModelPartData head = modelPartData.addChild("head", ModelPartBuilder.create().uv(0, 0).cuboid(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F, new Dilation(0.0F))
-		.uv(32, 46).cuboid(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F, new Dilation(0.25F))
-		.uv(24, 4).cuboid(-4.0F, -5.0F, -5.0F, 8.0F, 3.0F, 1.0F, new Dilation(0.0F)), ModelTransform.rotation(0.0F, 0.0F, 0.0F));
+		ModelPartData root = modelData.getRoot();
 
-		ModelPartData hat = modelPartData.addChild("hat", ModelPartBuilder.create(), ModelTransform.rotation(0.0F, 24.0F, 0.0F));
+		ModelPartData head = root.addChild("head", ModelPartBuilder.create()
+				.uv(0, 0).cuboid(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F, new Dilation(0.0F))
+				.uv(32, 46).cuboid(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F, new Dilation(0.25F))
+				.uv(24, 4).cuboid(-4.0F, -5.0F, -5.0F, 8.0F, 3.0F, 1.0F, new Dilation(0.0F)), ModelTransform.rotation(0.0F, 0.0F, 0.0F));
 
-		ModelPartData nose = modelPartData.addChild("nose", ModelPartBuilder.create().uv(0, 2).cuboid(-1.0F, -1.0F, -6.0F, 2.0F, 4.0F, 2.0F, new Dilation(0.0F)), ModelTransform.rotation(0.0F, -2.0F, 0.0F));
+		head.addChild("hat", ModelPartBuilder.create(), ModelTransform.NONE);
 
-		ModelPartData body = modelPartData.addChild("body", ModelPartBuilder.create().uv(36, 26).cuboid(-4.0F, 0.0F, -3.0F, 8.0F, 12.0F, 6.0F, new Dilation(0.0F))
+		head.addChild("nose", ModelPartBuilder.create()
+				.uv(0, 2).cuboid(-1.0F, -1.0F, -6.0F, 2, 4, 2),
+				ModelTransform.of(0.0F, -2.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+
+		root.addChild("body", ModelPartBuilder.create()
+				.uv(36, 26).cuboid(-4.0F, 0.0F, -3.0F, 8.0F, 12.0F, 6.0F, new Dilation(0.0F))
 		.uv(36, 2).cuboid(-4.0F, 0.0F, -3.0F, 8.0F, 18.0F, 6.0F, new Dilation(0.25F)), ModelTransform.rotation(0.0F, 0.0F, 0.0F));
 
-		ModelPartData left_arm = modelPartData.addChild("left_arm", ModelPartBuilder.create().uv(16, 18).mirrored().cuboid(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.0F)).mirrored(false)
-		.uv(16, 34).mirrored().cuboid(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.25F)).mirrored(false), ModelTransform.rotation(5.0F, 2.0F, 0.0F));
+		root.addChild("arms", ModelPartBuilder.create()
+						.uv(40, 38).cuboid(-8.0F, -2.0F, -2.0F, 8, 4, 4),
+				ModelTransform.of(0.0F, 2.0F, 0.0F, 0.0F, 0.0F, 0.0F));
 
-		ModelPartData right_arm = modelPartData.addChild("right_arm", ModelPartBuilder.create().uv(16, 18).cuboid(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.0F))
-		.uv(16, 34).cuboid(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.25F)), ModelTransform.rotation(-5.0F, 2.0F, 0.0F));
 
-		ModelPartData left_leg = modelPartData.addChild("left_leg", ModelPartBuilder.create().uv(0, 18).mirrored().cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.0F)).mirrored(false), ModelTransform.rotation(2.0F, 12.0F, 0.0F));
+		root.addChild("left_arm", ModelPartBuilder.create().uv(16, 18).mirrored().cuboid(-1.0F, -2.0F, -2.0F, 4, 12, 4, new Dilation(0.0F)).mirrored(false)
+		.uv(16, 34).mirrored().cuboid(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.25F)).mirrored(false),
+				ModelTransform.of(5.0F, 2.0F, 0.0F, 0.0F, 0.0F, 0.0F));
 
-		ModelPartData right_leg = modelPartData.addChild("right_leg", ModelPartBuilder.create().uv(0, 18).cuboid(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.0F)), ModelTransform.rotation(-2.0F, 12.0F, 0.0F));
+		root.addChild("right_arm", ModelPartBuilder.create().uv(16, 18).cuboid(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.0F))
+		.uv(16, 34).cuboid(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.25F)),
+				ModelTransform.of(-5.0F, 2.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+
+		root.addChild("left_leg", ModelPartBuilder.create().uv(0, 18).mirrored().cuboid(-2.0F, 0.0F, -2.0F, 4, 12, 4),
+				ModelTransform.of(2.0F, 12.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+
+		root.addChild("right_leg", ModelPartBuilder.create().uv(0, 18).cuboid(-2.0F, 0.0F, -2.0F, 4, 12, 4),
+				ModelTransform.of(-2.0F, 12.0F, 0.0F, 0.0F, 0.0F, 0.0F));
+
 		return TexturedModelData.of(modelData, 64, 64);
 	}
 	@Override

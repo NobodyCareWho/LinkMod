@@ -9,32 +9,33 @@ import net.minecraft.client.render.entity.state.RabbitEntityRenderState;
 import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import org.goober.linkmod.client.model.DesperadoEntityModel;
 import org.goober.linkmod.client.model.StalkerEntityModel;
 import org.goober.linkmod.entitystuff.AgentPillagerEntity;
 import org.goober.linkmod.entitystuff.DesperadoEntity;
 
-public class DesperadoEntityRenderer extends IllagerEntityRenderer<AgentPillagerEntity, IllagerEntityRenderState> {
-    private static final Identifier TEXTURE = Identifier.of("lmod","textures/entity/snowpillager2.png");
+public class DesperadoEntityRenderer extends IllagerEntityRenderer<DesperadoEntity, IllagerEntityRenderState> {
+    private static final Identifier TEXTURE = Identifier.of("lmod","textures/entity/cowboypillager2.png");
     public static final EntityModelLayer DESPERADO_LAYER =
-            new EntityModelLayer(Identifier.of("lmod", "stalker"), "main");
-    private static final Identifier RED_TEXTURE = Identifier.of("lmod","textures/entity/cowboypillager2");
-    private static final Identifier BLUE_TEXTURE = Identifier.of("lmod", "textures/entity/cowboypillager");
-
+            new EntityModelLayer(Identifier.of("lmod", "desperado"), "main");
+    private static final Identifier RED_TEXTURE = Identifier.of("lmod","textures/entity/cowboypillager2.png");
+    private static final Identifier BLUE_TEXTURE = Identifier.of("lmod", "textures/entity/cowboypillager.png");
+    private static final Identifier GREEN_TEXTURE = Identifier.of("lmod", "textures/entity/cowboypillager3.png");
 
     public DesperadoEntityRenderer(EntityRendererFactory.Context context) {
-        super(context, new StalkerEntityModel(context.getPart(DesperadoEntityRenderer.DESPERADO_LAYER)), 0.5F);
+        super(context, new DesperadoEntityModel(context.getPart(DesperadoEntityRenderer.DESPERADO_LAYER)), 0.5F);
         this.addFeature(new HeldItemFeatureRenderer<>(this));
     }
 
     public Identifier getTexture(IllagerEntityRenderState illagerEntityRenderState) {
-        Identifier var10000;
-        switch (desperadoEntityRenderState.type) {
-            case RED -> var10000 = RED_TEXTURE;
-            case BLUE -> var10000 = BLUE_TEXTURE;
-            default -> throw new MatchException((String)null, (Throwable)null);
-        }
+        //Identifier var10000;
+        //switch (desperadoEntityRenderState.type) {
+        //    case RED -> var10000 = RED_TEXTURE;
+        //    case BLUE -> var10000 = BLUE_TEXTURE;
+        //    default -> throw new MatchException((String)null, (Throwable)null);
+        //}
 
-        return var10000;
+        return GREEN_TEXTURE;
     }
 
     public IllagerEntityRenderState createRenderState() {

@@ -75,6 +75,8 @@ public class LinkmodClient implements ClientModInitializer {
         EntityRendererRegistry.register(LmodEntityRegistry.DYNAMITE, DynamiteEntityRenderer::new);
         EntityRendererRegistry.register(LmodEntityRegistry.PILLAGERDYNAMITE, PillagerDynamiteEntityRenderer::new);
         EntityRendererRegistry.register(LmodEntityRegistry.AGENTPILLAGER, AgentPillagerEntityRenderer::new);
+        EntityRendererRegistry.register(LmodEntityRegistry.DESPERADO, DesperadoEntityRenderer::new);
+        EntityRendererRegistry.register(LmodEntityRegistry.STALKER, StalkerEntityRenderer::new);
         // register renderer for pill grenade entity
         EntityRendererRegistry.register(LmodEntityRegistry.PILLGRENADE, PillGrenadeEntityRenderer::new);
 

@@ -9,8 +9,9 @@ import net.minecraft.util.Identifier;
 import org.goober.linkmod.client.model.AgentPillagerEntityModel;
 import org.goober.linkmod.client.model.StalkerEntityModel;
 import org.goober.linkmod.entitystuff.AgentPillagerEntity;
+import org.goober.linkmod.entitystuff.StalkerEntity;
 
-public class StalkerEntityRenderer extends IllagerEntityRenderer<AgentPillagerEntity, IllagerEntityRenderState> {
+public class StalkerEntityRenderer extends IllagerEntityRenderer<StalkerEntity, IllagerEntityRenderState> {
     private static final Identifier TEXTURE = Identifier.of("lmod","textures/entity/snowpillager2.png");
     public static final EntityModelLayer STALKER_LAYER =
             new EntityModelLayer(Identifier.of("lmod", "stalker"), "main");

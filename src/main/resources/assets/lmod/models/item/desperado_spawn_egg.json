@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "lmod:item/cowboypillagerspawnegg2"
+    "layer0": "lmod:item/cowboypillagerspawnegg3"
   }
 }

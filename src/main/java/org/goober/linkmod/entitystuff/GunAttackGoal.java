@@ -39,7 +39,7 @@ public class GunAttackGoal <T extends HostileEntity & RangedAttackMob & Crossbow
     }
 
     public boolean canStart() {
-        return this.hasAliveTarget() && this.isEntityHoldingGun();
+        return this.hasAliveTarget() && this.isEntityHoldingGun() && this.stage != GunAttackGoal.Stage.CHARGING ;
     }
 
     private boolean isEntityHoldingGun() {
@@ -99,7 +99,9 @@ public class GunAttackGoal <T extends HostileEntity & RangedAttackMob & Crossbow
                 this.actor.getNavigation().stop();
             }
 
-            this.actor.getLookControl().lookAt(livingEntity, 30.0F, 30.0F);
+                this.actor.getLookControl().lookAt(livingEntity, 30.0F, 30.0F);
+
+
             if (this.stage == GunAttackGoal.Stage.UNCHARGED) {
                 if (!bl3) {
                     this.actor.setCurrentHand(ProjectileUtil.getHandPossiblyHolding(this.actor, Items.CROSSBOW));

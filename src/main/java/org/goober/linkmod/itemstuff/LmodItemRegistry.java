@@ -505,6 +505,20 @@ public class LmodItemRegistry {
                     .maxCount(64)
     );
 
+    public static final Item STALKER_SPAWN_EGG = register(
+            "stalker_spawn_egg",
+            settings -> new SpawnEggItem(LmodEntityRegistry.STALKER, settings),
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
+    public static final Item DESPERADO_SPAWN_EGG = register(
+            "desperado_spawn_egg",
+            settings -> new SpawnEggItem(LmodEntityRegistry.DESPERADO, settings),
+            new Item.Settings()
+                    .maxCount(64)
+    );
+
     public static void initialize() {
         // Force class loading
     }
