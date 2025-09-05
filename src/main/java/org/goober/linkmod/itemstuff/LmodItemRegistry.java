@@ -14,6 +14,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import org.goober.linkmod.Linkmod;
@@ -97,6 +98,12 @@ public class LmodItemRegistry {
             settings -> new MaskItem(settings),
             new Item.Settings()
                     .maxCount(1)
+
+                    .component(DataComponentTypes.EQUIPPABLE, EquippableComponent.builder(EquipmentSlot.HEAD)
+                            .swappable(true)
+                            .equipSound(SoundEvents.ITEM_ARMOR_EQUIP_LEATHER) // optional: add equip sound
+                            .build()
+                    )
     );
 
     // guns

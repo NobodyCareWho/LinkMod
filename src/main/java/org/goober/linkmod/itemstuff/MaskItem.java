@@ -1,6 +1,7 @@
 package org.goober.linkmod.itemstuff;
 
 
+import net.minecraft.component.ComponentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -30,24 +31,7 @@ public class MaskItem extends Item{
         super(settings);
     }
 
-    @Override
-    public ActionResult use(World world, PlayerEntity user, Hand hand) {
-        ItemStack stack = user.getStackInHand(hand);
-        EquipmentSlot slot = EquipmentSlot.HEAD;
 
-        if (user.getEquippedStack(slot).isEmpty()) {
-            if (!world.isClient()) {
-                user.equipStack(slot, stack.copyWithCount(1));
-                stack.decrement(1);
-                    world.playSound(null, user.getX(), user.getY(), user.getZ(),
-                            SoundEvents.ITEM_ARMOR_EQUIP_LEATHER,
-                            SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
-            }
-            return ActionResult.SUCCESS;
-        } else {
-            return ActionResult.FAIL;
-        }
-    }
 
     @Override
     public void inventoryTick(ItemStack stack,
