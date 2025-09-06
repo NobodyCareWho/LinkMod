@@ -1,0 +1,27 @@
+{
+  "parent": "minecraft:lmod/root",
+  "criteria": {
+    "has_ironnugget": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:iron_nugget"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_ironnugget"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lmod:hematite",
+      "lmod:kunai"
+    ]
+  },
+  "sends_telemetry_event": true
+}

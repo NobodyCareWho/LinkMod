@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "lmod:polished_hematite",
+  "result": {
+    "count": 1,
+    "id": "lmod:polished_hematite_wall"
+  }
+}

@@ -112,7 +112,7 @@ public class DynamiteEntity extends PersistentProjectileEntity implements Damage
         if (--fuseTicks <= 0 && !this.getWorld().isClient) { // convert seconds to ticks
             if (this.getWorld() instanceof World world) {
                 // use grenade type settings for explosion
-                    world.createExplosion(this, getX(), getY()+0.1, getZ(), 5, false, World.ExplosionSourceType.MOB);
+                    world.createExplosion(this, getX(), getY()+0.1, getZ(), 3, false, World.ExplosionSourceType.MOB);
             }
             this.discard();
         }
@@ -149,7 +149,7 @@ public class DynamiteEntity extends PersistentProjectileEntity implements Damage
                 livingEntity.timeUntilRegen = 0;
             }
             // use grenade type settings for explosion
-                serverWorld.createExplosion(this, getX(), getY(), getZ(), 5, false, World.ExplosionSourceType.MOB);
+                serverWorld.createExplosion(this, getX(), getY(), getZ(), 3, false, World.ExplosionSourceType.MOB);
 
         }
         

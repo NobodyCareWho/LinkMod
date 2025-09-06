@@ -1,0 +1,37 @@
+{
+  "parent": "minecraft:lmod/root",
+  "criteria": {
+    "has_hematite": {
+      "conditions": {
+        "items": [
+          {
+            "items": "lmod:hematite"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_hematite"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lmod:chiseled_hematite",
+      "lmod:hematite_brick_slab",
+      "lmod:hematite_brick_stairs",
+      "lmod:hematite_brick_wall",
+      "lmod:hematite_bricks",
+      "lmod:hematite_slab",
+      "lmod:hematite_stairs",
+      "lmod:hematite_wall",
+      "lmod:polished_hematite",
+      "lmod:polished_hematite_slab",
+      "lmod:polished_hematite_stairs",
+      "lmod:polished_hematite_wall"
+    ]
+  },
+  "sends_telemetry_event": true
+}

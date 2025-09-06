@@ -35,7 +35,7 @@
     ],
     "fallback": {
       "type": "minecraft:model",
-      "model": "lmod:item/gauntlet"
+      "model": "lmod:item/gauntlet_2d"
     },
     "property": "minecraft:display_context"
   }

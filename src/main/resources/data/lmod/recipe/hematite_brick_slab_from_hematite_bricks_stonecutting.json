@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "lmod:hematite_bricks",
+  "result": {
+    "count": 2,
+    "id": "lmod:hematite_brick_slab"
+  }
+}

@@ -54,6 +54,8 @@
   "advancement.lmod.get_croissant.description": "qwuassaan",
   "advancement.lmod.get_exp_chest.title": "Where'd my XP go?!",
   "advancement.lmod.get_exp_chest.description": "Craft an Exp Chest",
+  "advancement.lmod.allguns.title": "Locked and loaded",
+  "advancement.lmod.allguns.description": "Craft each of the guns!",
 
 
   "block.lmod.rounded_sandstone": "Embossed Sandstone",

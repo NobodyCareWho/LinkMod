@@ -37,7 +37,7 @@ import org.goober.linkmod.projectilestuff.KunaiEntity;
 
 public class KunaiItem extends Item implements ProjectileItem {
     public static final int MIN_DRAW_DURATION = 5;
-    public static final float ATTACK_DAMAGE = 5.0F;
+    public static final float ATTACK_DAMAGE = 3.5F;
     public static final float THROW_SPEED = 2.7F;
 
     public KunaiItem(Item.Settings settings) {
@@ -45,7 +45,7 @@ public class KunaiItem extends Item implements ProjectileItem {
     }
 
     public static AttributeModifiersComponent createAttributeModifiers() {
-        return AttributeModifiersComponent.builder().add(EntityAttributes.ATTACK_DAMAGE, new EntityAttributeModifier(BASE_ATTACK_DAMAGE_MODIFIER_ID, 4.0, Operation.ADD_VALUE), AttributeModifierSlot.MAINHAND).build();
+        return AttributeModifiersComponent.builder().add(EntityAttributes.ATTACK_DAMAGE, new EntityAttributeModifier(BASE_ATTACK_DAMAGE_MODIFIER_ID, 2.0, Operation.ADD_VALUE), AttributeModifierSlot.MAINHAND).build();
     }
 
     public static ToolComponent createToolComponent() {

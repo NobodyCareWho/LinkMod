@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "": "",
+  "category": "misc",
+  "ingredients": [
+
+    "minecraft:tnt"
+  ],
+  "result": {
+    "id": "lmod:dynamite",
+    "count": 4
+  }
+}

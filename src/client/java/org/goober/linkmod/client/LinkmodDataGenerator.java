@@ -98,10 +98,49 @@ public class LinkmodDataGenerator implements DataGeneratorEntrypoint {
                     .criterion("has_lathe", InventoryChangedCriterion.Conditions.items(LmodBlockRegistry.LATHE))
                     .build(consumer, "lmod/get_lathe");
 
+
+
             AdvancementEntry enderchestAdvancement = Advancement.Builder.create().parent(rootAdvancement)
                     .criterion("has_echest", InventoryChangedCriterion.Conditions.items(Blocks.ENDER_CHEST))
                     .rewards(AdvancementRewards.Builder.recipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "exp_chest"))))
                     .build(consumer, "lmod/get_ender_chest");
+
+            AdvancementEntry bowlAdvancement = Advancement.Builder.create().parent(rootAdvancement)
+                    .criterion("has_bowl", InventoryChangedCriterion.Conditions.items(Items.BOWL))
+                    .rewards(AdvancementRewards.Builder.recipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "mask_of_obscurity"))))
+                    .build(consumer, "lmod/get_bowl");
+
+            AdvancementEntry tntAdvancement = Advancement.Builder.create().parent(rootAdvancement)
+                    .criterion("has_tnt", InventoryChangedCriterion.Conditions.items(Blocks.TNT))
+                    .rewards(AdvancementRewards.Builder.recipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "dynamite"))))
+                    .build(consumer, "lmod/get_tnt");
+
+            AdvancementEntry stringAdvancement = Advancement.Builder.create().parent(rootAdvancement)
+                    .criterion("has_string", InventoryChangedCriterion.Conditions.items(Items.STRING))
+                    .rewards(AdvancementRewards.Builder.recipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "kunai"))))
+                    .build(consumer, "lmod/get_string");
+
+            AdvancementEntry ironNuggetAdvancement = Advancement.Builder.create().parent(rootAdvancement)
+                    .criterion("has_ironnugget", InventoryChangedCriterion.Conditions.items(Items.IRON_NUGGET))
+                    .rewards(AdvancementRewards.Builder.recipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "hematite")))
+                            .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "kunai"))))
+                    .build(consumer, "lmod/get_ironnugget");
+
+            AdvancementEntry hematiteAdvancement = Advancement.Builder.create().parent(rootAdvancement)
+                    .criterion("has_hematite", InventoryChangedCriterion.Conditions.items(LmodBlockRegistry.HEMATITE))
+                    .rewards(AdvancementRewards.Builder.recipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "chiseled_hematite_block")))
+                            .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "hematite_brick_slab")))
+                            .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "hematite_brick_stairs")))
+                            .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "hematite_brick_wall")))
+                            .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "hematite_bricks")))
+                            .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "hematite_slab")))
+                            .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "hematite_stairs")))
+                            .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "hematite_wall")))
+                            .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "polished_hematite")))
+                            .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "polished_hematite_slab")))
+                            .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "polished_hematite_stairs")))
+                            .addRecipe(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of("lmod", "polished_hematite_wall"))))
+                    .build(consumer, "lmod/get_hematite");
 
             AdvancementEntry grenadeshellAdvancement = Advancement.Builder.create().parent(rootAdvancement)
                     .criterion("has_grenadeshell", InventoryChangedCriterion.Conditions.items(LmodItemRegistry.GRENADESHELL))
@@ -194,6 +233,23 @@ public class LinkmodDataGenerator implements DataGeneratorEntrypoint {
 
 
                     .build(consumer, "lmod/get_gun_components");
+
+            AdvancementEntry allGunsAdvancement = Advancement.Builder.create().parent(gunComponentsAdvancement)
+                    .display(
+                            LmodItemRegistry.REVOLVER,
+                            Text.translatable("advancement.lmod.allguns.title"),
+                            Text.translatable("advancement.lmod.allguns.description"),
+                            null,
+                            AdvancementFrame.CHALLENGE,
+                            true,
+                            true,
+                            false
+                    )
+                    .criterion("has_allguns", InventoryChangedCriterion.Conditions.items(LmodItemRegistry.REVOLVER,LmodItemRegistry.SHOTGUN,LmodItemRegistry.RIFLE,LmodItemRegistry.AUTORIFLE,LmodItemRegistry.GRENADELAUNCHER,LmodItemRegistry.BOILERPISTOL,LmodItemRegistry.PUMPSG,LmodItemRegistry.EJECTORPISTOL))
+                    .rewards(AdvancementRewards.Builder.experience(522))
+
+                    .build(consumer, "lmod/get_allguns");
+
         }
 
     }

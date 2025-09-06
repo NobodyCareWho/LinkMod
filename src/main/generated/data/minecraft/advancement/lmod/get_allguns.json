@@ -1,0 +1,58 @@
+{
+  "parent": "minecraft:lmod/get_gun_components",
+  "criteria": {
+    "has_allguns": {
+      "conditions": {
+        "items": [
+          {
+            "items": "lmod:revolver"
+          },
+          {
+            "items": "lmod:shotgun"
+          },
+          {
+            "items": "lmod:rifle"
+          },
+          {
+            "items": "lmod:autorifle"
+          },
+          {
+            "items": "lmod:grenadelauncher"
+          },
+          {
+            "items": "lmod:boilerpistol"
+          },
+          {
+            "items": "lmod:pumpshotgun"
+          },
+          {
+            "items": "lmod:ejectorpistol"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.lmod.allguns.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "lmod:revolver"
+    },
+    "title": {
+      "translate": "advancement.lmod.allguns.title"
+    }
+  },
+  "requirements": [
+    [
+      "has_allguns"
+    ]
+  ],
+  "rewards": {
+    "experience": 522
+  },
+  "sends_telemetry_event": true
+}

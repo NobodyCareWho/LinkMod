@@ -1,0 +1,26 @@
+{
+  "parent": "minecraft:lmod/root",
+  "criteria": {
+    "has_bowl": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:bowl"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_bowl"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lmod:mask_of_obscurity"
+    ]
+  },
+  "sends_telemetry_event": true
+}

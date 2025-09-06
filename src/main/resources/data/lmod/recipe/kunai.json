@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "I ",
+    "NS"
+  ],
+  "key": {
+    "N": "minecraft:iron_nugget",
+    "S": "minecraft:string",
+    "I": "minecraft:iron_ingot"
+  },
+  "result": {
+    "id": "lmod:kunai"
+  }
+}
