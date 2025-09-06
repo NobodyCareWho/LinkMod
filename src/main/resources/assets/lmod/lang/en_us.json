@@ -57,12 +57,27 @@
 
 
   "block.lmod.rounded_sandstone": "Embossed Sandstone",
+
   "block.lmod.gilded_sandstone": "Gilded Sandstone",
   "block.lmod.exp_chest": "Exp Chest",
   "container.lmod.exp_chest": "Exp Chest",
   "block.lmod.auros_bloom": "Auros Bloom",
   "block.lmod.lathe": "Lathe",
   "container.lmod.lathe": "Lathe",
+
+  "block.lmod.chiseled_hematite": "Chiseled Hematite",
+  "block.lmod.hematite": "Hematite",
+  "block.lmod.hematite_slab": "Hematite Slab",
+  "block.lmod.hematite_stairs": "Hematite Stairs",
+  "block.lmod.hematite_wall": "Polished Hematite Wall",
+  "block.lmod.hematite_bricks": "Hematite Bricks",
+  "block.lmod.hematite_brick_slab": "Hematite Brick Slab",
+  "block.lmod.hematite_brick_stairs": "Hematite Brick Stairs",
+  "block.lmod.hematite_brick_wall": "Hematite Brick Wall",
+  "block.lmod.polished_hematite": "Polished Hematite",
+  "block.lmod.polished_hematite_slab": "Polished Hematite Slab",
+  "block.lmod.polished_hematite_stairs": "Polished Hematite Stairs",
+  "block.lmod.polished_hematite_wall": "Polished Hematite Wall",
 
   "entity.lmod.agent_pillager": "Extortioner",
   "entity.lmod.stalker": "Stalker",

@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "lmod:hematite_wall",
+    "lmod:hematite_brick_wall",
+    "lmod:polished_hematite_wall"
+  ]
+}

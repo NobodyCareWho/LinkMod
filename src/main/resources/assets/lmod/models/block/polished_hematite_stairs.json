@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "lmod:block/polished_hematite",
+    "side": "lmod:block/polished_hematite",
+    "top": "lmod:block/polished_hematite"
+  }
+}

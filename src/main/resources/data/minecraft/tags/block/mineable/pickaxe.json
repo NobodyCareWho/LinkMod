@@ -4,6 +4,20 @@
     "lmod:rounded_sandstone",
     "lmod:gilded_sandstone",
     "lmod:lathe",
-    "lmod:exp_chest"
+    "lmod:exp_chest",
+    "lmod:hematite",
+    "lmod:hematite_slab",
+    "lmod:hematite_wall",
+    "lmod:hematite_stairs",
+    "lmod:hematite_bricks",
+    "lmod:hematite_brick_slab",
+    "lmod:hematite_brick_wall",
+    "lmod:hematite_brick_stairs",
+    "lmod:polished_hematite",
+    "lmod:polished_hematite_slab",
+    "lmod:polished_hematite_wall",
+    "lmod:polished_hematite_stairs",
+    "lmod:chiseled_hematite"
+
   ]
 }

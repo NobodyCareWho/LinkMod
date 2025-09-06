@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "lmod:block/hematite_slab"
+    },
+    "type=double": {
+      "model": "lmod:block/hematite"
+    },
+    "type=top": {
+      "model": "lmod:block/hematite_slab_top"
+    }
+  }
+}

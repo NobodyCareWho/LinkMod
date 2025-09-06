@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "lmod:block/hematite_wall_inventory"
+  }
+}
