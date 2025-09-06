@@ -7,7 +7,8 @@
     "PlayerEntityMixin",
     "PiglinEntityMixin",
     "PiglinBruteEntityMixin",
-    "SkeletonEntityMixin"
+    "SkeletonEntityMixin",
+    "RaidMixin"
   ],
   "injectors": {
     "defaultRequire": 1
