@@ -244,11 +244,19 @@ public class GunItem extends Item {
                     // update gun contents
                     stack.set(LmodDataComponentTypes.GUN_CONTENTS, builder.build());
 
-                    // play gun sound using sound profile
-                    if (bulletType.soundprofile() != null && bulletType.soundprofile().firesound() != null) {
+                    if (gunType.soundprofile() != null && gunType.soundprofile().gunsoundoverride() != null) {
                         world.playSound(null, user.getX(), user.getY(), user.getZ(),
-                                bulletType.soundprofile().firesound(),
+                                gunType.soundprofile().gunsoundoverride(),
                                 SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
+
+                    } else {
+
+                        // play gun sound using sound profile
+                        if (bulletType.soundprofile() != null && bulletType.soundprofile().firesound() != null) {
+                            world.playSound(null, user.getX(), user.getY(), user.getZ(),
+                                    bulletType.soundprofile().firesound(),
+                                    SoundCategory.PLAYERS, 1.0F, 1.0F / (world.getRandom().nextFloat() * 0.4F + 1.2F));
+                        }
                     }
 
 

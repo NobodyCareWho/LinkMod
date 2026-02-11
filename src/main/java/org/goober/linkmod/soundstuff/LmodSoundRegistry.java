@@ -26,6 +26,8 @@ public class LmodSoundRegistry {
     public static final SoundEvent GUNLOAD1 = registerSound("gunload1");
     public static final SoundEvent GUNLOAD2 = registerSound("gunload2");
     public static final SoundEvent SHOTGUNEJECT = registerSound("shotguneject");
+    public static final SoundEvent BIGGUNSHOOT = registerSound("autorifleshoot");
+    public static final SoundEvent BIGGUNLOAD = registerSound("autorifleload");
 
     // actual registration of all the custom SoundEvents
     private static SoundEvent registerSound(String id) {

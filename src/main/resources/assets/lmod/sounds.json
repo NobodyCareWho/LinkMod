@@ -73,5 +73,21 @@
       "lmod:shotguneject1",
       "lmod:shotguneject2"
     ]
-  }
+  },
+  "autorifleshoot": {
+    "subtitle": "sound.lmod.biggunshot",
+    "sounds": [
+      "lmod:bigmachinegun",
+      "lmod:bigmachinegun2",
+      "lmod:bigmachinegun3"
+    ]
+  },
+  "autorifleload": {
+  "subtitle": "sound.lmod.gunloading",
+  "sounds": [
+    "lmod:bigmgload",
+    "lmod:bigmgload2"
+  ]
+}
+
 }

@@ -65,7 +65,7 @@ public class LmodItemRegistry {
             KunaiItem::new,
             new Item.Settings()
                     .maxCount(16)
-                    .rarity(Rarity.RARE)
+
                     .attributeModifiers(KunaiItem.createAttributeModifiers())
                     .component(DataComponentTypes.TOOL, KunaiItem.createToolComponent())
                     .component(DataComponentTypes.WEAPON, new WeaponComponent(1))
@@ -76,7 +76,6 @@ public class LmodItemRegistry {
             DynamiteItem::new,
             new Item.Settings()
                     .maxCount(16)
-                    .rarity(Rarity.RARE)
     );
 
     public static final Item GAUNTLET = register(
